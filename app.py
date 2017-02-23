@@ -2,6 +2,7 @@
 
 from __future__ import print_function
 from future.standard_library import install_aliases
+
 install_aliases()
 
 from urllib.parse import urlparse, urlencode
@@ -15,6 +16,14 @@ from flask import Flask
 from flask import request
 from flask import make_response
 
+import logging.handlers
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+handler = logging.handlers.RotatingFileHandler('app.log', maxBytes=102400, backupCount=5)
+handler.setLevel(logging.DEBUG)
+logger.addHandler(handler)
+
 # Flask app should start in global layout
 app = Flask(__name__)
 
@@ -23,13 +32,13 @@ app = Flask(__name__)
 def webhook():
     req = request.get_json(silent=True, force=True)
 
-    print("Request:")
-    print(json.dumps(req, indent=4))
+    logger.info("Request:")
+    logger.info(json.dumps(req, indent=4))
 
     res = processRequest(req)
 
     res = json.dumps(res, indent=4)
-    # print(res)
+    # logger.info(res)
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
     return r
@@ -52,7 +61,7 @@ def processRequest(req):
 def makeYqlQuery(req):
     result = req.get("result")
     parameters = result.get("parameters")
-    #date variable creation
+    # date variable creation
     date = parameters.get("date")
     city = parameters.get("geo-city")
     if city is None:
@@ -84,14 +93,14 @@ def makeWebhookResult(data):
     if condition is None:
         return {}
 
-    # print(json.dumps(item, indent=4))
+    # logger.info(json.dumps(item, indent=4))
 
     speech = "Weather in " + location.get('city') + ": " + condition.get('text') + \
              ", the temperature is " + condition.get('temp') + " " + units.get('temperature')
-    #speech = "北京的天气怎么样？"
+    # speech = "北京的天气怎么样？"
 
-    print("Response:")
-    print(speech)
+    logger.info("Response:")
+    logger.info(speech)
 
     return {
         "speech": speech,
@@ -105,6 +114,6 @@ def makeWebhookResult(data):
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
 
-    print("Starting app on port %d" % port)
+    logger.info("Starting app on port %d" % port)
 
     app.run(debug=False, port=port, host='0.0.0.0')
