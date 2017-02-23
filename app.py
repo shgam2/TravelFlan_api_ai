@@ -52,6 +52,8 @@ def processRequest(req):
 def makeYqlQuery(req):
     result = req.get("result")
     parameters = result.get("parameters")
+    #date variable creation
+    date = parameters.get("date")
     city = parameters.get("geo-city")
     if city is None:
         return None
@@ -84,8 +86,9 @@ def makeWebhookResult(data):
 
     # print(json.dumps(item, indent=4))
 
-    speech = "Weather in " + location.get('city') + ": " + condition.get('text') + \
-             ", the temperature is " + condition.get('temp') + " " + units.get('temperature')
+    #speech = "Weather in " + location.get('city') + ": " + condition.get('text') + \
+    #         ", the temperature is " + condition.get('temp') + " " + units.get('temperature')
+    speech = "北京的天气怎么样？"
 
     print("Response:")
     print(speech)
