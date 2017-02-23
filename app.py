@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 # !/usr/bin/env python
 
 from __future__ import print_function
@@ -17,14 +18,6 @@ from flask import Flask
 from flask import request
 from flask import make_response
 
-import logging.handlers
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-handler = logging.handlers.RotatingFileHandler('/app/app.log', maxBytes=102400, backupCount=5)
-handler.setLevel(logging.DEBUG)
-logger.addHandler(handler)
-
 # Flask app should start in global layout
 app = Flask(__name__)
 
@@ -33,13 +26,13 @@ app = Flask(__name__)
 def webhook():
     req = request.get_json(silent=True, force=True)
 
-    logger.info("Request:")
-    logger.info(json.dumps(req, indent=4))
+    print("Request:")
+    print(json.dumps(req, indent=4))
 
     res = processRequest(req)
 
     res = json.dumps(res, indent=4)
-    # logger.info(res)
+    # print(res)
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
     return r
@@ -94,14 +87,14 @@ def makeWebhookResult(data):
     if condition is None:
         return {}
 
-    # logger.info(json.dumps(item, indent=4))
+    # print(json.dumps(item, indent=4))
 
     speech = "Weather in " + location.get('city') + ": " + condition.get('text') + \
              ", the temperature is " + condition.get('temp') + " " + units.get('temperature')
     # speech = "北京的天气怎么样？"
 
-    logger.info("Response:")
-    logger.info(speech)
+    print("Response:")
+    print(speech)
 
     return {
         "speech": speech,
@@ -115,6 +108,6 @@ def makeWebhookResult(data):
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
 
-    logger.info("Starting app on port %d" % port)
+    print("Starting app on port %d" % port)
 
     app.run(debug=False, port=port, host='0.0.0.0')
