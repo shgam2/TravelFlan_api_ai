@@ -20,7 +20,7 @@ import logging.handlers
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
-handler = logging.handlers.RotatingFileHandler('app.log', maxBytes=102400, backupCount=5)
+handler = logging.handlers.RotatingFileHandler('/app/app.log', maxBytes=102400, backupCount=5)
 handler.setLevel(logging.DEBUG)
 logger.addHandler(handler)
 
