@@ -94,7 +94,9 @@ def makeWebhookResult(data):
     print(speech)
 
     return {
-        "speech": speech,
+        "fulfillment": {
+            "speech": speech
+        },
         "displayText": speech,
         # "data": data,
         # "contextOut": [],
