@@ -39,18 +39,22 @@ def webhook():
 
 
 def processRequest(req):
-    if req.get("result").get("action") != "weather":
+    # weather intent
+    if req.get("result").get("action") == "weather":
+        baseurl = "https://query.yahooapis.com/v1/public/yql?"
+        yql_query = makeYqlQuery(req)
+        if yql_query is None:
+            return {}
+        yql_url = baseurl + urlencode({'q': yql_query}) + "&format=json"
+        result = urlopen(yql_url).read()
+        data = json.loads(result)
+        res = makeWebhookResult(data)
+        return res
+    # direction intent
+    elif req.get("result").get("action") == "direction":
         return {}
-    baseurl = "https://query.yahooapis.com/v1/public/yql?"
-    yql_query = makeYqlQuery(req)
-    if yql_query is None:
+    else:
         return {}
-    yql_url = baseurl + urlencode({'q': yql_query}) + "&format=json"
-    result = urlopen(yql_url).read()
-    data = json.loads(result)
-    res = makeWebhookResult(data)
-    return res
-
 
 def makeYqlQuery(req):
     result = req.get("result")
@@ -91,7 +95,6 @@ def makeWebhookResult(data):
 
     speech = "Weather in " + location.get('city') + ": " + condition.get('text') + \
              ", the temperature is " + condition.get('temp') + " " + units.get('temperature')
-
 
     print("Response:")
     print(speech)
