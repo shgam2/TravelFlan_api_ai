@@ -52,10 +52,12 @@ def processRequest(req):
         return res
     # direction intent
     elif req.get("result").get("action") == "direction":
-        return {}
+        direction_function()
     else:
         return {}
 
+
+# weather_intent: forms a query for yahoo yql
 def makeYqlQuery(req):
     result = req.get("result")
     parameters = result.get("parameters")
@@ -68,6 +70,7 @@ def makeYqlQuery(req):
     return "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text='" + city + "')"
 
 
+# Puts together a speech and returns a json-formatted object
 def makeWebhookResult(data):
     query = data.get('query')
     if query is None:
@@ -108,9 +111,19 @@ def makeWebhookResult(data):
     }
 
 
+# what is this?
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
 
     print("Starting app on port %d" % port)
 
     app.run(debug=False, port=port, host='0.0.0.0')
+
+
+def direction_function ():
+    speech = "Hello!"
+    return {
+        "speech": speech,
+        "displayText": speech,
+        "source": "apiai-weather-webhook-sample"
+    }
