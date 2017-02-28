@@ -52,7 +52,7 @@ def processRequest(req):
         return res
     # direction intent
     elif req.get("result").get("action") == "direction":
-        direction_function()
+        return direction_function()
     else:
         return {}
 
