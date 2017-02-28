@@ -13,6 +13,7 @@ from urllib.error import HTTPError
 
 import json
 import os
+import direction
 
 from flask import Flask
 from flask import request
@@ -52,7 +53,8 @@ def processRequest(req):
         return res
     # direction intent
     elif req.get("result").get("action") == "direction":
-        return direction_function()
+        return direction.direction_function()
+    # if no intent
     else:
         return {}
 
@@ -120,10 +122,3 @@ if __name__ == '__main__':
     app.run(debug=False, port=port, host='0.0.0.0')
 
 
-def direction_function ():
-    speech = "Hello!"
-    return {
-        "speech": speech,
-        "displayText": speech,
-        "source": "apiai-weather-webhook-sample"
-    }
