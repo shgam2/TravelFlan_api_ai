@@ -67,7 +67,14 @@ def processRequest(req):
         #return res
     # if no intent found
     else:
-        return {}
+        speech = "Hello!"
+        print("Response:")
+        print(speech)
+        return {
+            "speech": speech,
+            "displayText": speech,
+            "source": "apiai-weather-webhook-sample"
+        }
 
 
 # This method is for weather_intent: forms a query for yahoo yql and return the
