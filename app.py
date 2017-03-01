@@ -25,6 +25,7 @@ app = Flask(__name__)
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
+    #parses the incoming JSON request data and returns it
     req = request.get_json(silent=True, force=True)
 
     print("Request:")
@@ -47,6 +48,7 @@ def processRequest(req):
         if yql_query is None:
             return {}
         yql_url = baseurl + urlencode({'q': yql_query}) + "&format=json"
+
         result = urlopen(yql_url).read()
         data = json.loads(result)
         res = makeWebhookResult(data)
@@ -59,7 +61,7 @@ def processRequest(req):
         return {}
 
 
-# weather_intent: forms a query for yahoo yql
+# weather_intent: forms a query for yahoo yql and return the
 def makeYqlQuery(req):
     result = req.get("result")
     parameters = result.get("parameters")
@@ -73,6 +75,7 @@ def makeYqlQuery(req):
 
 
 # Puts together a speech and returns a json-formatted object
+# var: 'data' is data received from YahooWeather
 def makeWebhookResult(data):
     query = data.get('query')
     if query is None:
@@ -120,5 +123,3 @@ if __name__ == '__main__':
     print("Starting app on port %d" % port)
 
     app.run(debug=False, port=port, host='0.0.0.0')
-
-
