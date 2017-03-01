@@ -1,6 +1,6 @@
 def direction_function():
     speech = "Hello!"
-    return {}
+    return { }
     #    "speech": speech,
      #   "displayText": speech,
       #  "source": "apiai-weather-webhook-sample"
