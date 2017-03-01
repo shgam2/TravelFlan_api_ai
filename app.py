@@ -18,7 +18,9 @@ YAHOO_YQL_BASE_URL = 'https://query.yahooapis.com/v1/public/yql?'
 
 
 def make_yql_query(req):
+    print('test..')
     city = req['result']['parameters']['geo-city']
+    print(city)
     return 'select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\'%s\')' % (city,)
 
 
