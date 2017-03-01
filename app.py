@@ -41,7 +41,7 @@ def webhook():
 
 
 def processRequest(req):
-    # for weather intent
+    # if results.action --> weather, create yql_url
     if req.get("result").get("action") == "weather":
         baseurl = "https://query.yahooapis.com/v1/public/yql?"
         yql_query = makeYqlQuery(req)
@@ -55,7 +55,8 @@ def processRequest(req):
         return res
     # for direction intent
     elif req.get("result").get("action") == "direction":
-        return direction.direction_function()
+        res = direction.direction_function()
+        return res
     # if no intent found
     else:
         return {}
@@ -76,6 +77,7 @@ def makeYqlQuery(req):
 
 # This method puts together a speech and returns a json-formatted object
 # var: 'data' is data received from YahooWeather
+# Returns a JSON format object
 def makeWebhookResult(data):
     query = data.get('query')
     if query is None:
