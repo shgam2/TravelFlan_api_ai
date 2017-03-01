@@ -27,6 +27,8 @@ def make_yql_query(req):
 def process_request(req):
     res = None
 
+    print(type(req))
+
     action = req['result']['action']
     if action == 'weather':
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req)}) + '&format=json'
