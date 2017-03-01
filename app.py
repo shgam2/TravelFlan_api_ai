@@ -134,12 +134,14 @@ def grab_answer (loc1, loc2):
         count = 0
 
         while True:
+            print ("inside loop now!!")
             if direction[count][0] == "":
                 # location not found
                 break
             if direction[count][0] == from_loc:
                 row_num = count
                 count = 0
+                print ("rownum = {}".format(row_num))
                 break
             count = count + 1
 
@@ -150,11 +152,11 @@ def grab_answer (loc1, loc2):
             if direction[0][count] == to_loc:
                 col_num = count
                 count = 0
+                print("colnum = {}".format(col_num))
                 break
             count = count + 1
-
-        speech = direction[row_num][col_num]
         print(direction[row_num][col_num])
+        speech = direction[row_num][col_num]
         return speech
 
 
