@@ -32,9 +32,9 @@ def process_request(req):
     action = req['result']['action']
     if action == 'weather':
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req)}) + '&format=json'
-        print('YQL-Request:\n%s' % (url,))
+        #print('YQL-Request:\n%s' % (url,))
         _res = urlopen(url).read()
-        print('YQL-Response:\n%s' % (_res,))
+        #print('YQL-Response:\n%s' % (_res,))
 
         data = json.loads(_res)
 
@@ -64,6 +64,7 @@ def process_request(req):
             'source': 'apiai-weather'
         }
     elif action == 'direction':
+        print ("HEREEEEE")
         speech = parse_json(req)
         res = {
             'speech': speech,
@@ -90,6 +91,9 @@ def webhook():
 # input: JSON-formatted requested data
 # output: JSON-formatted response data
 def parse_json(req):
+    print ("----------------req --------------------")
+    print (req)
+    print("----------------req --------------------")
     result = req.get("result")
     parameters = result.get("parameters")
     loc1 = parameters.get("direction1")
@@ -97,6 +101,10 @@ def parse_json(req):
     if (loc1 is None) or (loc2 is None):
         return None
 
+    print ("-------------------------------------------------")
+    print ("loc1 = {}".format(loc1))
+    print("loc2 = {}".format(loc2))
+    print("-------------------------------------------------")
     speech = grab_answer(loc1, loc2)
 
     print("Response:")
@@ -146,7 +154,7 @@ def grab_answer (loc1, loc2):
 
         speech = direction[row_num][col_num]
         return speech
-        f.close()
+
 
 
 
