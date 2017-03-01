@@ -124,6 +124,7 @@ def parse_json(req):
 #   - answer speech (String data)
 def grab_answer (loc1, loc2):
     print ("in grab_answer function")
+    print ("filename = {}".format(file_name))
     with open(file_name, 'rt', encoding='utf8') as f:
         direction = list(csv.reader(f))
 
@@ -132,6 +133,9 @@ def grab_answer (loc1, loc2):
         row_num = 0
         col_num = 0
         count = 0
+
+        print ("from_loc = {}".format(from_loc))
+        print("to_loc = {}".format(to_loc))
 
         while True:
             print ("inside loop now!!")
