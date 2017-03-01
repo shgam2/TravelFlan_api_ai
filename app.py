@@ -1,135 +1,87 @@
 # -*- coding: utf-8 -*-
 
-# !/usr/bin/env python
-
 from __future__ import print_function
 from future.standard_library import install_aliases
 
 install_aliases()
 
-from urllib.parse import urlparse, urlencode
-from urllib.request import urlopen, Request
-from urllib.error import HTTPError
-
 import json
 import os
-import direction
+from urllib.parse import urlencode
+from urllib.request import urlopen
 
-from flask import Flask
-from flask import request
-from flask import make_response
+from flask import make_response, request, Flask
 
-# Flask app should start in global layout
 app = Flask(__name__)
+
+YAHOO_YQL_BASE_URL = 'https://query.yahooapis.com/v1/public/yql?'
+
+
+def make_yql_query(req):
+    city = req['result']['parameters']['geo-city']
+    return 'select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\'%s\')' % (city,)
+
+
+def process_request(req):
+    res = None
+
+    action = req['result']['action']
+    if action == 'weather':
+        url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req)}) + '&format=json'
+        _res = urlopen(url).read()
+        data = json.loads(_res)
+
+        if 'query' not in data:
+            return res
+        if 'results' not in data['query']:
+            return res
+        if 'channel' not in data['query']['results']:
+            return res
+
+        for x in ('location', 'item', 'units'):
+            if x not in data['query']['results']['channel']:
+                return res
+
+        if 'condition' not in data['query']['results']['channel']['item']:
+            return res
+
+        location = data['query']['results']['channel']['location']
+        condition = data['query']['results']['channel']['item']['condition']
+        units = data['query']['results']['channel']['units']
+
+        speech = 'Weather in %s: %s, the temperature is %s %s' % (location['city'], condition['text'],
+                                                                  condition['temp'], units['temperature'])
+        res = {
+            'speech': speech,
+            'displayText': speech,
+            'source': 'apiai-weather'
+        }
+    elif action == 'direction':
+        speech = 'Hello!'
+        res = {
+            'speech': speech,
+            'displayText': speech,
+            'source': 'apiai-direction'
+        }
+    return res
 
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
-    #parses the incoming JSON request data and returns it
     req = request.get_json(silent=True, force=True)
+    print('Request:\n%s' % (req,))
+    req = json.dumps(req, indent=4)
 
-    print("Request:")
-    print(json.dumps(req, indent=4))
-
-    res = processRequest(req)
-
+    res = process_request(req)
+    print('Response:\n%s' % (res,))
     res = json.dumps(res, indent=4)
-    # print(res)
+
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
     return r
 
 
-def processRequest(req):
-    # if results.action --> weather, create yql_url
-    if req.get("result").get("action") == "weather":
-        baseurl = "https://query.yahooapis.com/v1/public/yql?"
-        yql_query = makeYqlQuery(req)
-        if yql_query is None:
-            return {}
-        yql_url = baseurl + urlencode({'q': yql_query}) + "&format=json"
-
-        result = urlopen(yql_url).read()
-        data = json.loads(result)
-        res = makeWebhookResult(data)
-        return res
-    # for direction intent
-    elif req.get("result").get("action") == "direction":
-        speech = "Hello!"
-        print("Response:")
-        print(speech)
-        return {
-            "speech": speech,
-            "displayText": speech,
-            "source": "apiai-weather-webhook-sample"
-        }
-        #res = direction.direction_function()
-        #return res
-    # if no intent found
-    else:
-        return {}
-
-
-# This method is for weather_intent: forms a query for yahoo yql and return the
-def makeYqlQuery(req):
-    result = req.get("result")
-    parameters = result.get("parameters")
-    # date variable creation
-    date = parameters.get("date")
-    city = parameters.get("geo-city")
-    if city is None:
-        return None
-
-    return "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text='" + city + "')"
-
-
-# This method puts together a speech and returns a json-formatted object
-# var: 'data' is data received from YahooWeather
-# Returns a JSON format object
-def makeWebhookResult(data):
-    query = data.get('query')
-    if query is None:
-        return {}
-
-    result = query.get('results')
-    if result is None:
-        return {}
-
-    channel = result.get('channel')
-    if channel is None:
-        return {}
-
-    item = channel.get('item')
-    location = channel.get('location')
-    units = channel.get('units')
-    if (location is None) or (item is None) or (units is None):
-        return {}
-
-    condition = item.get('condition')
-    if condition is None:
-        return {}
-
-    # print(json.dumps(item, indent=4))
-
-    speech = "Weather in " + location.get('city') + ": " + condition.get('text') + \
-             ", the temperature is " + condition.get('temp') + " " + units.get('temperature')
-
-    print("Response:")
-    print(speech)
-
-    return {
-        "speech": speech,
-        "displayText": speech,
-        # "data": data,
-        # "contextOut": [],
-        "source": "apiai-weather-webhook-sample"
-    }
-
-
-# what is this?
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
-
-    print("Starting app on port %d" % port)
-
+    print('Starting app on port %d' % port)
     app.run(debug=False, port=port, host='0.0.0.0')
