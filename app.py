@@ -18,16 +18,12 @@ YAHOO_YQL_BASE_URL = 'https://query.yahooapis.com/v1/public/yql?'
 
 
 def make_yql_query(req):
-    print('test..')
     city = req['result']['parameters']['geo-city']
-    print(city)
     return 'select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\'%s\')' % (city,)
 
 
 def process_request(req):
     res = None
-
-    print(type(req))
 
     action = req['result']['action']
     if action == 'weather':
@@ -76,8 +72,7 @@ def process_request(req):
 @app.route('/webhook', methods=['POST'])
 def webhook():
     req = request.get_json(silent=True, force=True)
-    req = json.dumps(req, indent=4)
-    print('Request:\n%s' % (req,))
+    print('Request:\n%s' % (json.dumps(req, indent=4),))
 
     res = process_request(req)
     res = json.dumps(res, indent=4)
