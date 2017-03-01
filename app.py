@@ -7,6 +7,7 @@ install_aliases()
 
 import json
 import os
+import csv
 from urllib.parse import urlencode
 from urllib.request import urlopen
 
@@ -15,6 +16,9 @@ from flask import make_response, request, Flask
 app = Flask(__name__)
 
 YAHOO_YQL_BASE_URL = 'https://query.yahooapis.com/v1/public/yql?'
+
+#temporary csv file containing answers for direction-related questions
+file_name = 'direction_qa.csv'
 
 
 def make_yql_query(req):
@@ -60,7 +64,7 @@ def process_request(req):
             'source': 'apiai-weather'
         }
     elif action == 'direction':
-        speech = 'Hello!'
+        speech = parse_json(req)
         res = {
             'speech': speech,
             'displayText': speech,
@@ -81,6 +85,69 @@ def webhook():
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
     return r
+
+
+# input: JSON-formatted requested data
+# output: JSON-formatted response data
+def parse_json(req):
+    result = req.get("result")
+    parameters = result.get("parameters")
+    loc1 = parameters.get("direction1")
+    loc2 = parameters.get("direction2")
+    if (loc1 is None) or (loc2 is None):
+        return None
+
+    speech = grab_answer(loc1, loc2)
+
+    print("Response:")
+    print(speech)
+    return {
+        "speech": speech,
+        "displayText": speech,
+        "source": "apiai-weather-webhook-sample"
+    }
+
+
+# input:
+#   - from_location
+#   - to_location
+# output:
+#   - answer speech (String data)
+def grab_answer (loc1, loc2):
+
+    with open(file_name, 'rt', encoding='utf8') as f:
+        direction = list(csv.reader(f))
+
+        from_loc = loc1
+        to_loc = loc2
+        row_num = 0
+        col_num = 0
+        count = 0
+
+        while True:
+            if direction[count][0] == "":
+                # location not found
+                break
+            if direction[count][0] == from_loc:
+                row_num = count
+                count = 0
+                break
+            count = count + 1
+
+        while True:
+            if direction[0][count] == "":
+                # location not found
+                break
+            if direction[0][count] == to_loc:
+                col_num = count
+                count = 0
+                break
+            count = count + 1
+
+        speech = direction[row_num][col_num]
+        return speech
+        f.close()
+
 
 
 if __name__ == '__main__':
