@@ -55,8 +55,16 @@ def processRequest(req):
         return res
     # for direction intent
     elif req.get("result").get("action") == "direction":
-        res = direction.direction_function()
-        return res
+        speech = "Hello!"
+        print("Response:")
+        print(speech)
+        return {
+            "speech": speech,
+            "displayText": speech,
+            "source": "apiai-weather-webhook-sample"
+        }
+        #res = direction.direction_function()
+        #return res
     # if no intent found
     else:
         return {}
