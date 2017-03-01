@@ -127,7 +127,7 @@ def grab_answer (loc1, loc2):
     print ("filename = {}".format(file_name))
 
     try:
-        with open(file_name, 'r+', encoding='utf8') as f:
+        with open(file_name, 'r+') as f:
             direction = list(csv.reader(f))
 
             from_loc = loc1
