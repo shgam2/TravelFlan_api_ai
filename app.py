@@ -91,6 +91,7 @@ def webhook():
 # input: JSON-formatted requested data
 # output: JSON-formatted response data
 def parse_json(req):
+    print ("in parse_json method")
     print ("----------------req --------------------")
     print (req)
     print("----------------req --------------------")
@@ -122,7 +123,7 @@ def parse_json(req):
 # output:
 #   - answer speech (String data)
 def grab_answer (loc1, loc2):
-
+    print ("in grab_answer function")
     with open(file_name, 'rt', encoding='utf8') as f:
         direction = list(csv.reader(f))
 
@@ -153,8 +154,8 @@ def grab_answer (loc1, loc2):
             count = count + 1
 
         speech = direction[row_num][col_num]
+        print(direction[row_num][col_num])
         return speech
-
 
 
 
