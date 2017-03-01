@@ -41,7 +41,7 @@ def webhook():
 
 
 def processRequest(req):
-    # weather intent
+    # for weather intent
     if req.get("result").get("action") == "weather":
         baseurl = "https://query.yahooapis.com/v1/public/yql?"
         yql_query = makeYqlQuery(req)
@@ -53,15 +53,15 @@ def processRequest(req):
         data = json.loads(result)
         res = makeWebhookResult(data)
         return res
-    # direction intent
+    # for direction intent
     elif req.get("result").get("action") == "direction":
         return direction.direction_function()
-    # if no intent
+    # if no intent found
     else:
         return {}
 
 
-# weather_intent: forms a query for yahoo yql and return the
+# This method is for weather_intent: forms a query for yahoo yql and return the
 def makeYqlQuery(req):
     result = req.get("result")
     parameters = result.get("parameters")
@@ -74,7 +74,7 @@ def makeYqlQuery(req):
     return "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text='" + city + "')"
 
 
-# Puts together a speech and returns a json-formatted object
+# This method puts together a speech and returns a json-formatted object
 # var: 'data' is data received from YahooWeather
 def makeWebhookResult(data):
     query = data.get('query')
