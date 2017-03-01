@@ -125,44 +125,49 @@ def parse_json(req):
 def grab_answer (loc1, loc2):
     print ("in grab_answer function")
     print ("filename = {}".format(file_name))
-    with open(file_name, 'rt', encoding='utf8') as f:
-        direction = list(csv.reader(f))
 
-        from_loc = loc1
-        to_loc = loc2
-        row_num = 0
-        col_num = 0
-        count = 0
+    try:
+        with open(file_name, 'rt', encoding='utf8') as f:
+            direction = list(csv.reader(f))
 
-        print ("from_loc = {}".format(from_loc))
-        print("to_loc = {}".format(to_loc))
+            from_loc = loc1
+            to_loc = loc2
+            row_num = 0
+            col_num = 0
+            count = 0
 
-        while True:
-            print ("inside loop now!!")
-            if direction[count][0] == "":
-                # location not found
-                break
-            if direction[count][0] == from_loc:
-                row_num = count
-                count = 0
-                print ("rownum = {}".format(row_num))
-                break
-            count = count + 1
+            print ("from_loc = {}".format(from_loc))
+            print("to_loc = {}".format(to_loc))
 
-        while True:
-            if direction[0][count] == "":
-                # location not found
-                break
-            if direction[0][count] == to_loc:
-                col_num = count
-                count = 0
-                print("colnum = {}".format(col_num))
-                break
-            count = count + 1
-        print(direction[row_num][col_num])
-        speech = direction[row_num][col_num]
-        return speech
+            while True:
+                print ("inside loop now!!")
+                if direction[count][0] == "":
+                    # location not found
+                    break
+                if direction[count][0] == from_loc:
+                    row_num = count
+                    count = 0
+                    print ("rownum = {}".format(row_num))
+                    break
+                count = count + 1
 
+            while True:
+                if direction[0][count] == "":
+                    # location not found
+                    break
+                if direction[0][count] == to_loc:
+                    col_num = count
+                    count = 0
+                    print("colnum = {}".format(col_num))
+                    break
+                count = count + 1
+            print(direction[row_num][col_num])
+            speech = direction[row_num][col_num]
+            return speech
+    except IOError:
+        print ("exception error")
+    else:
+        print ("something weird happened")
 
 
 if __name__ == '__main__':
