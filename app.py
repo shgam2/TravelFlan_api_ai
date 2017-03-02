@@ -72,6 +72,7 @@ def process_request(req):
         res = {
             'speech': speech,
             'displayText': speech,
+            'source': 'apiai-direction'
         }
     elif action == 'translation':
         print("translate arrived")
