@@ -8,14 +8,16 @@ install_aliases()
 import json
 import os
 import csv
+import requests
 from urllib.parse import urlencode
-from urllib.request import urlopen
+from urllib.request import Request, urlopen
 
 from flask import make_response, request, Flask
 
 app = Flask(__name__)
 
 YAHOO_YQL_BASE_URL = 'https://query.yahooapis.com/v1/public/yql?'
+TRANSLATE_BASE_URL = 'https://translate.us-east-1.elasticbeanstalk.com/translate'
 
 # temporary csv file containing answers for direction-related questions
 file_name = 'direction_qa.csv'
@@ -71,8 +73,38 @@ def process_request(req):
             'displayText': speech,
             'source': 'apiai-direction'
         }
+    elif action == 'translate':
+        print("translate arrived")
+        phrase = req['result']['parameters']['Phrase']
+        language = req['result']['parameters']['language']
+
+        print('phase' % phrase);
+        print(phrase);
+
+        code = find_language_code(language)
+
+        post_fields = {'text': phrase, "to": code}
+
+        response = requests.post(TRANSLATE_BASE_URL, json.dumps(post_fields),
+                      headers={'Content-Type': 'application/json', 'Authorization': 'Basic dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
+
+        print(json.dumps(response));
+        speech =  '"%s" in %s is "%s"' % (phrase, language, response.body)
+        res = {
+            'speech': speech,
+            'displayText': speech,
+            'source': 'apiai-translate'
+        }
     return res
 
+def find_language_code(lang):
+    return {
+        'korean': 'ko',
+        'english': 'en',
+        'japanese': 'ja',
+        'chinese simplified': 'zh-cn',
+        'chinese traditional': 'zh-tw',
+    }.get(lang)
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
