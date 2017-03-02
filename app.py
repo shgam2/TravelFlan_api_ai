@@ -9,7 +9,6 @@ import json
 import os
 import csv
 import requests
-import langdetect as ld
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
