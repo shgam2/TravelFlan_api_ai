@@ -8,6 +8,7 @@ install_aliases()
 import json
 import os
 import csv
+import langdetect as ld
 from urllib.parse import urlencode
 from urllib.request import urlopen
 
@@ -18,7 +19,9 @@ app = Flask(__name__)
 YAHOO_YQL_BASE_URL = 'https://query.yahooapis.com/v1/public/yql?'
 
 # temporary csv file containing answers for direction-related questions
-file_name = 'direction_qa.csv'
+dir_file_en = 'direction_qa.csv'
+dir_file_ch = ''
+dir_file_tw = ''
 
 
 def make_yql_query(req):
@@ -64,7 +67,6 @@ def process_request(req):
             'source': 'apiai-weather'
         }
     elif action == 'direction':
-        print("HEREEEEE")
         speech = parse_json(req)
         res = {
             'speech': speech,
@@ -77,7 +79,7 @@ def process_request(req):
 @app.route('/webhook', methods=['POST'])
 def webhook():
     req = request.get_json(silent=True, force=True)
-    #print('Request:\n%s' % (json.dumps(req, indent=4),))
+    print('Request:\n%s' % (json.dumps(req, indent=4),))
 
     res = process_request(req)
     res = json.dumps(res, indent=4)
@@ -97,6 +99,9 @@ def parse_json(req):
     print("----------------req --------------------")
     result = req.get("result")
     parameters = result.get("parameters")
+
+    lang_check(result.get("resolvedQuery"))
+
     loc1 = parameters.get("direction1")
     loc2 = parameters.get("direction2")
     if (loc1 is None) or (loc2 is None):
@@ -112,6 +117,11 @@ def parse_json(req):
     print(speech)
     return speech
 
+
+def lang_check (phrase):
+    letters_check = phrase[0:3]
+    lang_code = ld.detect_langs(letters_check)[0].lang
+    return lang_code
 
 # input:
 #   - from_location
