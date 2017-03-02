@@ -91,7 +91,7 @@ def process_request(req):
         print(phrase)
         print(language)
 
-        code = find_language_code(language.tolower())
+        code = find_language_code(language.lower())
 
         print(code)
 
