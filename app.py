@@ -95,7 +95,7 @@ def process_request(req):
 
         print(code)
 
-        post_fields = {'text': phrase, "to": code}
+        post_fields = {'text': str(phrase), "to": str(code)}
         print('call started')
         response = requests.post(TRANSLATE_BASE_URL, json.dumps(post_fields),
                       headers={'Content-Type': 'application/json', 'Authorization': 'Basic dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
