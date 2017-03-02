@@ -9,6 +9,7 @@ import json
 import os
 import csv
 import requests
+import langdetect as ld
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
@@ -20,7 +21,9 @@ YAHOO_YQL_BASE_URL = 'https://query.yahooapis.com/v1/public/yql?'
 TRANSLATE_BASE_URL = 'https://translate.us-east-1.elasticbeanstalk.com/translate'
 
 # temporary csv file containing answers for direction-related questions
-file_name = 'direction_qa.csv'
+dir_file_en = 'direction_qa.csv'
+dir_file_ch = ''
+dir_file_tw = ''
 
 
 def make_yql_query(req):
@@ -66,7 +69,6 @@ def process_request(req):
             'source': 'apiai-weather'
         }
     elif action == 'direction':
-        print("HEREEEEE")
         speech = parse_json(req)
         res = {
             'speech': speech,
@@ -109,7 +111,7 @@ def find_language_code(lang):
 @app.route('/webhook', methods=['POST'])
 def webhook():
     req = request.get_json(silent=True, force=True)
-    #print('Request:\n%s' % (json.dumps(req, indent=4),))
+    print('Request:\n%s' % (json.dumps(req, indent=4),))
 
     res = process_request(req)
     res = json.dumps(res, indent=4)
@@ -129,6 +131,9 @@ def parse_json(req):
     print("----------------req --------------------")
     result = req.get("result")
     parameters = result.get("parameters")
+
+    lang_check(result.get("resolvedQuery"))
+
     loc1 = parameters.get("direction1")
     loc2 = parameters.get("direction2")
     if (loc1 is None) or (loc2 is None):
@@ -145,6 +150,11 @@ def parse_json(req):
     return speech
 
 
+def lang_check (phrase):
+    letters_check = phrase[0:3]
+    lang_code = ld.detect_langs(letters_check)[0].lang
+    return lang_code
+
 # input:
 #   - from_location
 #   - to_location
@@ -152,10 +162,10 @@ def parse_json(req):
 #   - answer speech (String data)
 def grab_answer(loc1, loc2):
     print("in grab_answer function")
-    print("filename = {}".format(file_name))
+    print("filename = {}".format(dir_file_en))
 
     try:
-        with open(file_name, 'rU') as f:
+        with open(dir_file_en, 'rU') as f:
             direction = list(csv.reader(f))
 
             from_loc = loc1
