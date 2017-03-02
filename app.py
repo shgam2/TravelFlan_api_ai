@@ -135,9 +135,10 @@ def parse_json(req):
     #    dir_file = dir_file_en
     #else:
     lang_code = req['originalRequest']['data'].get('locale')
+    print ("**************lang_code = {}".format(lang_code))
     if lang_code == "zh_HK":
-        dir_file = dir_file_tw
         # use traditional chinese
+        dir_file = dir_file_tw
     elif lang_code == "zh_CN":
         # use simplified chinese
         dir_file = dir_file_cn
