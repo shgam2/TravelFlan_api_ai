@@ -166,8 +166,8 @@ def grab_answer(loc1, loc2):
             return speech
     except IOError:
         print("exception error")
-    except:
-        print("something weird happened")
+    except Exception as e:
+        print("something weird happened", e)
 
 
 if __name__ == '__main__':
