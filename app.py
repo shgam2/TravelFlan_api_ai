@@ -130,10 +130,10 @@ def lang_check (phrase):
 #   - answer speech (String data)
 def grab_answer(loc1, loc2):
     print("in grab_answer function")
-    print("filename = {}".format(file_name))
+    print("filename = {}".format(dir_file_en))
 
     try:
-        with open(file_name, 'rU') as f:
+        with open(dir_file_en, 'rU') as f:
             direction = list(csv.reader(f))
 
             from_loc = loc1
