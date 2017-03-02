@@ -97,12 +97,12 @@ def process_request(req):
 
         post_fields = {'text': str(phrase), "to": str(code)}
         print('call started')
-        requests.post('http://awseb-e-f-AWSEBLoa-VIW6OYVV6CSY-1979702995.us-east-1.elb.amazonaws.com/translate',
-                      json.dumps({'to': 'ja', 'text': '111'}), headers={'Content-Type': 'application/json',
-                                                                        'Authorization': 'Basic dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
+        response = requests.post(TRANSLATE_BASE_URL, json.dumps({'to': 'ja', 'text': 'i love you'}),
+                      headers={'Content-Type': 'application/json', 'Authorization': 'Basic dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
+
         print('call ended')
-        #print(json.dumps(response, indent=4))
-        speech = 'sdf'
+        print(json.dumps(response, indent=4))
+        speech = '"%s" in %s is "%s"' % (phrase, language, response.body)
         res = {
             'speech': speech,
             'displayText': speech,
