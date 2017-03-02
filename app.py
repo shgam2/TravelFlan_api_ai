@@ -17,7 +17,7 @@ app = Flask(__name__)
 
 YAHOO_YQL_BASE_URL = 'https://query.yahooapis.com/v1/public/yql?'
 
-#temporary csv file containing answers for direction-related questions
+# temporary csv file containing answers for direction-related questions
 file_name = 'direction_qa.csv'
 
 
@@ -32,9 +32,9 @@ def process_request(req):
     action = req['result']['action']
     if action == 'weather':
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req)}) + '&format=json'
-        #print('YQL-Request:\n%s' % (url,))
+        # print('YQL-Request:\n%s' % (url,))
         _res = urlopen(url).read()
-        #print('YQL-Response:\n%s' % (_res,))
+        # print('YQL-Response:\n%s' % (_res,))
 
         data = json.loads(_res)
 
@@ -64,7 +64,7 @@ def process_request(req):
             'source': 'apiai-weather'
         }
     elif action == 'direction':
-        print ("HEREEEEE")
+        print("HEREEEEE")
         speech = parse_json(req)
         res = {
             'speech': speech,
@@ -91,9 +91,9 @@ def webhook():
 # input: JSON-formatted requested data
 # output: JSON-formatted response data
 def parse_json(req):
-    print ("in parse_json method")
-    print ("----------------req --------------------")
-    print (req)
+    print("in parse_json method")
+    print("----------------req --------------------")
+    print(req)
     print("----------------req --------------------")
     result = req.get("result")
     parameters = result.get("parameters")
@@ -102,8 +102,8 @@ def parse_json(req):
     if (loc1 is None) or (loc2 is None):
         return None
 
-    print ("-------------------------------------------------")
-    print ("loc1 = {}".format(loc1))
+    print("-------------------------------------------------")
+    print("loc1 = {}".format(loc1))
     print("loc2 = {}".format(loc2))
     print("-------------------------------------------------")
     speech = grab_answer(loc1, loc2)
@@ -122,12 +122,12 @@ def parse_json(req):
 #   - to_location
 # output:
 #   - answer speech (String data)
-def grab_answer (loc1, loc2):
-    print ("in grab_answer function")
-    print ("filename = {}".format(file_name))
+def grab_answer(loc1, loc2):
+    print("in grab_answer function")
+    print("filename = {}".format(file_name))
 
     try:
-        with open(file_name, 'r+') as f:
+        with open(file_name, 'r+', encoding='utf8') as f:
             direction = list(csv.reader(f))
 
             from_loc = loc1
@@ -136,18 +136,18 @@ def grab_answer (loc1, loc2):
             col_num = 0
             count = 0
 
-            print ("from_loc = {}".format(from_loc))
+            print("from_loc = {}".format(from_loc))
             print("to_loc = {}".format(to_loc))
 
             while True:
-                print ("inside loop now!!")
+                print("inside loop now!!")
                 if direction[count][0] == "":
                     # location not found
                     break
                 if direction[count][0] == from_loc:
                     row_num = count
                     count = 0
-                    print ("rownum = {}".format(row_num))
+                    print("rownum = {}".format(row_num))
                     break
                 count = count + 1
 
@@ -165,9 +165,9 @@ def grab_answer (loc1, loc2):
             speech = direction[row_num][col_num]
             return speech
     except IOError:
-        print ("exception error")
-    else:
-        print ("something weird happened")
+        print("exception error")
+    except:
+        print("something weird happened")
 
 
 if __name__ == '__main__':
