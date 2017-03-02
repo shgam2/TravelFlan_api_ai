@@ -72,7 +72,6 @@ def process_request(req):
         res = {
             'speech': speech,
             'displayText': speech,
-            'source': 'apiai-direction'
         }
     elif action == 'translation':
         print("translate arrived")
@@ -80,25 +79,25 @@ def process_request(req):
         phrase = req['result']['parameters']['Phrase']
         language = req['result']['parameters']['language']
 
-        print(phrase);
-        print(language);
+        print(phrase)
+        print(language)
 
         code = find_language_code(language)
 
-        print(code);
+        print(code)
 
         post_fields = {'text': phrase, "to": code}
-        print('call started');
+        print('call started')
         response = requests.post(TRANSLATE_BASE_URL, json.dumps(post_fields),
                       headers={'Content-Type': 'application/json', 'Authorization': 'Basic dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
-        print('call ended');
-        print(json.dumps(response, indent=4));
-        speech =  '"%s" in %s is "%s"' % (phrase, language, response.body)
+        print('call ended')
+        print(json.dumps(response, indent=4))
+        speech = '"%s" in %s is "%s"' % (phrase, language, response.body)
         res = {
             'speech': speech,
             'displayText': speech,
             'source': 'apiai-translate'
-        } 
+        }
     return res
 
 def find_language_code(lang):
