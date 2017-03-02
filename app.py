@@ -25,10 +25,20 @@ dir_file_ch = ''
 dir_file_tw = ''
 
 
+
 def make_yql_query(req):
     city = req['result']['parameters']['geo-city']
     return 'select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\'%s\')' % (city,)
 
+
+def find_language_code(lang):
+    return {
+        'korean': 'ko',
+        'english': 'en',
+        'japanese': 'ja',
+        'chinese simplified': 'zh-cn',
+        'chinese traditional': 'zh-tw',
+    }.get(lang)
 
 def process_request(req):
     res = None
@@ -101,15 +111,6 @@ def process_request(req):
         }
     return res
 
-def find_language_code(lang):
-    return {
-        'korean': 'ko',
-        'english': 'en',
-        'japanese': 'ja',
-        'chinese simplified': 'zh-cn',
-        'chinese traditional': 'zh-tw',
-    }.get(lang)
-
 @app.route('/webhook', methods=['POST'])
 def webhook():
     req = request.get_json(silent=True, force=True)
@@ -150,7 +151,6 @@ def parse_json(req):
     print("Response:")
     print(speech)
     return speech
-
 
 def lang_check (phrase):
     letters_check = phrase[0:3]
