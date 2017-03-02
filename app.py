@@ -131,19 +131,19 @@ def parse_json(req):
     # print("----------------req --------------------")
     # print(req)
     # print("----------------req --------------------")
-    if req.get['originalRequest'] is None:
-        dir_file = dir_file_en
+    #if req.get['originalRequest'] is None:
+    #    dir_file = dir_file_en
+    #else:
+    lang_code = req['originalRequest']['data'].get('locale')
+    if lang_code == "zh_HK":
+        dir_file = dir_file_tw
+        # use traditional chinese
+    elif lang_code == "zh_CN":
+        # use simplified chinese
+        dir_file = dir_file_cn
     else:
-        lang_code = req['originalRequest']['data'].get('locale')
-        if lang_code == "zh_HK":
-            dir_file = dir_file_tw
-            # use traditional chinese
-        elif lang_code == "zh_CN":
-            # use simplified chinese
-            dir_file = dir_file_cn
-        else:
-            # use english
-            dir_file = dir_file_en
+        # use english
+        dir_file = dir_file_en
 
 
     result = req.get("result")
