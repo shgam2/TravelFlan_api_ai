@@ -75,15 +75,17 @@ def process_request(req):
             'displayText': speech,
             'source': 'apiai-direction'
         }
-    elif action == 'translate':
+    elif action == 'translation':
         print("translate arrived")
         phrase = req['result']['parameters']['Phrase']
         language = req['result']['parameters']['language']
 
-        print('phase' % phrase);
-        print(phrase);
+        print('phrase: ' % phrase);
+        print('language: ' % language);
 
         code = find_language_code(language)
+
+        print('code: ' % code);
 
         post_fields = {'text': phrase, "to": code}
 
