@@ -76,6 +76,7 @@ def process_request(req):
         }
     elif action == 'translation':
         print("translate arrived")
+        print(json.dumps(req['result'], indent=4))
         phrase = req['result']['parameters']['Phrase']
         language = req['result']['parameters']['language']
 
