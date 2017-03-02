@@ -24,8 +24,6 @@ dir_file_en = 'direction_qa.csv'
 dir_file_ch = ''
 dir_file_tw = ''
 
-
-
 def make_yql_query(req):
     city = req['result']['parameters']['geo-city']
     return 'select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\'%s\')' % (city,)
@@ -93,7 +91,7 @@ def process_request(req):
         print(phrase)
         print(language)
 
-        code = find_language_code(language)
+        code = find_language_code(language.tolower())
 
         print(code)
 
