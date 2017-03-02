@@ -98,7 +98,7 @@ def process_request(req):
             'speech': speech,
             'displayText': speech,
             'source': 'apiai-translate'
-        }
+        } 
     return res
 
 def find_language_code(lang):
