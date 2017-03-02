@@ -83,7 +83,7 @@ def process_request(req):
         print(phrase);
         print(language);
 
-        code = find_language_code(language.lower())
+        code = find_language_code(str(language).lower())
 
         print(code);
 
