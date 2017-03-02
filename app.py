@@ -20,9 +20,9 @@ YAHOO_YQL_BASE_URL = 'https://query.yahooapis.com/v1/public/yql?'
 TRANSLATE_BASE_URL = 'http://awseb-e-f-AWSEBLoa-VIW6OYVV6CSY-1979702995.us-east-1.elb.amazonaws.com/translate'
 
 # temporary csv file containing answers for direction-related questions
-dir_file_en = 'direction_qa.csv'
-dir_file_cn = ''
-dir_file_tw = ''
+dir_file_en = 'transportation_en.csv'
+dir_file_cn = 'transportation_cn.csv'
+dir_file_tw = 'transportation_tw.csv'
 
 def make_yql_query(req):
     city = req['result']['parameters']['geo-city']
