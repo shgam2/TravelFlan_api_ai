@@ -98,9 +98,11 @@ def process_request(req):
         url = TRANSLATE_BASE_URL + urlencode({'text': phrase, 'to': code, 'authtoken': 'dHJhdmVsZmxhbjp0b3VyMTIzNA==' })
         print(url)
         _res = urlopen(url).read()
+        print('im here1')
         translateData = json.loads(_res)
+        print('im here2')
         translateText = json.dumps(translateData, indent=4)
-
+        print('im here3')
         print(translateText)
         speech = 'test1'
         res = {
