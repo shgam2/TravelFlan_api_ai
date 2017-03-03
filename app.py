@@ -17,6 +17,7 @@ from flask import make_response, request, Flask
 
 app = Flask(__name__)
 
+
 YAHOO_YQL_BASE_URL = 'https://query.yahooapis.com/v1/public/yql?'
 TRANSLATE_BASE_URL = 'http://awseb-e-f-AWSEBLoa-VIW6OYVV6CSY-1979702995.us-east-1.elb.amazonaws.com/translate?'
 
@@ -40,7 +41,6 @@ def find_language_code(lang):
         'chinese simplified': 'zh-cn',
         'chinese traditional': 'zh-tw',
     }.get(lang)
-
 
 def process_request(req):
     res = None
@@ -96,6 +96,7 @@ def process_request(req):
         print('hello2')
         language = req['result']['parameters']['language']
         print('hello3')
+        print(language.lower().decode())
         code = find_language_code(language.lower())
         print('hello4')
 
