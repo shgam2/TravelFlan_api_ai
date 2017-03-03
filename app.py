@@ -202,10 +202,10 @@ def grab_answer(loc1, loc2, dir_file):
 
     try:
         with open(dir_file, 'rU') as f:
-            print('START')
-            print(f.read())
+            #print('START')
+            #print(f.read())
             direction = list(csv.reader(f))
-            print('END')
+            #print('END')
 
             from_loc = loc1
             to_loc = loc2
@@ -213,11 +213,13 @@ def grab_answer(loc1, loc2, dir_file):
             col_num = 0
             count = 0
 
+
             print("from_loc = {}".format(from_loc))
             print("to_loc = {}".format(to_loc))
 
             while True:
-                print("inside loop now!!")
+                print("find origin (column)")
+                print(count)
                 if direction[count][0] == "":
                     # location not found
                     break
@@ -229,6 +231,8 @@ def grab_answer(loc1, loc2, dir_file):
                 count = count + 1
 
             while True:
+                print("find destination(row)")
+                print(count)
                 if direction[0][count] == "":
                     # location not found
                     break
