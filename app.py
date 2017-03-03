@@ -17,6 +17,9 @@ from flask import make_response, request, Flask
 
 app = Flask(__name__)
 
+translated = "\u308f\u305f\u3057\u306f\u3001\u3042\u306a\u305f\u3092\u611b\u3057\u3066\u3044\u307e\u3059"
+k = str(translated).decode('utf-8')
+
 YAHOO_YQL_BASE_URL = 'https://query.yahooapis.com/v1/public/yql?'
 TRANSLATE_BASE_URL = 'http://awseb-e-f-AWSEBLoa-VIW6OYVV6CSY-1979702995.us-east-1.elb.amazonaws.com/translate?'
 
@@ -100,6 +103,7 @@ def process_request(req):
         print(url)
         _res = urlopen(url).read()
         print('im here1')
+        print(_res)
         print(json.dumps(_res, indent=4))
         translated = str(json.dumps(_res, indent=4)).decode('utf-8').encode('utf-8')
         speech = '"%s" in %s is "%s"' % (phrase, language, translated)
