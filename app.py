@@ -93,12 +93,13 @@ def process_request(req):
         print("translate block entered")
         print(json.dumps(req['result'], indent=4))
         print('hello1')
-        phrase = req['result']['parameters']['Phrase']
+        phrase = str(req['result']['parameters']['Phrase'])
         print('hello2')
-        language = req['result']['parameters']['language']
+        language = str(req['result']['parameters']['language'])
         print('hello3')
         print(type(language))
-        print(str(language).lower())
+        print(language)
+        print(language.lower())
         print('hello3.5')
         code = find_language_code(language.lower())
         print('hello4')
