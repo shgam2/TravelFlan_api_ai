@@ -23,6 +23,11 @@ out_of_bound = "Error occured due to one of the following reasons:\n" \
                "1. You must use your own language to ask transportation-related question\n" \
                "2. The origin/destination you are looking for is not in our database\n" \
                "Please rephrase your transportation-related question and try again."
+rephrase_error = "Please rephrase your transportation-related question\n" \
+                 "Example:\n" \
+                 '- English: "How can I go to Kyoto from Osaka?"\n' \
+                 '- Simplified Chinese: "从大阪要怎样乘车到京都？"\n' \
+                 '- Traditional CHinese: "由大阪點搭車去京都？"'
 
 
 def make_yql_query(req):
@@ -126,7 +131,6 @@ def webhook():
 # output: JSON-formatted response data
 def parse_json(req):
     lang_code = req['originalRequest']['data'].get('locale')
-    # print ("**************lang_code = {}".format(lang_code))
     if lang_code == "zh_TW" or lang_code == "zh_HK":
         # use traditional chinese
         dir_file = dir_file_tw
@@ -140,10 +144,11 @@ def parse_json(req):
     result = req.get("result")
     parameters = result.get("parameters")
 
+
     loc1 = parameters.get("direction1")
     loc2 = parameters.get("direction2")
-    if (loc1 is None) or (loc2 is None):
-        return None
+    if (loc1 == "") or (loc2 == "") or (loc1 is None) or (loc2 is None):
+        return rephrase_error
 
     speech = grab_answer(loc1, loc2, dir_file)
     print("Response:")
@@ -166,8 +171,6 @@ def grab_answer(loc1, loc2, dir_file):
 
             from_loc = loc1
             to_loc = loc2
-            row_num = 0
-            col_num = 0
             count = 0
 
             print("from_loc = {}".format(from_loc))
