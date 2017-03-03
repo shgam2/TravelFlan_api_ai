@@ -97,6 +97,7 @@ def process_request(req):
         print(json.dumps(req['result'], indent=4))
         phrase = req['result']['parameters']['Phrase']
         language = req['result']['parameters']['language']
+        print(language, type(language))
         if isinstance(language, str):
             print('hello3.1')
             language = language.lower()
