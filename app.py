@@ -1,17 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
-from future.standard_library import install_aliases
-
-install_aliases()
-
+import csv
 import json
 import os
-import csv
-import requests
-import unicodecsv
 from urllib.parse import urlencode
-from urllib.request import Request, urlopen
+from urllib.request import urlopen
 
 from flask import make_response, request, Flask
 
@@ -24,6 +17,7 @@ TRANSLATE_BASE_URL = 'http://awseb-e-f-AWSEBLoa-VIW6OYVV6CSY-1979702995.us-east-
 dir_file_en = 'transportation_en.csv'
 dir_file_cn = 'transportation_cn.csv'
 dir_file_tw = 'transportation_tw.csv'
+
 
 def make_yql_query(req):
     city = req['result']['parameters']['geo-city']
@@ -41,10 +35,10 @@ def find_language_code(lang):
         '簡體中文': 'zh-cn',
         '简体中文': 'zh-cn',
         '繁體中文': 'zh-tw',
-        '繁體中文': 'zh-tw',
         'chinese simplified': 'zh-cn',
         'chinese traditional': 'zh-tw',
     }.get(lang)
+
 
 def process_request(req):
     res = None
@@ -85,30 +79,21 @@ def process_request(req):
         }
     elif action == 'direction':
         speech = parse_json(req)
-        print("111111111111")
-        print(speech)
         res = {
             'speech': speech,
             'displayText': speech,
             'source': 'apiai-direction'
         }
     elif action == 'translation':
-        print("translate block entered")
-
         phrase = req['result']['parameters']['Phrase']
         language = req['result']['parameters']['language']
 
         code = find_language_code(language.lower())
 
-        print(phrase)
-
         url = TRANSLATE_BASE_URL + urlencode({'text': phrase, 'to': code, 'authtoken': 'dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
         _res = urlopen(url).read()
-        print(_res)
-        print(type(phrase))
-        print(type(language))
-        print(type(_res.decode()))
-        speech = '"%s" in %s is "%s"' % (phrase, language, _res.decode('utf-8'))
+
+        speech = '"%s" in %s is "%s"' % (phrase, language, _res.decode())
         res = {
             'speech': speech,
             'displayText': speech,
@@ -123,12 +108,7 @@ def webhook():
     print('Request:\n%s' % (json.dumps(req, indent=4),))
 
     res = process_request(req)
-    print ("RESSS")
-    print (res)
-    try:
-        res = json.dumps(res, indent=4)
-    except Exception as e:
-        print (e)
+    res = json.dumps(res, indent=4)
     print('Response:\n%s' % (res,))
 
     r = make_response(res)
@@ -187,17 +167,16 @@ def grab_answer(loc1, loc2, dir_file):
 
     try:
         with open(dir_file, 'rU') as f:
-            #print('START')
-            #print(f.read())
+            # print('START')
+            # print(f.read())
             direction = list(csv.reader(f))
-            #print('END')
+            # print('END')
 
             from_loc = loc1
             to_loc = loc2
             row_num = 0
             col_num = 0
             count = 0
-
 
             print("from_loc = {}".format(from_loc))
             print("to_loc = {}".format(to_loc))
