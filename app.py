@@ -99,11 +99,11 @@ def process_request(req):
         print(url)
         _res = urlopen(url).read()
         print('im here1')
-        translateData = json.loads(_res)
+        translated = json.loads(_res)
         print('im here2')
-        translateText = json.dumps(translateData, indent=4)
+        translate_text = json.dumps(translated, indent=4)
         print('im here3')
-        print(translateText)
+        print(translate_text)
         speech = 'test1'
         res = {
             'speech': speech,
