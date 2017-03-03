@@ -16,8 +16,9 @@ from urllib.request import Request, urlopen
 from flask import make_response, request, Flask
 
 app = Flask(__name__)
-k = "\u65e5\u6587"
-k.lower()
+k = u"\u65e5\u6587"
+print(type(k))
+
 
 YAHOO_YQL_BASE_URL = 'https://query.yahooapis.com/v1/public/yql?'
 TRANSLATE_BASE_URL = 'http://awseb-e-f-AWSEBLoa-VIW6OYVV6CSY-1979702995.us-east-1.elb.amazonaws.com/translate?'
@@ -93,10 +94,13 @@ def process_request(req):
         print("translate block entered")
         print(json.dumps(req['result'], indent=4))
         print('hello1')
-        phrase = str(req['result']['parameters']['Phrase'])
+        phrase = req['result']['parameters']['Phrase']
         print('hello2')
-        language = str(req['result']['parameters']['language'])
+        language = req['result']['parameters']['language']
         print('hello3')
+        if(type(language) == 'unicode')
+            se = language.encode('utf-8')
+            print(se)
         print(type(language))
         print(language)
         print(language.lower())
