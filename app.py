@@ -100,12 +100,8 @@ def process_request(req):
         _res = urlopen(url).read()
         print('im here1')
         print(json.dumps(_res, indent=4))
-        translated = json.loads(_res)
-        print('im here2')
-        translate_text = json.dumps(translated, indent=4)
-        print('im here3')
-        print(translate_text)
-        speech = 'test1'
+        translated = json.dumps(_res, indent=4)
+        speech = '"%s" in %s is "%s"' % (phrase, language, translated)
         res = {
             'speech': speech,
             'displayText': speech,
