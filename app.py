@@ -17,7 +17,7 @@ from flask import make_response, request, Flask
 app = Flask(__name__)
 
 YAHOO_YQL_BASE_URL = 'https://query.yahooapis.com/v1/public/yql?'
-TRANSLATE_BASE_URL = 'http://awseb-e-f-AWSEBLoa-VIW6OYVV6CSY-1979702995.us-east-1.elb.amazonaws.com/translate'
+TRANSLATE_BASE_URL = 'http://awseb-e-f-AWSEBLoa-VIW6OYVV6CSY-1979702995.us-east-1.elb.amazonaws.com/translate?'
 
 # temporary csv files containing answers for transportation-related questions
 dir_file_en = 'transportation_en.csv'
@@ -100,10 +100,12 @@ def process_request(req):
         post_fields = {'text': str(phrase), "to": str(code)}
         print('call 1 started')
 
-        requests.post('http://awseb-e-f-AWSEBLoa-VIW6OYVV6CSY-1979702995.us-east-1.elb.amazonaws.com/translate', json.dumps({'to': 'ja', 'text': 'i love you'}), headers={'Content-Type': 'application/json', 'Authorization': 'Basic dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
         #response = requests.post(TRANSLATE_BASE_URL, json.dumps({'to': 'ja', 'text': 'i love you'}), headers={'Content-Type': 'application/json', 'Authorization': 'Basic dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
+        url = TRANSLATE_BASE_URL + urlencode({'text': phrase, 'to': code, 'authtoken': 'dHJhdmVsZmxhbjp0b3VyMTIzNA==' })
+        print(url)
+        _res = urlopen(url).read()
 
-        #print(json.dumps(response, indent=4))
+        print(json.dumps(_res, indent=4))
         speech = 'test1'
         res = {
             'speech': speech,
