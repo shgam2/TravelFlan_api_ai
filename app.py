@@ -103,7 +103,7 @@ def process_request(req):
         _res = urlopen(url).read()
         print('im here1')
         print(_res)
-        speech = '"%s" in %s is "%s"' % (phrase, language, str(_res))
+        speech = '"%s" in %s is "%s"' % (phrase, language, _res.decode())
         res = {
             'speech': speech,
             'displayText': speech,
