@@ -96,7 +96,7 @@ def process_request(req):
         print('hello2')
         language = req['result']['parameters']['language']
         print('hello3')
-        print(language.lower().decode())
+        print(language.lower())
         code = find_language_code(language.lower())
         print('hello4')
 
