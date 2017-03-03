@@ -99,6 +99,7 @@ def process_request(req):
         print(url)
         _res = urlopen(url).read()
         print('im here1')
+        print(json.dumps(_res, indent=4))
         translated = json.loads(_res)
         print('im here2')
         translate_text = json.dumps(translated, indent=4)
