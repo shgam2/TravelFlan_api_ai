@@ -122,7 +122,7 @@ def process_request(req):
         print(_res)
         print(type(phrase))
         print(type(language))
-        print(type(_res.decode()))
+        print(type(str(_res.decode())))
         speech = '"%s" in %s is "%s"' % (phrase, language, _res.decode())
         res = {
             'speech': speech,
