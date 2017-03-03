@@ -100,8 +100,11 @@ def process_request(req):
 
         requests.post('http://awseb-e-f-AWSEBLoa-VIW6OYVV6CSY-1979702995.us-east-1.elb.amazonaws.com/translate', json.dumps({'to': 'ja', 'text': 'i love you'}), headers={'Content-Type': 'application/json', 'Authorization': 'Basic dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
         #response = requests.post(TRANSLATE_BASE_URL, json.dumps({'to': 'ja', 'text': 'i love you'}), headers={'Content-Type': 'application/json', 'Authorization': 'Basic dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
+        url = TRANSLATE_BASE_URL + urlencode({'text': phrase, 'to': code, 'authtoken': 'dHJhdmVsZmxhbjp0b3VyMTIzNA==' })
+        # print('YQL-Request:\n%s' % (url,))
+        _res = urlopen(url).read()
 
-        #print(json.dumps(response, indent=4))
+        print(json.dumps(_res, indent=4))
         speech = 'test1'
         res = {
             'speech': speech,
