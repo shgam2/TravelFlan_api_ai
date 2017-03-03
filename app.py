@@ -91,9 +91,13 @@ def process_request(req):
     elif action == 'translation':
         print("translate block entered")
         print(json.dumps(req['result'], indent=4))
+        print('hello1')
         phrase = req['result']['parameters']['Phrase']
+        print('hello2')
         language = req['result']['parameters']['language']
+        print('hello3')
         code = find_language_code(language.lower())
+        print('hello4')
 
         print(phrase)
         print(language)
