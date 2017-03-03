@@ -19,10 +19,10 @@ app = Flask(__name__)
 YAHOO_YQL_BASE_URL = 'https://query.yahooapis.com/v1/public/yql?'
 TRANSLATE_BASE_URL = 'http://awseb-e-f-AWSEBLoa-VIW6OYVV6CSY-1979702995.us-east-1.elb.amazonaws.com/translate'
 
-# temporary csv file containing answers for direction-related questions
-dir_file_en = 'direction_qa.csv'
-dir_file_ch = ''
-dir_file_tw = ''
+# temporary csv files containing answers for transportation-related questions
+dir_file_en = 'transportation_en.csv'
+dir_file_cn = 'transportation_cn.csv'
+dir_file_tw = 'transportation_tw.csv'
 
 def make_yql_query(req):
     city = req['result']['parameters']['geo-city']
@@ -77,6 +77,8 @@ def process_request(req):
         }
     elif action == 'direction':
         speech = parse_json(req)
+        print ("111111111111")
+        print (speech)
         res = {
             'speech': speech,
             'displayText': speech,
@@ -119,7 +121,12 @@ def webhook():
     print('Request:\n%s' % (json.dumps(req, indent=4),))
 
     res = process_request(req)
-    res = json.dumps(res, indent=4)
+    print ("RESSS")
+    print (res)
+    try:
+        res = json.dumps(res, indent=4)
+    except Exception as e:
+        print (e)
     print('Response:\n%s' % (res,))
 
     r = make_response(res)
@@ -130,46 +137,56 @@ def webhook():
 # input: JSON-formatted requested data
 # output: JSON-formatted response data
 def parse_json(req):
-    print("in parse_json method")
-    print("----------------req --------------------")
-    print(req)
-    print("----------------req --------------------")
+    # print("in parse_json method")
+    # print("----------------req --------------------")
+    # print(req)
+    # print("----------------req --------------------")
+    #if req.get['originalRequest'] is None:
+    #    dir_file = dir_file_en
+    #else:
+    lang_code = req['originalRequest']['data'].get('locale')
+    #print ("**************lang_code = {}".format(lang_code))
+    if lang_code == "zh_HK":
+        # use traditional chinese
+        dir_file = dir_file_tw
+    elif lang_code == "zh_CN":
+        # use simplified chinese
+        dir_file = dir_file_cn
+    else:
+        # use english
+        dir_file = dir_file_en
+
+
     result = req.get("result")
     parameters = result.get("parameters")
-
-    lang_check(result.get("resolvedQuery"))
 
     loc1 = parameters.get("direction1")
     loc2 = parameters.get("direction2")
     if (loc1 is None) or (loc2 is None):
         return None
 
-    print("-------------------------------------------------")
-    print("loc1 = {}".format(loc1))
-    print("loc2 = {}".format(loc2))
-    print("-------------------------------------------------")
-    speech = grab_answer(loc1, loc2)
+    # print("-------------------------------------------------")
+    # print("loc1 = {}".format(loc1))
+    # print("loc2 = {}".format(loc2))
+    # print("-------------------------------------------------")
+    speech = grab_answer(loc1, loc2, dir_file)
 
     print("Response:")
     print(speech)
     return speech
 
-def lang_check (phrase):
-    letters_check = phrase[0:3]
-    lang_code = ld.detect_langs(letters_check)[0].lang
-    return lang_code
 
 # input:
 #   - from_location
 #   - to_location
 # output:
 #   - answer speech (String data)
-def grab_answer(loc1, loc2):
+def grab_answer(loc1, loc2, dir_file):
     print("in grab_answer function")
-    print("filename = {}".format(dir_file_en))
+    print("filename = {}".format(dir_file))
 
     try:
-        with open(dir_file_en, 'rU') as f:
+        with open(dir_file, 'rU') as f:
             direction = list(csv.reader(f))
 
             from_loc = loc1
