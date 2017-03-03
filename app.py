@@ -77,6 +77,8 @@ def process_request(req):
         }
     elif action == 'direction':
         speech = parse_json(req)
+        print ("111111111111")
+        print (speech)
         res = {
             'speech': speech,
             'displayText': speech,
@@ -161,8 +163,8 @@ def parse_json(req):
     # print("-------------------------------------------------")
     speech = grab_answer(loc1, loc2, dir_file)
 
-    # print("Response:")
-    # print(speech)
+    print("Response:")
+    print(speech)
     return speech
 
 
