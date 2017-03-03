@@ -35,6 +35,13 @@ def find_language_code(lang):
         'korean': 'ko',
         'english': 'en',
         'japanese': 'ja',
+        '日文': 'ja',
+        '韓文': 'ko',
+        '韩文': 'ko',
+        '簡體中文': 'zh-cn',
+        '简体中文': 'zh-cn',
+        '繁體中文': 'zh-tw',
+        '繁體中文': 'zh-tw',
         'chinese simplified': 'zh-cn',
         'chinese traditional': 'zh-tw',
     }.get(lang)
@@ -78,8 +85,8 @@ def process_request(req):
         }
     elif action == 'direction':
         speech = parse_json(req)
-        print ("111111111111")
-        print (speech)
+        print("111111111111")
+        print(speech)
         res = {
             'speech': speech,
             'displayText': speech,
@@ -90,25 +97,40 @@ def process_request(req):
         print(json.dumps(req['result'], indent=4))
         phrase = req['result']['parameters']['Phrase']
         language = req['result']['parameters']['language']
+        if isinstance(language, str):
+            print('hello3.1')
+            language = language.lower()
+        elif isinstance(language, unicode):
+            print('hello3.2')
+            language = language.encode('utf-8')
+            print(type(language))
         code = find_language_code(language.lower())
+        print('hello4')
+
+        if isinstance(phrase, str):
+            print('hello4.1')
+        elif isinstance(phrase, unicode):
+            print('hello4.2')
+            phrase = phrase.encode('utf-8')
 
         print(phrase)
         print(language)
         print(code)
 
-        url = TRANSLATE_BASE_URL + urlencode({'text': phrase, 'to': code, 'authtoken': 'dHJhdmVsZmxhbjp0b3VyMTIzNA==' })
-        print(url)
+        url = TRANSLATE_BASE_URL + urlencode({'text': phrase, 'to': code, 'authtoken': 'dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
         _res = urlopen(url).read()
-        print('im here1')
-        print(json.dumps(_res, indent=4))
-        translated = str(json.dumps(_res, indent=4)).decode('utf-8').encode('utf-8')
-        speech = '"%s" in %s is "%s"' % (phrase, language, translated)
+        print(_res)
+        print(type(phrase))
+        print(type(language))
+        print(type(_res.decode()))
+        speech = '"%s" in %s is "%s"' % (phrase, language, _res.decode('utf-8'))
         res = {
             'speech': speech,
             'displayText': speech,
             'source': 'apiai-translate'
         }
     return res
+
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -136,11 +158,11 @@ def parse_json(req):
     # print("----------------req --------------------")
     # print(req)
     # print("----------------req --------------------")
-    #if req.get['originalRequest'] is None:
+    # if req.get['originalRequest'] is None:
     #    dir_file = dir_file_en
-    #else:
+    # else:
     lang_code = req['originalRequest']['data'].get('locale')
-    #print ("**************lang_code = {}".format(lang_code))
+    # print ("**************lang_code = {}".format(lang_code))
     if lang_code == "zh_TW" or lang_code == "zh_HK":
         # use traditional chinese
         dir_file = dir_file_tw
@@ -150,7 +172,6 @@ def parse_json(req):
     else:
         # use english
         dir_file = dir_file_en
-
 
     result = req.get("result")
     parameters = result.get("parameters")
