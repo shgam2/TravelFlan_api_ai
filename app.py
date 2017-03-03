@@ -88,12 +88,12 @@ def process_request(req):
             'displayText': speech,
             'source': 'apiai-weather'
         }
-    elif action == 'direction':
+    elif action == 'transportation':
         speech = parse_json(req)
         res = {
             'speech': speech,
             'displayText': speech,
-            'source': 'apiai-direction'
+            'source': 'apiai-transportation'
         }
     elif action == 'translation':
         phrase = req['result']['parameters']['Phrase']
