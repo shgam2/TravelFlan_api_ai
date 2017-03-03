@@ -94,29 +94,13 @@ def process_request(req):
         }
     elif action == 'translation':
         print("translate block entered")
-        print(json.dumps(req['result'], indent=4))
+
         phrase = req['result']['parameters']['Phrase']
         language = req['result']['parameters']['language']
-        print(language, type(language))
-        if isinstance(language, str):
-            print('hello3.1')
-            language = language.lower()
-        elif isinstance(language, unicode):
-            print('hello3.2')
-            language = language.encode('utf-8')
-            print(type(language))
-        code = find_language_code(language.lower())
-        print('hello4')
 
-        if isinstance(phrase, str):
-            print('hello4.1')
-        elif isinstance(phrase, unicode):
-            print('hello4.2')
-            phrase = phrase.encode('utf-8')
+        code = find_language_code(language.lower())
 
         print(phrase)
-        print(language)
-        print(code)
 
         url = TRANSLATE_BASE_URL + urlencode({'text': phrase, 'to': code, 'authtoken': 'dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
         _res = urlopen(url).read()
