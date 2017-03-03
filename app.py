@@ -118,7 +118,12 @@ def webhook():
     print('Request:\n%s' % (json.dumps(req, indent=4),))
 
     res = process_request(req)
-    res = json.dumps(res, indent=4)
+    print ("RESSS")
+    print (res)
+    try:
+        res = json.dumps(res, indent=4)
+    except Exception as e:
+        print (e)
     print('Response:\n%s' % (res,))
 
     r = make_response(res)
