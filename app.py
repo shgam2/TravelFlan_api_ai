@@ -40,6 +40,7 @@ def find_language_code(lang):
         'english': 'en',
         'japanese': 'ja',
         '\u65e5\u6587': 'ja',
+        '日文': 'ja',
         'chinese simplified': 'zh-cn',
         'chinese traditional': 'zh-tw',
     }.get(lang)
@@ -104,7 +105,7 @@ def process_request(req):
         elif isinstance(language, unicode):
             print('hello3.2')
             language = language.encode('utf-8')
-        print('hello3.3')
+            print(type(language))
         code = find_language_code(language)
         print('hello4')
 
