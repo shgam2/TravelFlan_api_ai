@@ -85,27 +85,23 @@ def process_request(req):
             'source': 'apiai-direction'
         }
     elif action == 'translation':
-        print("translate arrived")
+        print("translate block entered")
         print(json.dumps(req['result'], indent=4))
         phrase = req['result']['parameters']['Phrase']
         language = req['result']['parameters']['language']
+        code = find_language_code(language.lower())
 
         print(phrase)
         print(language)
-
-        code = find_language_code(language.lower())
-
         print(code)
-
-        post_fields = {'text': str(phrase), "to": str(code)}
-        print('call 1 started')
 
         url = TRANSLATE_BASE_URL + urlencode({'text': phrase, 'to': code, 'authtoken': 'dHJhdmVsZmxhbjp0b3VyMTIzNA==' })
         print(url)
         _res = urlopen(url).read()
         translateData = json.loads(_res)
+        translateText = json.dumps(translateData, indent=4)
 
-        print(translateData)
+        print(translateText)
         speech = 'test1'
         res = {
             'speech': speech,
