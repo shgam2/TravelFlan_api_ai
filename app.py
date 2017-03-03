@@ -141,7 +141,7 @@ def parse_json(req):
     #else:
     lang_code = req['originalRequest']['data'].get('locale')
     #print ("**************lang_code = {}".format(lang_code))
-    if lang_code == "zh_HK":
+    if lang_code == "zh_TW" or lang_code == "zh_HK":
         # use traditional chinese
         dir_file = dir_file_tw
     elif lang_code == "zh_CN":
@@ -181,7 +181,10 @@ def grab_answer(loc1, loc2, dir_file):
 
     try:
         with open(dir_file, 'rU') as f:
+            print('START')
+            print(f.read())
             direction = list(unicodecsv.reader(f, encoding='utf-8'))
+            print('END')
 
             from_loc = loc1
             to_loc = loc2
