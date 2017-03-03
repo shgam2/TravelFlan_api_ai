@@ -36,6 +36,7 @@ def find_language_code(lang):
         'korean': 'ko',
         'english': 'en',
         'japanese': 'ja',
+        '\u65e5\u6587': 'ja',
         'chinese simplified': 'zh-cn',
         'chinese traditional': 'zh-tw',
     }.get(lang)
@@ -101,7 +102,6 @@ def process_request(req):
         url = TRANSLATE_BASE_URL + urlencode({'text': phrase, 'to': code, 'authtoken': 'dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
         print(url)
         _res = urlopen(url).read()
-        print('im here1')
         print(_res)
         speech = '"%s" in %s is "%s"' % (phrase, language, _res.decode())
         res = {
