@@ -98,13 +98,14 @@ def process_request(req):
         print('hello2')
         language = req['result']['parameters']['language']
         print('hello3')
-        se = language.encode('utf-8')
-        print(se)
-        print(type(language))
-        print(language)
-        print(language.lower())
-        print('hello3.5')
-        code = find_language_code(language.lower())
+        if isinstance(language, str):
+            print('hello3.1')
+            language = language.lower()
+        elif isinstance(language, unicode):
+            print('hello3.2')
+            language.encode('utf-8')
+        print('hello3.3')
+        code = find_language_code(language)
         print('hello4')
 
         print(phrase)
