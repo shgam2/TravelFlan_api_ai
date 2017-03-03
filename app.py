@@ -102,7 +102,7 @@ def process_request(req):
 
         #response = requests.post(TRANSLATE_BASE_URL, json.dumps({'to': 'ja', 'text': 'i love you'}), headers={'Content-Type': 'application/json', 'Authorization': 'Basic dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
         url = TRANSLATE_BASE_URL + urlencode({'text': phrase, 'to': code, 'authtoken': 'dHJhdmVsZmxhbjp0b3VyMTIzNA==' })
-        # print('YQL-Request:\n%s' % (url,))
+        print(url)
         _res = urlopen(url).read()
 
         print(json.dumps(_res, indent=4))
