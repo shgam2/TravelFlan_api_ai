@@ -88,7 +88,7 @@ def process_request(req):
             'displayText': speech,
             'source': 'apiai-weather'
         }
-    elif action == 'transportation':
+    elif action == 'direction':
         speech = parse_json(req)
         res = {
             'speech': speech,
