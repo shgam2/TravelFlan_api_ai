@@ -9,6 +9,7 @@ import json
 import os
 import csv
 import requests
+import unicodecsv
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
@@ -164,7 +165,6 @@ def parse_json(req):
     # print("loc2 = {}".format(loc2))
     # print("-------------------------------------------------")
     speech = grab_answer(loc1, loc2, dir_file)
-
     print("Response:")
     print(speech)
     return speech
@@ -181,7 +181,7 @@ def grab_answer(loc1, loc2, dir_file):
 
     try:
         with open(dir_file, 'rU') as f:
-            direction = list(csv.reader(f))
+            direction = list(unicodecsv.reader(f, encoding='utf-8'))
 
             from_loc = loc1
             to_loc = loc2
