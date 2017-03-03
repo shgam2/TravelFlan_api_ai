@@ -18,6 +18,12 @@ dir_file_en = 'transportation_en.csv'
 dir_file_cn = 'transportation_cn.csv'
 dir_file_tw = 'transportation_tw.csv'
 
+# template error messages:
+out_of_bound = "Error occured due to one of the following reasons:\n" \
+               "1. You must use your own language to ask transportation-related question\n" \
+               "2. The origin/destination you are looking for is not in our database\n" \
+               "Please rephrase your transportation-related question and try again."
+
 
 def make_yql_query(req):
     city = req['result']['parameters']['geo-city']
@@ -119,13 +125,6 @@ def webhook():
 # input: JSON-formatted requested data
 # output: JSON-formatted response data
 def parse_json(req):
-    # print("in parse_json method")
-    # print("----------------req --------------------")
-    # print(req)
-    # print("----------------req --------------------")
-    # if req.get['originalRequest'] is None:
-    #    dir_file = dir_file_en
-    # else:
     lang_code = req['originalRequest']['data'].get('locale')
     # print ("**************lang_code = {}".format(lang_code))
     if lang_code == "zh_TW" or lang_code == "zh_HK":
@@ -146,10 +145,6 @@ def parse_json(req):
     if (loc1 is None) or (loc2 is None):
         return None
 
-    # print("-------------------------------------------------")
-    # print("loc1 = {}".format(loc1))
-    # print("loc2 = {}".format(loc2))
-    # print("-------------------------------------------------")
     speech = grab_answer(loc1, loc2, dir_file)
     print("Response:")
     print(speech)
@@ -167,10 +162,7 @@ def grab_answer(loc1, loc2, dir_file):
 
     try:
         with open(dir_file, 'rU') as f:
-            # print('START')
-            # print(f.read())
             direction = list(csv.reader(f))
-            # print('END')
 
             from_loc = loc1
             to_loc = loc2
@@ -182,37 +174,27 @@ def grab_answer(loc1, loc2, dir_file):
             print("to_loc = {}".format(to_loc))
 
             while True:
-                print("find origin (column)")
-                print(count)
-                if direction[count][0] == "":
-                    # location not found
-                    break
                 if direction[count][0] == from_loc:
                     row_num = count
                     count = 0
-                    print("rownum = {}".format(row_num))
                     break
                 count = count + 1
 
             while True:
-                print("find destination(row)")
-                print(count)
-                if direction[0][count] == "":
-                    # location not found
-                    break
                 if direction[0][count] == to_loc:
                     col_num = count
                     count = 0
                     print("colnum = {}".format(col_num))
                     break
                 count = count + 1
-            print(direction[row_num][col_num])
             speech = direction[row_num][col_num]
             return speech
     except IOError:
         print("exception error")
+    except IndexError:
+        return out_of_bound
     except Exception as e:
-        print("something weird happened", e)
+        print("something weird happened: ", e)
 
 
 if __name__ == '__main__':
