@@ -20,14 +20,14 @@ dir_file_tw = 'transportation_tw.csv'
 
 # template error messages:
 out_of_bound = "Error occured due to one of the following reasons:\n" \
-               "1. You must use your own language to ask transportation-related question\n" \
-               "2. The origin/destination you are looking for is not in our database\n" \
-               "Please rephrase your transportation-related question and try again."
-rephrase_error = "Please rephrase your transportation-related question\n" \
+               "1. You must use the language that you signed-up with when asking transportation-related question\n" \
+               "2. The origin and/or destination that you've entered is/are not in our database\n" \
+               "Please rephrase your transportation-related question and try again!"
+rephrase_error = "Please rephrase your transportation-related question.\n" \
                  "Example:\n" \
                  '- English: "How can I go to Kyoto from Osaka?"\n' \
-                 '- Simplified Chinese: "从大阪要怎样乘车到京都？"\n' \
-                 '- Traditional CHinese: "由大阪點搭車去京都？"'
+                 '- 简化字: "从大阪要怎样乘车到京都？"\n' \
+                 '- 正體字: "由大阪點搭車去京都？"'
 
 
 def make_yql_query(req):
