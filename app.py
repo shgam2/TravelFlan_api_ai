@@ -94,11 +94,8 @@ def process_request(req):
     elif action == 'translation':
         print("translate block entered")
         print(json.dumps(req['result'], indent=4))
-        print('hello1')
         phrase = req['result']['parameters']['Phrase']
-        print('hello2')
         language = req['result']['parameters']['language']
-        print('hello3')
         if isinstance(language, str):
             print('hello3.1')
             language = language.lower()
@@ -123,6 +120,7 @@ def process_request(req):
         print(url)
         _res = urlopen(url).read()
         print(_res)
+        print(type(_res.decode()))
         speech = '"%s" in %s is "%s"' % (phrase, language, _res.decode())
         res = {
             'speech': speech,
