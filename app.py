@@ -100,7 +100,7 @@ def process_request(req):
         _res = urlopen(url).read()
         print('im here1')
         print(json.dumps(_res, indent=4))
-        translated = str(json.dumps(_res, indent=4)).decode('iso-8859-1')
+        translated = str(json.dumps(_res, indent=4)).decode('iso-8859-1').encode('utf8')
         speech = '"%s" in %s is "%s"' % (phrase, language, translated)
         res = {
             'speech': speech,
