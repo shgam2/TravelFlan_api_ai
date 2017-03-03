@@ -100,14 +100,13 @@ def process_request(req):
         post_fields = {'text': str(phrase), "to": str(code)}
         print('call 1 started')
 
-        #response = requests.post(TRANSLATE_BASE_URL, json.dumps({'to': 'ja', 'text': 'i love you'}), headers={'Content-Type': 'application/json', 'Authorization': 'Basic dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
         url = TRANSLATE_BASE_URL + urlencode({'text': phrase, 'to': code, 'authtoken': 'dHJhdmVsZmxhbjp0b3VyMTIzNA==' })
         print(url)
         _res = urlopen(url).read()
-        translateResult = json.loads(_res)
+        translateData = json.loads(_res)
 
-        print(translateResult)
-        speech = '"%s" in %s is "%s"' % (phrase, language, translateResult)
+        print(translateData)
+        speech = 'test1'
         res = {
             'speech': speech,
             'displayText': speech,
