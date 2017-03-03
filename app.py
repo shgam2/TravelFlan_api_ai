@@ -16,9 +16,6 @@ from urllib.request import Request, urlopen
 from flask import make_response, request, Flask
 
 app = Flask(__name__)
-k = u"\u65e5\u6587"
-print(type(k))
-
 
 YAHOO_YQL_BASE_URL = 'https://query.yahooapis.com/v1/public/yql?'
 TRANSLATE_BASE_URL = 'http://awseb-e-f-AWSEBLoa-VIW6OYVV6CSY-1979702995.us-east-1.elb.amazonaws.com/translate?'
@@ -122,7 +119,7 @@ def process_request(req):
         print(_res)
         print(type(phrase))
         print(type(language))
-        print(type(str(_res.decode())))
+        print(type(_res.decode()))
         speech = '"%s" in %s is "%s"' % (phrase, language, _res.decode())
         res = {
             'speech': speech,
