@@ -98,7 +98,7 @@ def process_request(req):
         print('hello2')
         language = req['result']['parameters']['language']
         print('hello3')
-        if(type(language) == 'unicode')
+        if type(language) == 'unicode':
             se = language.encode('utf-8')
             print(se)
         print(type(language))
