@@ -57,9 +57,9 @@ def process_request(req):
     action = req['result']['action']
     if action == 'weather':
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req)}) + '&format=json'
-        # print('YQL-Request:\n%s' % (url,))
+        print('YQL-Request:\n%s' % (url,))
         _res = urlopen(url).read()
-        # print('YQL-Response:\n%s' % (_res,))
+        print('YQL-Response:\n%s' % (_res,))
 
         data = json.loads(_res)
 
@@ -116,11 +116,11 @@ def process_request(req):
 @app.route('/webhook', methods=['POST'])
 def webhook():
     req = request.get_json(silent=True, force=True)
-    print('Request:\n%s' % (json.dumps(req, indent=4),))
+    #print('Request:\n%s' % (json.dumps(req, indent=4),))
 
     res = process_request(req)
     res = json.dumps(res, indent=4)
-    print('Response:\n%s' % (res,))
+    #print('Response:\n%s' % (res,))
 
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
@@ -151,8 +151,8 @@ def parse_json(req):
         return rephrase_error
 
     speech = grab_answer(loc1, loc2, dir_file)
-    print("Response:")
-    print(speech)
+    #print("Response:")
+    #print(speech)
     return speech
 
 
@@ -162,8 +162,8 @@ def parse_json(req):
 # output:
 #   - answer speech (String data)
 def grab_answer(loc1, loc2, dir_file):
-    print("in grab_answer function")
-    print("filename = {}".format(dir_file))
+    #print("in grab_answer function")
+    #print("filename = {}".format(dir_file))
 
     try:
         with open(dir_file, 'rU') as f:
@@ -173,8 +173,8 @@ def grab_answer(loc1, loc2, dir_file):
             to_loc = loc2
             count = 0
 
-            print("from_loc = {}".format(from_loc))
-            print("to_loc = {}".format(to_loc))
+            #print("from_loc = {}".format(from_loc))
+            #print("to_loc = {}".format(to_loc))
 
             while True:
                 if direction[count][0] == from_loc:
@@ -187,7 +187,7 @@ def grab_answer(loc1, loc2, dir_file):
                 if direction[0][count] == to_loc:
                     col_num = count
                     count = 0
-                    print("colnum = {}".format(col_num))
+                    #print("colnum = {}".format(col_num))
                     break
                 count = count + 1
             speech = direction[row_num][col_num]
