@@ -81,6 +81,7 @@ def process_request(req):
         condition = data['query']['results']['channel']['item']['condition']
         units = data['query']['results']['channel']['units']
 
+
         speech = 'Weather in %s: %s, the temperature is %s %s' % (location['city'], condition['text'],
                                                                   condition['temp'], units['temperature'])
         res = {
@@ -116,11 +117,11 @@ def process_request(req):
 @app.route('/webhook', methods=['POST'])
 def webhook():
     req = request.get_json(silent=True, force=True)
-    #print('Request:\n%s' % (json.dumps(req, indent=4),))
+    print('Request:\n%s' % (json.dumps(req, indent=4),))
 
     res = process_request(req)
     res = json.dumps(res, indent=4)
-    #print('Response:\n%s' % (res,))
+    print('Response:\n%s' % (res,))
 
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
