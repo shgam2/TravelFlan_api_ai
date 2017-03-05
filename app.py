@@ -59,9 +59,9 @@ def process_request(req):
     if action == 'weather':
 
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req)}) + '&format=json'
-        print('YQL-Request:\n%s' % (url,))
+        #print('YQL-Request:\n%s' % (url,))
         _res = urlopen(url).read()
-        print('YQL-Response:\n%s' % (_res,))
+        #print('YQL-Response:\n%s' % (_res,))
         print('----------------------------------------')
         print('date is: {}'.format(date))
         print('----------------------------------------')
@@ -122,11 +122,11 @@ def process_request(req):
 @app.route('/webhook', methods=['POST'])
 def webhook():
     req = request.get_json(silent=True, force=True)
-    print('Request:\n%s' % (json.dumps(req, indent=4),))
+    #print('Request:\n%s' % (json.dumps(req, indent=4),))
 
     res = process_request(req)
     res = json.dumps(res, indent=4)
-    print('Response:\n%s' % (res,))
+    #print('Response:\n%s' % (res,))
 
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
