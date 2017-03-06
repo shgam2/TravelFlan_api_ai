@@ -94,7 +94,7 @@ def process_request(req):
                 speech = 'Weather in %s (current): %s, the temperature is %s %s' % (location['city'], condition['text'],
                                                                           condition['temp'], units['temperature'])
             else:
-                speech = ("Here is the 10-day forecast for %s" % (location['city']))
+                speech = ("Here is the 10-day forecast for %s:" % (location['city']))
                 for i in range(0, 10):
                     item_num = i
                     fc_weather = forecast(date, item_num, forecast_items)
