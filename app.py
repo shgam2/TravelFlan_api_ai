@@ -116,15 +116,16 @@ def process_request(req):
                     #print ("speech now is: \n{}".format(speech))
                     print ("{}. fc_weather now: {}".format(i,fc_weather))
                     #print ("fc_weather[date] = {}".format(fc_weather['date'])) ############something wrong here??
-                    if fc_weather != "":
+                    if fc_weather != None:
                         speech = speech + "\n(%s): %s, high: %s %s, low: %s %s" % (
                             fc_weather['date'], fc_weather['text'],
                             fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
+
                     #print ("11")
                     #print ("date isssss {}".format(date))
                     date = datetime.datetime.strptime(date, "%Y-%m-%d").strftime("%d %b %Y")
-                    #print ("temp_date = {}".format(date))
                     date += datetime.timedelta(days=1)
+                    print ("{}. Temporary date = {}".format(i,date))
                     print("22")
 
         else:
@@ -212,30 +213,38 @@ def webhook():
     return r
 
 
-def forecast(date, data):
+def forecast(date, date_period, data):
     print("date:{}".format(date))
     #print("type of date:{}".format(type(date)))
     #print("date-period:{}".format(date_period))
     # print("_res:{}".format(data))
 
     fc_weather = None
+    if date:
+        for i in data['query']['results']['channel']['item']['forecast']:
+            #print("date from api: {}".format(date))
+            #print("date from yahoo: {}".format(i.get('date')))
 
-    for i in data['query']['results']['channel']['item']['forecast']:
-        #print("date from api: {}".format(date))
-        #print("date from yahoo: {}".format(i.get('date')))
-        i_date = datetime.strptime(i.get('date'), "%d %b %Y").strftime("%Y-%m-%d")
-        #print("Converted date from yahoo: {}".format(i_date))
+            #print("Converted date from yahoo: {}".format(i_date))
+            if date:
+                i_date = datetime.strptime(i.get('date'), "%d %b %Y").strftime("%Y-%m-%d")
 
-        if date == i_date:
-            fc_weather = {
-                'date': i.get('date'),
-                'high': i.get('high'),
-                'low': i.get('low'),
-                'text': i.get('text')
-            }
-            print(fc_weather)
-            break
-
+                if date == i_date:
+                    fc_weather = {
+                        'date': i.get('date'),
+                        'high': i.get('high'),
+                        'low': i.get('low'),
+                        'text': i.get('text')
+                    }
+                    print(fc_weather)
+                    break
+            else: #if date_period:
+                fc_weather += {
+                    'date': i.get('date'),
+                    'high': i.get('high'),
+                    'low': i.get('low'),
+                    'text': i.get('text')
+                }
     return fc_weather
 
 
