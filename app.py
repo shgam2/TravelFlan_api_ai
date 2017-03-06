@@ -115,7 +115,7 @@ def process_request(req):
                     fc_weather = forecast(date, data)
                     print ("speech now is: \n{}".format(speech))
                     print ("{}. fc_weather now: {}".format(i,fc_weather))
-                    print ("fc_weather[date] = ".format(fc_weather['date'])) ############something wrong here??
+                    print ("fc_weather[date] = {}".format(fc_weather['date'])) ############something wrong here??
                     speech = speech + "\n(%s): %s, high: %s %s, low: %s %s" % (
                         fc_weather['date'], fc_weather['text'],
                         fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
@@ -127,7 +127,7 @@ def process_request(req):
             print("111111111111111111111")
             fc_weather = forecast(date, data)
             print("fc_weather now: {}".format(fc_weather))
-            print("fc_weather[date] = ".format(fc_weather['date']))
+            print("fc_weather[date] = {}".format(fc_weather['date']))
             speech = 'Weather in %s (%s): %s, high: %s %s, low: %s %s' % (
                 location['city'], fc_weather['date'], fc_weather['text'],
                 fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
