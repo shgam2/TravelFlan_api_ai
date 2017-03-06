@@ -108,6 +108,10 @@ def process_request(req):
                     "attachment_type": "image",
                     "attachment_url": "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/q5.jpg"
                 }
+                {
+                    "attachment_type": "image",
+                    "attachment_url": "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/q5_cn.jpg"
+                }
             ]
 
         }
