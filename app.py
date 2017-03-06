@@ -34,7 +34,7 @@ rephrase_error = "Please rephrase your transportation-related question.\n" \
 
 def make_yql_query(req):
     city = req['result']['parameters']['geo-city']
-    return "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text='%s' and u='c')" % (city,)
+    return 'select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\'%s\') and u=\'c\'' % (city,)
 
 
 def find_language_code(lang):
