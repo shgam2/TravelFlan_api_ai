@@ -114,7 +114,8 @@ def process_request(req):
                     print ("1 date is {}".format(date))
                     fc_weather = forecast(date, data)
                     print ("speech now is: \n{}".format(speech))
-                    print ("fc_weather[date] = ".format(fc_weather['date']))
+                    print ("{}. fc_weather now: {}".format(i,fc_weather))
+                    print ("fc_weather[date] = ".format(fc_weather['date'])) ############something wrong here??
                     speech = speech + "\n(%s): %s, high: %s %s, low: %s %s" % (
                         fc_weather['date'], fc_weather['text'],
                         fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
