@@ -110,11 +110,11 @@ def process_request(req):
 
                 speech = "Weather in %s" % (location['city'])
                 for i in range(0, 9):
-                    print("---------loop--------")
+                    print("---------loop--------{}".format(i))
                     fc_weather = forecast(date, data)
-                    speech.append("\n(%s): %s, high: %s %s, low: %s %s" % (
+                    speech = speech + "\n(%s): %s, high: %s %s, low: %s %s" % (
                         fc_weather['date'], fc_weather['text'],
-                        fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature']))
+                        fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
                     print ("11")
                     date = datetime.datetime.strptime(date, "%d %b %Y").timedelta(days=1)
                     print("22")
