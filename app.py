@@ -95,13 +95,13 @@ def process_request(req):
             speech = 'Weather in %s: %s, the temperature is %s %s' % (location['city'], condition['text'],
                                                                   condition['temp'], units['temperature'])
         else:
-            speech = '%s - Weather in %s: %s, high: %s %s, low: %s %s' % (fc_weather['date'],['city'], fc_weather['text'],
+            speech = 'Weather in %s (%s): %s, high: %s %s, low: %s %s' % (location['city'], fc_weather['date'], fc_weather['text'],
                                                                   fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
         res = {
             'speech': speech,
             'displayText': speech,
             'source': 'apiai-weather',
-            'data': "aaaa"
+            'data': "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/q5.png"
         }
     elif action == 'direction':
         speech = parse_json(req)
