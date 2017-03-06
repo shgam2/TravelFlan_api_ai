@@ -96,27 +96,19 @@ def process_request(req):
                 speech = 'Weather in %s: %s, the temperature is %s %s' % (location['city'], condition['text'],
                                                                           condition['temp'], units['temperature'])
             else:
-                print("222222222222222222222")
-                n = 0
-                date = ""
-                while True:
-                    #print("date is {}".format(date))
-                    #print("date_period[n] = {}".format(date_period[n]))
-                    if date_period[n] == '/':
-                        break
-                    date = date + date_period[n]
-                    n=n+1
-                print("FINALLY date is {}".format(date))
+                # while True: #to get the
+                #     if date_period[n] == '/':
+                #         break
+                #     date = date + date_period[n]
+                #     n=n+1
 
                 speech = ("Weather in %s" % (location['city']))
                 for i in range(0, 9):
-                    print("---------loop--------{}".format(i))
-                    #print ("1 date is {}".format(date))
+                    print("--------- loop: {} --------".format(i))
                     fc_weather = forecast(date, data)
-                    #print ("speech now is: \n{}".format(speech))
-                    print ("{}. fc_weather now: {}".format(i,fc_weather))
-                    #print ("fc_weather[date] = {}".format(fc_weather['date'])) ############something wrong here??
+                    print ("fc_weather = {}".format(fc_weather))
                     if fc_weather != None:
+                        print ("hehe")
                         speech = speech + "\n(%s): %s, high: %s %s, low: %s %s" % (
                             fc_weather['date'], fc_weather['text'],
                             fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
@@ -130,7 +122,7 @@ def process_request(req):
 
         else:
             print("111111111111111111111")
-            fc_weather = forecast(date, data)
+            fc_weather = forecast(date, date_period, data)
             print("fc_weather now: {}".format(fc_weather))
             print("fc_weather[date] = {}".format(fc_weather['date']))
             speech = 'Weather in %s (%s): %s, high: %s %s, low: %s %s' % (
