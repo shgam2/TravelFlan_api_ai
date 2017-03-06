@@ -120,9 +120,9 @@ def process_request(req):
                         fc_weather['date'], fc_weather['text'],
                         fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
                     print ("11")
-                    temp_date = datetime.datetime.strptime(date, "%d %b %Y")
+                    date = datetime.datetime.strptime(date, "%d %b %Y")
                     print ("temp_date = {}".format(temp_date))
-                    date = temp_date.timedelta(days=1)
+                    date += datetime.timedelta(days=1)
                     print("22")
 
         else:
