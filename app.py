@@ -3,6 +3,7 @@
 import csv
 import json
 import os
+import datetime
 from urllib.parse import urlencode
 from urllib.request import urlopen
 
@@ -56,6 +57,7 @@ def process_request(req):
 
     action = req['result']['action']
     date = req['result']['parameters'].get('date')
+    #datetime.datetime.strptime("05 Mar 2017", "%d %b %Y").strftime("%Y-%m-%d")
     if action == 'weather':
         print ("date:{}".format(date))
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req)}) + '&format=json'
@@ -89,7 +91,8 @@ def process_request(req):
         res = {
             'speech': speech,
             'displayText': speech,
-            'source': 'apiai-weather'
+            'source': 'apiai-weather',
+            'data': "aaaa"
         }
     elif action == 'direction':
         speech = parse_json(req)
@@ -128,6 +131,8 @@ def webhook():
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
     return r
+
+#def forecast(date):
 
 
 # input: JSON-formatted requested data
