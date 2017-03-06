@@ -164,7 +164,7 @@ def forecast(date, date_period, data):
         print ("date from api: {}".format(date))
         print ("date from yahoo: {}".format(i.get('date')))
         print ("Converted date from yahoo: {}".format(datetime.datetime.strptime(i.get('date'), "%d %b %Y").strftime("%Y-%m-%d")))
-        if date.__eq__(datetime.datetime.strptime(i.get('date'), "%d %b %Y").strftime("%Y-%m-%d")):
+        if date in datetime.datetime.strptime(i.get('date'), "%d %b %Y").strftime("%Y-%m-%d"):
             high = i.get('high')
             low = i.get('low')
             text = i.get('text')
