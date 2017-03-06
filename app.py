@@ -220,10 +220,10 @@ def forecast(date, data):
     fc_weather = None
 
     for i in data['query']['results']['channel']['item']['forecast']:
-        print("date from api: {}".format(date))
-        print("date from yahoo: {}".format(i.get('date')))
+        #print("date from api: {}".format(date))
+        #print("date from yahoo: {}".format(i.get('date')))
         i_date = datetime.strptime(i.get('date'), "%d %b %Y").strftime("%Y-%m-%d")
-        print("Converted date from yahoo: {}".format(i_date))
+        #print("Converted date from yahoo: {}".format(i_date))
 
         if date == i_date:
             fc_weather = {
