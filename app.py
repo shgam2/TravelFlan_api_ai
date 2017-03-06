@@ -115,33 +115,33 @@ def process_request(req):
         res = {
             'speech': speech,
             'displayText': speech,
-            'source': 'apiai-weather',
-            'data': [
-                {
-                    "attachment_type": "template",
-                    "attachment_template":
-                        {
-                            'template_type': 'generic',
-                            'elements': [
-                                {
-                                    'title': 'TEST!!',
-                                    'image_url': 'https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/q5.png',
-                                    'buttons': [
-                                        {
-                                            'type': 'web_url',
-                                            'url': 'https://travelflan.com',
-                                            'title': 'View'
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                },
-                {
-                    "attachment_type": "image",
-                    "attachment_url": "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/q5_cn.png"
-                }
-            ]
+            'source': 'apiai-weather'#,
+            # 'data': [
+            #     {
+            #         "attachment_type": "template",
+            #         "attachment_template":
+            #             {
+            #                 'template_type': 'generic',
+            #                 'elements': [
+            #                     {
+            #                         'title': 'TEST!!',
+            #                         'image_url': 'https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/q5.png',
+            #                         'buttons': [
+            #                             {
+            #                                 'type': 'web_url',
+            #                                 'url': 'https://travelflan.com',
+            #                                 'title': 'View'
+            #                             }
+            #                         ]
+            #                     }
+            #                 ]
+            #             }
+            #     },
+            #     {
+            #         "attachment_type": "image",
+            #         "attachment_url": "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/q5_cn.png"
+            #     }
+            # ]
 
         }
     elif action == 'direction':
