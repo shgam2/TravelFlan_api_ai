@@ -101,7 +101,7 @@ def process_request(req):
                 speech = ("Weather in %s" % (location['city']))
                 for i in range(0, 9):
                     print("--------- loop: {} --------".format(i))
-                    fc_weather = forecast(temp_date, forecast_items)
+                    fc_weather = forecast_days(temp_date, forecast_items)
                     print("fc_weather = {}".format(fc_weather))
 
                     speech = speech + "\n(%s): %s, high: %s %s, low: %s %s" % (
