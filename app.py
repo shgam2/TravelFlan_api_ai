@@ -95,10 +95,23 @@ def process_request(req):
             speech = 'Weather in %s: %s, the temperature is %s %s' % (location['city'], condition['text'],
                                                                       condition['temp'], units['temperature'])
         else:
-            fc_weather = forecast(date, date_period, data)
-            speech = 'Weather in %s (%s): %s, high: %s %s, low: %s %s' % (
-                location['city'], fc_weather['date'], fc_weather['text'],
-                fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
+            if (date_period == ""):
+                fc_weather = forecast(date, date_period, data)
+                speech = 'Weather in %s (%s): %s, high: %s %s, low: %s %s' % (
+                    location['city'], fc_weather['date'], fc_weather['text'],
+                    fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
+            else:
+                speech = "Weather in %s"% (location['city'])
+                for i in 10:
+                    fc_weather = forecast(date, date_period, data)
+                    speech.append ("\n%s\n  %s, high: %s %s, low: %s %s" % (
+                    fc_weather['date'], fc_weather['text'],
+                    fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature']))
+
+            # fc_weather = forecast(date, date_period, data)
+            # speech = 'Weather in %s (%s): %s, high: %s %s, low: %s %s' % (
+            #     location['city'], fc_weather['date'], fc_weather['text'],
+            #     fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
         res = {
             'speech': speech,
             'displayText': speech,
