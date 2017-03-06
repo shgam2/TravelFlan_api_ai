@@ -106,11 +106,12 @@ def process_request(req):
             else:
                 print ("222222222222222222222")
                 speech = "Weather in %s"% (location['city'])
-                for i in 10:
+                for i in range (0,9):
                     fc_weather = forecast(date, date_period, data)
-                    speech.append ("\n%s\n  %s, high: %s %s, low: %s %s" % (
-                    fc_weather['date'], fc_weather['text'],
-                    fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature']))
+                    speech.append ("\n(%s): %s, high: %s %s, low: %s %s" % (
+                        fc_weather['date'], fc_weather['text'],
+                        fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature']))
+                    date = datetime.datetime.strptime(date, "%d %b %Y").timedelta(days=1)
 
             # fc_weather = forecast(date, date_period, data)
             # speech = 'Weather in %s (%s): %s, high: %s %s, low: %s %s' % (
@@ -235,8 +236,8 @@ def parse_json(req):
 
     loc1 = parameters.get("direction1")
     loc2 = parameters.get("direction2")
-    if (loc1 == "") or (loc2 == "") or (loc1 is None) or (loc2 is None):
-        return rephrase_error
+    # if (loc1 == "") or (loc2 == "") or (loc1 is None) or (loc2 is None):
+    #     return rephrase_error
 
     speech = grab_answer(loc1, loc2, dir_file)
     # print("Response:")
@@ -282,8 +283,8 @@ def grab_answer(loc1, loc2, dir_file):
             return speech
     except IOError:
         print("exception error")
-    except IndexError:
-        return out_of_bound
+    #except IndexError:
+        #return out_of_bound
     except Exception as e:
         print("something weird happened: ", e)
 
