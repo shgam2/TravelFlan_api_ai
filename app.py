@@ -57,7 +57,7 @@ def process_request(req):
 
     action = req['result']['action']
     date = req['result']['parameters'].get('date')
-    print ("*********date is {}".format(date))
+    print("*********date is {}".format(date))
     date_period = req['result']['parameters'].get('date-period')
     # datetime.datetime.strptime("05 Mar 2017", "%d %b %Y").strftime("%Y-%m-%d")
     if action == 'weather':
@@ -91,22 +91,38 @@ def process_request(req):
         units = data['query']['results']['channel']['units']
 
         if date == "":
-            print ("date is empty -------------------")
+            # print ("date is empty -------------------")
             speech = 'Weather in %s: %s, the temperature is %s %s' % (location['city'], condition['text'],
                                                                       condition['temp'], units['temperature'])
         else:
             fc_weather = forecast(date, date_period, data)
             speech = 'Weather in %s (%s): %s, high: %s %s, low: %s %s' % (
-            location['city'], fc_weather['date'], fc_weather['text'],
-            fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
+                location['city'], fc_weather['date'], fc_weather['text'],
+                fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
         res = {
             'speech': speech,
             'displayText': speech,
             'source': 'apiai-weather',
             'data': [
                 {
-                    "attachment_type": "image",
-                    "attachment_url": "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/q5.png"
+                    "attachment_type": "template",
+                    "attachment_template":
+                        {
+                            'template_type': 'generic',
+                            'elements': [
+                                {
+                                    'title': 'TEST!!',
+                                    'image_url': 'https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/q5.png',
+                                    'buttons': [
+                                        {
+                                            'type': 'web_url',
+                                            'url': 'https://travelflan.com',
+                                            'title': 'View'
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
                 },
                 {
                     "attachment_type": "image",
@@ -160,22 +176,26 @@ def forecast(date, date_period, data):
     print("date-period:{}".format(date_period))
     # print("_res:{}".format(data))
 
-    for i in data['query']['results']['channel']['item']['forecast']:
-        print ("date from api: {}".format(date))
-        print ("date from yahoo: {}".format(i.get('date')))
-        print ("Converted date from yahoo: {}".format(datetime.datetime.strptime(i.get('date'), "%d %b %Y").strftime("%Y-%m-%d")))
-        if date == datetime.datetime.strptime(i.get('date'), "%d %b %Y").strftime("%Y-%m-%d"):
-            high = i.get('high')
-            low = i.get('low')
-            text = i.get('text')
-            break
+    if (date != ""):
+        for i in data['query']['results']['channel']['item']['forecast']:
+            print("date from api: {}".format(date))
+            print("date from yahoo: {}".format(i.get('date')))
+            print("Converted date from yahoo: {}".format(
+                datetime.datetime.strptime(i.get('date'), "%d %b %Y").strftime("%Y-%m-%d")))
+            if date == datetime.datetime.strptime(i.get('date'), "%d %b %Y").strftime("%Y-%m-%d"):
+                high = i.get('high')
+                low = i.get('low')
+                text = i.get('text')
+                break
 
-    fc_weather = {
-        'date': i.get('date'),
-        'high': high,
-        'low': low,
-        'text': text
-    }
+        fc_weather = {
+            'date': i.get('date'),
+            'high': high,
+            'low': low,
+            'text': text
+        }
+    elif (date_period != ""):
+        print ("dateperiod part hereee")
     return fc_weather
 
 
