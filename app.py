@@ -95,12 +95,15 @@ def process_request(req):
             speech = 'Weather in %s: %s, the temperature is %s %s' % (location['city'], condition['text'],
                                                                       condition['temp'], units['temperature'])
         else:
+            print ("DATE NOT NULL")
             if (date_period == ""):
+                print ("111111111111111111111")
                 fc_weather = forecast(date, date_period, data)
                 speech = 'Weather in %s (%s): %s, high: %s %s, low: %s %s' % (
                     location['city'], fc_weather['date'], fc_weather['text'],
                     fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
             else:
+                print ("222222222222222222222")
                 speech = "Weather in %s"% (location['city'])
                 for i in 10:
                     fc_weather = forecast(date, date_period, data)
