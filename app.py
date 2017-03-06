@@ -91,7 +91,7 @@ def process_request(req):
 
         if date == "":
             if (date_period == ""):
-                speech = 'Weather in %s (current): %s, the temperature is %s %s' % (location['city'], condition['text'],
+                speech = 'Weather in %s (current): %s, the temperature is %s °%s' % (location['city'], condition['text'],
                                                                           condition['temp'], units['temperature'])
             else:
                 speech = ("Here is the 10-day forecast for %s:" % (location['city']))
@@ -99,7 +99,7 @@ def process_request(req):
                     item_num = i
                     fc_weather = forecast(date, item_num, forecast_items)
 
-                    speech = speech + "\n(%s) %s, high: %s %s, low: %s %s" % (
+                    speech = speech + "\n(%s) %s, high: %s °%s, low: %s °%s" % (
                         datetime.strptime(fc_weather['date'], "%d %b %Y").strftime("%a %b %d"), fc_weather['text'],
                         fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
 
@@ -107,7 +107,7 @@ def process_request(req):
             item_num = -1
             fc_weather = forecast(date, item_num, forecast_items)
 
-            speech = 'Weather in %s (%s): %s, high: %s %s, low: %s %s' % (
+            speech = 'Weather in %s (%s): %s, high: %s °%s, low: %s °%s' % (
                 location['city'], fc_weather['date'], fc_weather['text'],
                 fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
 
