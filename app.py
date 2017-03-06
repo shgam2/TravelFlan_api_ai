@@ -123,7 +123,7 @@ def process_request(req):
 
         else:
             print("111111111111111111111")
-            fc_weather = forecast(date, date_period, data)
+            fc_weather = forecast(date, data)
             speech = 'Weather in %s (%s): %s, high: %s %s, low: %s %s' % (
                 location['city'], fc_weather['date'], fc_weather['text'],
                 fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
@@ -225,7 +225,7 @@ def forecast(date, data):
                 'low': i.get('low'),
                 'text': i.get('text')
             }
-            print (fc_weather)
+            print(fc_weather)
             break
 
     return fc_weather
