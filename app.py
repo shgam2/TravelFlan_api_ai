@@ -161,6 +161,7 @@ def forecast(date, date_period, data):
     # print("_res:{}".format(data))
 
     for i in data['query']['results']['channel']['item']['forecast']:
+        print ("date from api: {}".format(date))
         print ("date from yahoo: {}".format(i.get('date')))
         print ("Converted date from yahoo: {}".format(datetime.datetime.strptime(i.get('date'), "%d %b %Y").strftime("%Y-%m-%d")))
         if date.__eq__(datetime.datetime.strptime(i.get('date'), "%d %b %Y").strftime("%Y-%m-%d")):
