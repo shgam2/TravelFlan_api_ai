@@ -106,11 +106,11 @@ def process_request(req):
             'data': [
                 {
                     "attachment_type": "image",
-                    "attachment_url": "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/q5.jpg"
+                    "attachment_url": "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/q5.png"
                 },
                 {
                     "attachment_type": "image",
-                    "attachment_url": "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/q5_cn.jpg"
+                    "attachment_url": "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/q5_cn.png"
                 }
             ]
 
@@ -156,6 +156,7 @@ def webhook():
 
 def forecast(date, date_period, data):
     print("date:{}".format(date))
+    print("type of date:{}".format(type(date)))
     print("date-period:{}".format(date_period))
     # print("_res:{}".format(data))
 
