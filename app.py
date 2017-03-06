@@ -228,11 +228,10 @@ def forecast(date, forecast_items):
                 break
     return fc_weather
 
-def forecast_days (date_period, forecast_items):
+def forecast_days (temp_date, forecast_items):
     print ("howdy")
-    day_weather = data['query']['results']['channel']['item']['forecast']
     if temp_date == "temp":
-        print ("first item is: {}:".format(day_weather[0]))
+        print ("first item is: {}:".format(forecast_items[0]))
     return None
 
 
