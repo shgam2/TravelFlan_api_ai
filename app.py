@@ -100,13 +100,13 @@ def process_request(req):
                 n = 0
                 date = ""
                 while True:
-                    print("date is {}".format(date))
-                    print("date_period[n] = {}".format(date_period[n]))
-                    date = date + date_period[n]
+                    #print("date is {}".format(date))
+                    #print("date_period[n] = {}".format(date_period[n]))
                     if date_period[n] == '/':
                         break
+                    date = date + date_period[n]
                     n=n+1
-                print("FINALLY date is {}".format(date))
+                #print("FINALLY date is {}".format(date))
 
                 speech = "Weather in %s" % (location['city'])
                 for i in range(0, 9):
