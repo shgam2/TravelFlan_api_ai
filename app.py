@@ -60,6 +60,7 @@ def process_request(req):
     date = req['result']['parameters'].get('date')
     print("*********date is {}".format(date))
     date_period = req['result']['parameters'].get('date-period')
+    print("*********date_period is {}".format(date))
 
     if action == 'weather':
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req)}) + '&format=json'
