@@ -100,12 +100,12 @@ def process_request(req):
             'speech': speech,
             'displayText': speech,
             'source': 'apiai-weather',
-            # 'data': [
-            #     {
-            #         "attachment_type": "image",
-            #         "attachment_url": "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/q5.jpg"
-            #     }
-            # ]
+            'data': [
+                {
+                    "attachment_type": "image",
+                    "attachment_url": "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/q5.jpg"
+                }
+            ]
 
         }
     elif action == 'direction':
