@@ -97,13 +97,14 @@ def process_request(req):
                                                                           condition['temp'], units['temperature'])
             else:
                 print("222222222222222222222")
-                n=0
+                n = 0
                 while True:
                     date.append(date_period[n])
                     if date_period[n] == '/':
                         break
                     n=n+1
-                print (date)
+                    print (date)
+                print("date is {}".format(date))
 
                 speech = "Weather in %s" % (location['city'])
                 for i in range(0, 9):
