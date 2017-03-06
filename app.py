@@ -90,39 +90,35 @@ def process_request(req):
         location = data['query']['results']['channel']['location']
         condition = data['query']['results']['channel']['item']['condition']
         units = data['query']['results']['channel']['units']
+        forecast_items = data['query']['results']['channel']['item']['forecast']
 
         if date == "":
             if (date_period == ""):
                 speech = 'Weather in %s: %s, the temperature is %s %s' % (location['city'], condition['text'],
                                                                           condition['temp'], units['temperature'])
             else:
-                # while True: #to get the
-                #     if date_period[n] == '/':
-                #         break
-                #     date = date + date_period[n]
-                #     n=n+1
-
+                temp_date = "temp"
                 speech = ("Weather in %s" % (location['city']))
                 for i in range(0, 9):
                     print("--------- loop: {} --------".format(i))
-                    fc_weather = forecast(date, data)
-                    print ("fc_weather = {}".format(fc_weather))
-                    if fc_weather != None:
-                        print ("hehe")
-                        speech = speech + "\n(%s): %s, high: %s %s, low: %s %s" % (
-                            fc_weather['date'], fc_weather['text'],
-                            fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
+                    fc_weather = forecast(temp_date, forecast_items)
+                    print("fc_weather = {}".format(fc_weather))
 
-                    #print ("11")
+                    speech = speech + "\n(%s): %s, high: %s %s, low: %s %s" % (
+                        fc_weather['date'], fc_weather['text'],
+                        fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
+
+                    temp_date = fc_weather['date']
+                    print("fc_weather is this: {}".format(fc_weather['date']))
                     #print ("date isssss {}".format(date))
-                    date = datetime.datetime.strptime(date, "%Y-%m-%d").strftime("%d %b %Y")
-                    date += datetime.timedelta(days=1)
-                    print ("{}. Temporary date = {}".format(i,date))
-                    print("22")
+                    #date = datetime.datetime.strptime(date, "%Y-%m-%d").strftime("%d %b %Y")
+                    #date += datetime.timedelta(days=1)
+                    #print("{}. Temporary date = {}".format(i,date))
+                    #print("22")
 
         else:
             print("111111111111111111111")
-            fc_weather = forecast(date, date_period, data)
+            fc_weather = forecast(date, forecast_items)
             print("fc_weather now: {}".format(fc_weather))
             print("fc_weather[date] = {}".format(fc_weather['date']))
             speech = 'Weather in %s (%s): %s, high: %s %s, low: %s %s' % (
@@ -205,39 +201,39 @@ def webhook():
     return r
 
 
-def forecast(date, date_period, data):
+def forecast(date, forecast_items):
     print("date:{}".format(date))
     #print("type of date:{}".format(type(date)))
     #print("date-period:{}".format(date_period))
     # print("_res:{}".format(data))
 
     fc_weather = None
-    if date:
-        for i in data['query']['results']['channel']['item']['forecast']:
-            #print("date from api: {}".format(date))
-            #print("date from yahoo: {}".format(i.get('date')))
 
-            #print("Converted date from yahoo: {}".format(i_date))
-            if date:
-                i_date = datetime.strptime(i.get('date'), "%d %b %Y").strftime("%Y-%m-%d")
+    for i in forecast_items:
+        #print("date from api: {}".format(date))
+        #print("date from yahoo: {}".format(i.get('date')))
 
-                if date == i_date:
-                    fc_weather = {
-                        'date': i.get('date'),
-                        'high': i.get('high'),
-                        'low': i.get('low'),
-                        'text': i.get('text')
-                    }
-                    print(fc_weather)
-                    break
-            else: #if date_period:
-                fc_weather += {
+        #print("Converted date from yahoo: {}".format(i_date))
+        if date:
+            i_date = datetime.strptime(i.get('date'), "%d %b %Y").strftime("%Y-%m-%d")
+
+            if date == i_date:
+                fc_weather = {
                     'date': i.get('date'),
                     'high': i.get('high'),
                     'low': i.get('low'),
                     'text': i.get('text')
                 }
+                print(fc_weather)
+                break
     return fc_weather
+
+def forecast_days (date_period, forecast_items):
+    print ("howdy")
+    day_weather = data['query']['results']['channel']['item']['forecast']
+    if temp_date == "temp":
+        print ("first item is: {}:".format(day_weather[0]))
+    return None
 
 
 # input: JSON-formatted requested data
