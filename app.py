@@ -101,15 +101,17 @@ def process_request(req):
                 speech = ("Weather in %s" % (location['city']))
                 for i in range(0, 9):
                     print("--------- loop: {} --------".format(i))
-                    fc_weather = forecast_days(temp_date, forecast_items)
+                    item_num = i
+                    fc_weather = forecast_days(item_num, forecast_items)
                     print("fc_weather = {}".format(fc_weather))
 
                     speech = speech + "\n(%s): %s, high: %s %s, low: %s %s" % (
                         fc_weather['date'], fc_weather['text'],
                         fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
 
+                    print ("speech is: \n{}".format(speech))
                     temp_date = fc_weather['date']
-                    print("fc_weather is this: {}".format(fc_weather['date']))
+                    #print("fc_weather is this: {}".format(fc_weather['date']))
                     #print ("date isssss {}".format(date))
                     #date = datetime.datetime.strptime(date, "%Y-%m-%d").strftime("%d %b %Y")
                     #date += datetime.timedelta(days=1)
@@ -117,10 +119,9 @@ def process_request(req):
                     #print("22")
 
         else:
-            print("111111111111111111111")
             fc_weather = forecast(date, forecast_items)
-            print("fc_weather now: {}".format(fc_weather))
-            print("fc_weather[date] = {}".format(fc_weather['date']))
+            #print("fc_weather now: {}".format(fc_weather))
+            #print("fc_weather[date] = {}".format(fc_weather['date']))
             speech = 'Weather in %s (%s): %s, high: %s %s, low: %s %s' % (
                 location['city'], fc_weather['date'], fc_weather['text'],
                 fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
@@ -228,11 +229,12 @@ def forecast(date, forecast_items):
                 break
     return fc_weather
 
-def forecast_days (temp_date, forecast_items):
-    print ("howdy")
-    if temp_date == "temp":
-        print ("first item is: {}:".format(forecast_items[0]))
-    return None
+
+def forecast_days (item_num, forecast_items):
+
+    fc_weather = forecast_items[item_num]
+
+    return fc_weather
 
 
 # input: JSON-formatted requested data
