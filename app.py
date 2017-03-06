@@ -3,11 +3,12 @@
 import csv
 import json
 import os
-import datetime
+from datetime import datetime
 from urllib.parse import urlencode
 from urllib.request import urlopen
 
 from flask import make_response, request, Flask
+import googlemaps
 
 app = Flask(__name__)
 
@@ -59,9 +60,8 @@ def process_request(req):
     date = req['result']['parameters'].get('date')
     print("*********date is {}".format(date))
     date_period = req['result']['parameters'].get('date-period')
-    # datetime.datetime.strptime("05 Mar 2017", "%d %b %Y").strftime("%Y-%m-%d")
-    if action == 'weather':
 
+    if action == 'weather':
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req)}) + '&format=json'
         print('YQL-Request:\n%s' % (url,))
         _res = urlopen(url).read()
@@ -176,26 +176,26 @@ def forecast(date, date_period, data):
     print("date-period:{}".format(date_period))
     # print("_res:{}".format(data))
 
-    if (date != ""):
+    fc_weather = None
+
+    if date:
         for i in data['query']['results']['channel']['item']['forecast']:
             print("date from api: {}".format(date))
             print("date from yahoo: {}".format(i.get('date')))
-            print("Converted date from yahoo: {}".format(
-                datetime.datetime.strptime(i.get('date'), "%d %b %Y").strftime("%Y-%m-%d")))
-            if date == datetime.datetime.strptime(i.get('date'), "%d %b %Y").strftime("%Y-%m-%d"):
-                high = i.get('high')
-                low = i.get('low')
-                text = i.get('text')
-                break
+            i_date = datetime.strptime(i.get('date'), "%d %b %Y").strftime("%Y-%m-%d")
+            print("Converted date from yahoo: {}".format(i_date))
 
-        fc_weather = {
-            'date': i.get('date'),
-            'high': high,
-            'low': low,
-            'text': text
-        }
-    elif (date_period != ""):
-        print ("dateperiod part hereee")
+            if date == i_date:
+                fc_weather = {
+                    'date': i.get('date'),
+                    'high': i.get('high'),
+                    'low': i.get('low'),
+                    'text': i.get('text')
+                }
+                break
+    elif date_period:
+        pass
+
     return fc_weather
 
 
