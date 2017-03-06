@@ -97,40 +97,24 @@ def process_request(req):
                 speech = 'Weather in %s: %s, the temperature is %s %s' % (location['city'], condition['text'],
                                                                           condition['temp'], units['temperature'])
             else:
-                temp_date = "temp"
-                speech = ("Weather in %s" % (location['city']))
-                for i in range(0, 9):
-                    print("--------- loop: {} --------".format(i))
+                speech = ("Here is 10-day forecast for %s" % (location['city']))
+                for i in range(0, 10):
                     item_num = i
-                    fc_weather = forecast_days(item_num, forecast_items)
-                    print("fc_weather = {}".format(fc_weather))
+                    fc_weather = forecast(date, item_num, forecast_items)
 
                     speech = speech + "\n(%s): %s, high: %s %s, low: %s %s" % (
                         fc_weather['date'], fc_weather['text'],
                         fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
 
-                    print ("speech is: \n{}".format(speech))
-                    temp_date = fc_weather['date']
-                    #print("fc_weather is this: {}".format(fc_weather['date']))
-                    #print ("date isssss {}".format(date))
-                    #date = datetime.datetime.strptime(date, "%Y-%m-%d").strftime("%d %b %Y")
-                    #date += datetime.timedelta(days=1)
-                    #print("{}. Temporary date = {}".format(i,date))
-                    #print("22")
-
         else:
-            fc_weather = forecast(date, forecast_items)
-            #print("fc_weather now: {}".format(fc_weather))
-            #print("fc_weather[date] = {}".format(fc_weather['date']))
+            item_num = -1
+            fc_weather = forecast(date, item_num, forecast_items)
+
             speech = 'Weather in %s (%s): %s, high: %s %s, low: %s %s' % (
                 location['city'], fc_weather['date'], fc_weather['text'],
                 fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
 
 
-            # fc_weather = forecast(date, date_period, data)
-            # speech = 'Weather in %s (%s): %s, high: %s %s, low: %s %s' % (
-            #     location['city'], fc_weather['date'], fc_weather['text'],
-            #     fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
         res = {
             'speech': speech,
             'displayText': speech,
@@ -202,19 +186,14 @@ def webhook():
     return r
 
 
-def forecast(date, forecast_items):
-    print("date:{}".format(date))
-    #print("type of date:{}".format(type(date)))
-    #print("date-period:{}".format(date_period))
-    # print("_res:{}".format(data))
+def forecast(date, item_num, forecast_items):
+    if item_num != -1:
+        fc_weather = forecast_items[item_num]
+        return fc_weather
 
     fc_weather = None
 
     for i in forecast_items:
-        #print("date from api: {}".format(date))
-        #print("date from yahoo: {}".format(i.get('date')))
-
-        #print("Converted date from yahoo: {}".format(i_date))
         if date:
             i_date = datetime.strptime(i.get('date'), "%d %b %Y").strftime("%Y-%m-%d")
 
@@ -229,11 +208,8 @@ def forecast(date, forecast_items):
                 break
     return fc_weather
 
-
 def forecast_days (item_num, forecast_items):
-
     fc_weather = forecast_items[item_num]
-
     return fc_weather
 
 
