@@ -97,10 +97,18 @@ def process_request(req):
                                                                           condition['temp'], units['temperature'])
             else:
                 print("222222222222222222222")
+                n=0
+                while True:
+                    date.append(date_period[n])
+                    if date_period[n] == '/':
+                        break
+                    n=n+1
+                print (date)
+
                 speech = "Weather in %s" % (location['city'])
                 for i in range(0, 9):
                     print("---------loop--------")
-                    fc_weather = forecast(date, date_period, data)
+                    fc_weather = forecast(date, data)
                     speech.append("\n(%s): %s, high: %s %s, low: %s %s" % (
                         fc_weather['date'], fc_weather['text'],
                         fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature']))
@@ -191,8 +199,8 @@ def webhook():
     return r
 
 
-def forecast(date, date_period, data):
-    #print("date:{}".format(date))
+def forecast(date, data):
+    print("date:{}".format(date))
     #print("type of date:{}".format(type(date)))
     #print("date-period:{}".format(date_period))
     # print("_res:{}".format(data))
@@ -212,6 +220,7 @@ def forecast(date, date_period, data):
                 'low': i.get('low'),
                 'text': i.get('text')
             }
+            print (fc_weather)
             break
 
     return fc_weather
