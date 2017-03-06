@@ -192,30 +192,27 @@ def webhook():
 
 
 def forecast(date, date_period, data):
-    print("date:{}".format(date))
-    print("type of date:{}".format(type(date)))
-    print("date-period:{}".format(date_period))
+    #print("date:{}".format(date))
+    #print("type of date:{}".format(type(date)))
+    #print("date-period:{}".format(date_period))
     # print("_res:{}".format(data))
 
     fc_weather = None
 
-    if date:
-        for i in data['query']['results']['channel']['item']['forecast']:
-            print("date from api: {}".format(date))
-            print("date from yahoo: {}".format(i.get('date')))
-            i_date = datetime.strptime(i.get('date'), "%d %b %Y").strftime("%Y-%m-%d")
-            print("Converted date from yahoo: {}".format(i_date))
+    for i in data['query']['results']['channel']['item']['forecast']:
+        print("date from api: {}".format(date))
+        print("date from yahoo: {}".format(i.get('date')))
+        i_date = datetime.strptime(i.get('date'), "%d %b %Y").strftime("%Y-%m-%d")
+        print("Converted date from yahoo: {}".format(i_date))
 
-            if date == i_date:
-                fc_weather = {
-                    'date': i.get('date'),
-                    'high': i.get('high'),
-                    'low': i.get('low'),
-                    'text': i.get('text')
-                }
-                break
-    elif date_period:
-        pass
+        if date == i_date:
+            fc_weather = {
+                'date': i.get('date'),
+                'high': i.get('high'),
+                'low': i.get('low'),
+                'text': i.get('text')
+            }
+            break
 
     return fc_weather
 
