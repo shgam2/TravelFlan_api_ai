@@ -101,7 +101,8 @@ def process_request(req):
                 date = ""
                 while True:
                     print("date is {}".format(date))
-                    date.append(date_period[n])
+                    print("date_period[n] = {}".format(date_period[n]))
+                    date = date + date_period[n]
                     if date_period[n] == '/':
                         break
                     n=n+1
