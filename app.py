@@ -104,7 +104,9 @@ def process_request(req):
                     speech.append("\n(%s): %s, high: %s %s, low: %s %s" % (
                         fc_weather['date'], fc_weather['text'],
                         fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature']))
+                    print ("11")
                     date = datetime.datetime.strptime(date, "%d %b %Y").timedelta(days=1)
+                    print("22")
 
         else:
             print("111111111111111111111")
