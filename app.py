@@ -57,15 +57,21 @@ def process_request(req):
 
     action = req['result']['action']
     date = req['result']['parameters'].get('date')
+    date_period = req['result']['parameters'].get('date-period')
     #datetime.datetime.strptime("05 Mar 2017", "%d %b %Y").strftime("%Y-%m-%d")
     if action == 'weather':
-        print ("date:{}".format(date))
+
+
+
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req)}) + '&format=json'
         print('YQL-Request:\n%s' % (url,))
         _res = urlopen(url).read()
         print('YQL-Response:\n%s' % (_res,))
 
         data = json.loads(_res)
+
+        # forecast function
+        fc_weather = forecast(date, date_period, data)
 
         if 'query' not in data:
             return res
@@ -85,9 +91,12 @@ def process_request(req):
         condition = data['query']['results']['channel']['item']['condition']
         units = data['query']['results']['channel']['units']
 
-
-        speech = 'Weather in %s: %s, the temperature is %s %s' % (location['city'], condition['text'],
+        if date == "":
+            speech = 'Weather in %s: %s, the temperature is %s %s' % (location['city'], condition['text'],
                                                                   condition['temp'], units['temperature'])
+        else:
+            speech = '%s - Weather in %s: %s, high: %s %s, low: %s %s' % (fc_weather['date'],['city'], fc_weather['text'],
+                                                                  fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
         res = {
             'speech': speech,
             'displayText': speech,
@@ -132,7 +141,24 @@ def webhook():
     r.headers['Content-Type'] = 'application/json'
     return r
 
-#def forecast(date):
+def forecast(date, date_period, data):
+    print("date:{}".format(date))
+    print("date-period:{}".format(date_period))
+    #print("_res:{}".format(data))
+
+    for i in data['query']['results']['channel']['item']['forecast']:
+        if datetime.datetime.strptime(i.get('date'), "%d %b %Y").strftime("%Y-%m-%d") == date:
+            high = i.get('high')
+            low = i.get('low')
+            text = i.get('text')
+
+    fc_weather = {
+        'date': i.get('date'),
+        'high': high,
+        'low': low,
+        'text': text
+    }
+    return fc_weather
 
 
 # input: JSON-formatted requested data
@@ -151,7 +177,6 @@ def parse_json(req):
 
     result = req.get("result")
     parameters = result.get("parameters")
-
 
     loc1 = parameters.get("direction1")
     loc2 = parameters.get("direction2")
