@@ -112,6 +112,8 @@ def process_request(req):
                 for i in range(0, 9):
                     print("---------loop--------{}".format(i))
                     fc_weather = forecast(date, data)
+                    print ("speech now is: \n{}".format(speech))
+                    print ("fc_weather[date] = ".format(fc_weather['date']))
                     speech = speech + "\n(%s): %s, high: %s %s, low: %s %s" % (
                         fc_weather['date'], fc_weather['text'],
                         fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
