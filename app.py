@@ -90,6 +90,7 @@ def process_request(req):
         units = data['query']['results']['channel']['units']
 
         if date == "":
+            print ("date is empty -------------------")
             speech = 'Weather in %s: %s, the temperature is %s %s' % (location['city'], condition['text'],
                                                                       condition['temp'], units['temperature'])
         else:
