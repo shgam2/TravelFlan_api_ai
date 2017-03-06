@@ -70,9 +70,6 @@ def process_request(req):
 
         data = json.loads(_res)
 
-        # forecast function
-
-
         if 'query' not in data:
             return res
         if 'results' not in data['query']:
@@ -94,10 +91,10 @@ def process_request(req):
 
         if date == "":
             if (date_period == ""):
-                speech = 'Weather in %s: %s, the temperature is %s %s' % (location['city'], condition['text'],
+                speech = 'Weather in %s (current): %s, the temperature is %s %s' % (location['city'], condition['text'],
                                                                           condition['temp'], units['temperature'])
             else:
-                speech = ("Here is 10-day forecast for %s" % (location['city']))
+                speech = ("Here is the 10-day forecast for %s" % (location['city']))
                 for i in range(0, 10):
                     item_num = i
                     fc_weather = forecast(date, item_num, forecast_items)
@@ -208,10 +205,6 @@ def forecast(date, item_num, forecast_items):
                 break
     return fc_weather
 
-def forecast_days (item_num, forecast_items):
-    fc_weather = forecast_items[item_num]
-    return fc_weather
-
 
 # input: JSON-formatted requested data
 # output: JSON-formatted response data
@@ -232,12 +225,8 @@ def parse_json(req):
 
     loc1 = parameters.get("direction1")
     loc2 = parameters.get("direction2")
-    # if (loc1 == "") or (loc2 == "") or (loc1 is None) or (loc2 is None):
-    #     return rephrase_error
 
     speech = grab_answer(loc1, loc2, dir_file)
-    # print("Response:")
-    # print(speech)
     return speech
 
 
@@ -247,8 +236,6 @@ def parse_json(req):
 # output:
 #   - answer speech (String data)
 def grab_answer(loc1, loc2, dir_file):
-    # print("in grab_answer function")
-    # print("filename = {}".format(dir_file))
 
     try:
         with open(dir_file, 'rU') as f:
@@ -257,9 +244,6 @@ def grab_answer(loc1, loc2, dir_file):
             from_loc = loc1
             to_loc = loc2
             count = 0
-
-            # print("from_loc = {}".format(from_loc))
-            # print("to_loc = {}".format(to_loc))
 
             while True:
                 if direction[count][0] == from_loc:
@@ -272,7 +256,6 @@ def grab_answer(loc1, loc2, dir_file):
                 if direction[0][count] == to_loc:
                     col_num = count
                     count = 0
-                    # print("colnum = {}".format(col_num))
                     break
                 count = count + 1
             speech = direction[row_num][col_num]
