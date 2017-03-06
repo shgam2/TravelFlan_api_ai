@@ -57,6 +57,7 @@ def process_request(req):
 
     action = req['result']['action']
     date = req['result']['parameters'].get('date')
+    print ("*********date is {}".format(date))
     date_period = req['result']['parameters'].get('date-period')
     # datetime.datetime.strptime("05 Mar 2017", "%d %b %Y").strftime("%Y-%m-%d")
     if action == 'weather':
@@ -69,7 +70,7 @@ def process_request(req):
         data = json.loads(_res)
 
         # forecast function
-        fc_weather = forecast(date, date_period, data)
+
 
         if 'query' not in data:
             return res
@@ -94,6 +95,7 @@ def process_request(req):
             speech = 'Weather in %s: %s, the temperature is %s %s' % (location['city'], condition['text'],
                                                                       condition['temp'], units['temperature'])
         else:
+            fc_weather = forecast(date, date_period, data)
             speech = 'Weather in %s (%s): %s, high: %s %s, low: %s %s' % (
             location['city'], fc_weather['date'], fc_weather['text'],
             fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
