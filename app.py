@@ -106,11 +106,12 @@ def process_request(req):
                         break
                     date = date + date_period[n]
                     n=n+1
-                #print("FINALLY date is {}".format(date))
+                print("FINALLY date is {}".format(date))
 
                 speech = ("Weather in %s" % (location['city']))
                 for i in range(0, 9):
                     print("---------loop--------{}".format(i))
+                    print ("1 date is {}".format(date))
                     fc_weather = forecast(date, data)
                     print ("speech now is: \n{}".format(speech))
                     print ("fc_weather[date] = ".format(fc_weather['date']))
