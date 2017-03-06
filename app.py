@@ -100,7 +100,7 @@ def process_request(req):
                     fc_weather = forecast(date, item_num, forecast_items)
 
                     speech = speech + "\n(%s) %s, high: %s %s, low: %s %s" % (
-                        datetime.strptime(fc_weather['date'], "%d %b %Y").strftime("%A %b %d"), fc_weather['text'],
+                        datetime.strptime(fc_weather['date'], "%d %b %Y").strftime("%a %b %d"), fc_weather['text'],
                         fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
 
         else:
@@ -196,7 +196,7 @@ def forecast(date, item_num, forecast_items):
 
             if date == i_date:
                 fc_weather = {
-                    'date': datetime.strptime(i.get('date'), "%d %b %Y").strftime("%A %b %d"),
+                    'date': datetime.strptime(i.get('date'), "%d %b %Y").strftime("%a %b %d"),
                     'high': i.get('high'),
                     'low': i.get('low'),
                     'text': i.get('text')
