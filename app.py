@@ -58,10 +58,8 @@ def process_request(req):
     action = req['result']['action']
     date = req['result']['parameters'].get('date')
     date_period = req['result']['parameters'].get('date-period')
-    #datetime.datetime.strptime("05 Mar 2017", "%d %b %Y").strftime("%Y-%m-%d")
+    # datetime.datetime.strptime("05 Mar 2017", "%d %b %Y").strftime("%Y-%m-%d")
     if action == 'weather':
-
-
 
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req)}) + '&format=json'
         print('YQL-Request:\n%s' % (url,))
@@ -93,18 +91,21 @@ def process_request(req):
 
         if date == "":
             speech = 'Weather in %s: %s, the temperature is %s %s' % (location['city'], condition['text'],
-                                                                  condition['temp'], units['temperature'])
+                                                                      condition['temp'], units['temperature'])
         else:
-            speech = 'Weather in %s (%s): %s, high: %s %s, low: %s %s' % (location['city'], fc_weather['date'], fc_weather['text'],
-                                                                  fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
+            speech = 'Weather in %s (%s): %s, high: %s %s, low: %s %s' % (
+            location['city'], fc_weather['date'], fc_weather['text'],
+            fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
         res = {
             'speech': speech,
             'displayText': speech,
             'source': 'apiai-weather',
-            'data': [{
-                "attachment_type": "image",
-                "attachment_url": "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/q5.jpg"
-            }]
+            # 'data': [
+            #     {
+            #         "attachment_type": "image",
+            #         "attachment_url": "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/q5.jpg"
+            #     }
+            # ]
 
         }
     elif action == 'direction':
@@ -145,10 +146,11 @@ def webhook():
     r.headers['Content-Type'] = 'application/json'
     return r
 
+
 def forecast(date, date_period, data):
     print("date:{}".format(date))
     print("date-period:{}".format(date_period))
-    #print("_res:{}".format(data))
+    # print("_res:{}".format(data))
 
     for i in data['query']['results']['channel']['item']['forecast']:
         if datetime.datetime.strptime(i.get('date'), "%d %b %Y").strftime("%Y-%m-%d") == date:
@@ -188,8 +190,8 @@ def parse_json(req):
         return rephrase_error
 
     speech = grab_answer(loc1, loc2, dir_file)
-    #print("Response:")
-    #print(speech)
+    # print("Response:")
+    # print(speech)
     return speech
 
 
@@ -199,8 +201,8 @@ def parse_json(req):
 # output:
 #   - answer speech (String data)
 def grab_answer(loc1, loc2, dir_file):
-    #print("in grab_answer function")
-    #print("filename = {}".format(dir_file))
+    # print("in grab_answer function")
+    # print("filename = {}".format(dir_file))
 
     try:
         with open(dir_file, 'rU') as f:
@@ -210,8 +212,8 @@ def grab_answer(loc1, loc2, dir_file):
             to_loc = loc2
             count = 0
 
-            #print("from_loc = {}".format(from_loc))
-            #print("to_loc = {}".format(to_loc))
+            # print("from_loc = {}".format(from_loc))
+            # print("to_loc = {}".format(to_loc))
 
             while True:
                 if direction[count][0] == from_loc:
@@ -224,7 +226,7 @@ def grab_answer(loc1, loc2, dir_file):
                 if direction[0][count] == to_loc:
                     col_num = count
                     count = 0
-                    #print("colnum = {}".format(col_num))
+                    # print("colnum = {}".format(col_num))
                     break
                 count = count + 1
             speech = direction[row_num][col_num]
