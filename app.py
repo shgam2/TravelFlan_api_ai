@@ -221,13 +221,13 @@ def get_gmap_directions(from_loc, to_loc, lang):
     map_image_url = 'https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/googlemap_image.jpg'
 
     if lang == 'zh_TW' or lang == 'zh_HK':
-        title = '地圖'
+        title = '地圖 - %s -> %s' % (from_loc, to_loc)
         button_title = '點擊查看'
     elif lang == 'zh_CN':
-        title = '地图'
+        title = '地图 - %s -> %s' % (from_loc, to_loc)
         button_title = '点击查看'
     else:
-        title = 'Map'
+        title = 'Map - %s -> %s' % (from_loc, to_loc)
         button_title = 'Click to view'
 
     data = [
