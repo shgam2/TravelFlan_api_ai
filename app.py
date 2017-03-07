@@ -316,10 +316,10 @@ def process_request(req):
         if not date:
             if not date_period:
                 if userlocale == "zh_cn":
-                    temp = conv_weather_cond(condition['text'])
+                    temp = conv_weather_cond(condition['text'], "s_cn")
                     speech = '%s的天气: %s, 温度是华氏%s°%s' % (location['city'], temp, condition['temp'], units['temperature'])
                 elif userlocale == "zh_tw" or userlocale == "zh_hk":
-                    temp = conv_weather_cond(condition['text'])
+                    temp = conv_weather_cond(condition['text'], "t_cn")
                     speech = '%s的天氣: %s, 溫度是華氏%s°%s' % (location['city'], temp, condition['temp'], units['temperature'])
                 else:
                     speech = 'Current weather in %s: %s, the temperature is %s°%s' % (
@@ -383,8 +383,28 @@ def process_request(req):
         }
     return res
 
-def conv_weather_cond (condition):
-    print ("asd")
+
+def conv_weather_cond (condition, lang):
+    weather_file = "weather_condition.csv"
+    try:
+        with open(weather_file, 'rU') as f:
+            w_cond = list(csv.reader(f))
+            row_num=1
+            while True:
+                if w_cond[row_num][0] == condition:
+                    cond_found = w_cond[row_num][0]
+                    print ("found the weather condition! : {}".format(cond_found))
+                else:
+                    print ("not found!")
+    except IOError as e:
+        print('IOError: {}'.format(weather_file), e)
+    except Exception as e:
+        print('Exception', e)
+
+
+    # if lang == "s_cn":
+
+
     return "sunny?"
 
 
