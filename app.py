@@ -109,25 +109,17 @@ def grab_answer(from_loc, to_loc, dir_file):
 def get_gmap_directions(from_loc, to_loc, lang):
     now = datetime.now()
 
-    print('TEST1')
-
     from_loc = gmaps.places(from_loc, language=lang)['results'][0]['formatted_address']
     to_loc = gmaps.places(to_loc, language=lang)['results'][0]['formatted_address']
 
-    print('TEST2')
-
     url = 'https://www.google.com/maps?saddr=%s&daddr=%s&dirflg=r' % (
         from_loc.replace(' ', '+'), to_loc.replace(' ', '+'))
-
-    print('TEST3')
 
     directions_result = gmaps.directions(from_loc, to_loc, mode='transit', departure_time=now, language=lang)
     if directions_result:
         pass
 
-    print('TEST4')
-
-    speech = ''
+    speech = 'TEST!!'
     data = [
         {
             "attachment_type": "template",
@@ -149,13 +141,10 @@ def get_gmap_directions(from_loc, to_loc, lang):
         }
     ]
 
-    print('TEST5')
-
     return speech, data
 
 
 def parse_json(req):
-    print('TEST!!')
     lang = req['originalRequest']['data'].get('locale')
     if lang == 'zh_TW' or lang == 'zh_HK':
         dir_file = DIR_FILE_TW
@@ -170,13 +159,9 @@ def parse_json(req):
     from_loc = parameters.get('direction1')
     to_loc = parameters.get('direction2')
 
-    print('TEST!!2')
-
     speech, data = grab_answer(from_loc, to_loc, dir_file)
     if not speech:
-        print('TEST!!3')
         speech, data = get_gmap_directions(from_loc, to_loc, lang)
-        print('TEST!!4')
     return speech, data
 
 
