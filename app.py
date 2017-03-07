@@ -318,10 +318,10 @@ def process_request(req):
         if not date:
             if not date_period:
                 if userlocale.lower() == "zh_cn":
-                    temp = conv_weather_cond(condition['text'], "s_cn")
+                    temp = conv_weather_cond(condition['code'], "s_cn")
                     speech = '%s的天气: %s, 温度是华氏%s°%s' % (city, temp, condition['temp'], units['temperature'])
                 elif userlocale.lower() == "zh_tw" or userlocale.lower() == "zh_hk":
-                    temp = conv_weather_cond(condition['text'], "t_cn")
+                    temp = conv_weather_cond(condition['code'], "t_cn")
                     speech = '%s的天氣: %s, 溫度是華氏%s°%s' % (city, temp, condition['temp'], units['temperature'])
                 else:
                     speech = 'Current weather in %s: %s, the temperature is %s°%s' % (
@@ -350,10 +350,10 @@ def process_request(req):
                             lang = "s_cn"
                         else:
                             lang = "t_cn"
-                        cond = conv_weather_cond(fc_weather['text'],lang)
+                        c_code = conv_weather_cond(fc_weather['code'],lang)
 
                         speech += '\n(%s) %s, 高溫: %s°%s, 低溫: %s°%s' % (
-                            datetime.strptime(fc_weather['date'], '%d %b %Y').strftime('%m/%d'), cond, fc_weather['high'],
+                            datetime.strptime(fc_weather['date'], '%d %b %Y').strftime('%m/%d'), c_code, fc_weather['high'],
                             units['temperature'], fc_weather['low'], units['temperature'])
                         print ("speech = {}".format(speech))
                     else:
@@ -411,17 +411,17 @@ def process_request(req):
     return res
 
 
-def conv_weather_cond(condition, lang):
+def conv_weather_cond(c_code, lang):
     print ("lang is {}".format(lang))
     weather_file = "weather_condition.csv"
     try:
         with open(weather_file, 'rU') as f:
             w_cond = list(csv.reader(f))
             row_num=1
-            print("condition = {}".format(condition))
+            print("condition = {}".format(c_code))
             while True:
                 print ("w_cond[row_num][0] = {}".format(w_cond[row_num][0]))
-                if w_cond[row_num][0] == condition.lower():
+                if w_cond[row_num][0] == c_code:
                     row_found = row_num
                     print ("found the weather condition! : {}".format(row_found))
                     break
@@ -439,11 +439,11 @@ def conv_weather_cond(condition, lang):
     print ("00")
 
     if (lang == "s_cn"):
-        print("11 {}".format(w_cond[row_found][1]))
-        return w_cond[row_found][1]
-    else:
-        print("22 {}".format(w_cond[row_found][2]))
+        print("11 {}".format(w_cond[row_found][2]))
         return w_cond[row_found][2]
+    else:
+        print("22 {}".format(w_cond[row_found][3]))
+        return w_cond[row_found][3]
     #11
 
 @app.route('/webhook', methods=['POST'])
