@@ -309,6 +309,7 @@ def process_request(req):
         condition = data['query']['results']['channel']['item']['condition']
         units = data['query']['results']['channel']['units']
         forecast_items = data['query']['results']['channel']['item']['forecast']
+        city = req['result']['parameters']['geo-city']
 
         date = req['result']['parameters'].get('date')
         date_period = req['result']['parameters'].get('date-period')
@@ -317,10 +318,10 @@ def process_request(req):
             if not date_period:
                 if userlocale == "zh_cn":
                     temp = conv_weather_cond(condition['text'], "s_cn")
-                    speech = '%s的天气: %s, 温度是华氏%s°%s' % (location['city'], temp, condition['temp'], units['temperature'])
+                    speech = '%s的天气: %s, 温度是华氏%s°%s' % (city, temp, condition['temp'], units['temperature'])
                 elif userlocale == "zh_tw" or userlocale == "zh_hk":
                     temp = conv_weather_cond(condition['text'], "t_cn")
-                    speech = '%s的天氣: %s, 溫度是華氏%s°%s' % (location['city'], temp, condition['temp'], units['temperature'])
+                    speech = '%s的天氣: %s, 溫度是華氏%s°%s' % (city, temp, condition['temp'], units['temperature'])
                 else:
                     speech = 'Current weather in %s: %s, the temperature is %s°%s' % (
                         location['city'], condition['text'],
