@@ -109,8 +109,8 @@ def grab_answer(from_loc, to_loc, dir_file):
 def get_gmap_directions(from_loc, to_loc, lang):
     now = datetime.now()
 
-    from_loc = gmaps.places_autocomplete(from_loc, language=lang)[0]['structured_formatting']['main_text']
-    to_loc = gmaps.places_autocomplete(to_loc, language=lang)[0]['structured_formatting']['main_text']
+    from_loc = gmaps.places(from_loc, language=lang)['results'][0]['formatted_address']
+    to_loc = gmaps.places(to_loc, language=lang)['results'][0]['formatted_address']
 
     directions_result = gmaps.directions(from_loc, to_loc, mode='transit', departure_time=now, language=lang)
 
