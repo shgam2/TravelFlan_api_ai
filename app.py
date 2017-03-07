@@ -358,7 +358,9 @@ def process_request(req):
 
 
         else: #tomorrow portion
+            print ("11111111111")
             if (date == "明天"):
+                print ("2222222222222")
                 t_date = forecast_items[0]['date']
                 t_text = forecast_items[0]['text']
                 t_high = forecast_items[0]['high']
