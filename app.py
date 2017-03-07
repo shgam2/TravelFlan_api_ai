@@ -87,6 +87,7 @@ def make_yql_query(req):
 
 def forecast(date, item_num, forecast_items):
     if item_num != -1:
+        print ("I'M HERE!!!!!!!!!!!!!!!!!!!!!!")
         fc_weather = forecast_items[item_num]
         return fc_weather
 
