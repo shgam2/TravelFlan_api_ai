@@ -213,6 +213,7 @@ def get_gmap_directions(from_loc, to_loc, lang):
             l += len(x)
             if l > 500:
                 speech = speech[:l - len(x)] + '\n...'
+                break
     else:
         speech = ' '
 
