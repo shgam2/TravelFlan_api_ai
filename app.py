@@ -109,19 +109,25 @@ def grab_answer(from_loc, to_loc, dir_file):
 def get_gmap_directions(from_loc, to_loc, lang):
     now = datetime.now()
 
+    print('TEST1')
+
     from_loc = gmaps.places(from_loc, language=lang)['results'][0]['formatted_address']
     to_loc = gmaps.places(to_loc, language=lang)['results'][0]['formatted_address']
 
     url = 'https://www.google.com/maps?saddr=%s&daddr=%s&dirflg=r' % (
         from_loc.replace(' ', '+'), to_loc.replace(' ', '+'))
 
+    print('TEST2')
     directions_result = gmaps.directions(from_loc, to_loc, mode='transit', departure_time=now, language=lang)
     if directions_result:
+        print('TEST3')
         fare = directions_result[0]['fare']['text']
         departure_time = directions_result[0]['legs'][0]['departure_time']['text']
         arrival_time = directions_result[0]['legs'][0]['arrival_time']['text']
         distance = directions_result[0]['legs'][0]['distance']['text']
         duration = directions_result[0]['legs'][0]['duration']['text']
+
+        print('TEST4')
 
         route = ''
         for step in directions_result[0]['legs'][0]['steps']:
@@ -131,6 +137,7 @@ def get_gmap_directions(from_loc, to_loc, lang):
                 route += '- %s: %s ~ %s' % (step['line']['vehicle']['name'],
                                             step['departure_stop'], step['arrival_stop'])
 
+        print('TEST5')
         speech = 'Fare: %s\n' \
                  'Departure Time: %s\n' \
                  'Arrival Time: %s\n' \
@@ -138,7 +145,9 @@ def get_gmap_directions(from_loc, to_loc, lang):
                  'Duration: %s\n' \
                  'Route:\n%s' % (fare, departure_time, arrival_time, distance, duration, route)
     else:
+        print('TEST7')
         speech = ' '
+    print('TEST6')
     data = [
         {
             "attachment_type": "template",
