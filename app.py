@@ -131,6 +131,7 @@ def get_gmap_directions(from_loc, to_loc, lang):
 
 
 def parse_json(req):
+    print('TEST1')
     lang = req['originalRequest']['data'].get('locale')
     if lang == 'zh_TW' or lang == 'zh_HK':
         dir_file = DIR_FILE_TW
@@ -145,9 +146,14 @@ def parse_json(req):
     from_loc = parameters.get('direction1')
     to_loc = parameters.get('direction2')
 
+    print('TEST2')
+
     speech = grab_answer(from_loc, to_loc, dir_file)
     if not speech:
+        print('TEST3')
         speech = get_gmap_directions(from_loc, to_loc, lang)
+        print('TEST4')
+    print('TEST5')
     return speech
 
 
