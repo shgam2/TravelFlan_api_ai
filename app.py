@@ -127,7 +127,7 @@ def get_gmap_directions(from_loc, to_loc, lang):
                 'template_type': 'generic',
                 'elements': [
                     {
-                        'title': '',
+                        'title': 'TEST!!!',
                         'buttons': [
                             {
                                 'type': 'web_url',
