@@ -361,7 +361,7 @@ def process_request(req):
             print ("11111111111")
             if (date == "明天"):
                 print ("2222222222222")
-                t_date = forecast_items[0]['date']
+                t_date = datetime.strptime(forecast_items[0]['date'], '%d %b %Y').strftime('%m/%d')
                 t_code = forecast_items[0]['code']
                 t_high = forecast_items[0]['high']
                 t_low = forecast_items[0]['low']
