@@ -115,13 +115,13 @@ def grab_answer(from_loc, to_loc, dir_file, lang):
 
 
             for i in range(1, 7):
-                print("1.{} -- 2.{}".format(direction[i][0], from_loc.lower()))
-                if direction[i][0] == from_loc.lower():
+                print("1.{} -- 2.{}".format(direction[i][0].lower(), from_loc.lower()))
+                if direction[i][0].lower() == from_loc.lower():
                     row_num = i
                     break
 
             for i in range(1, 11):
-                if direction[0][i] == to_loc.lower():
+                if direction[0][i].lower() == to_loc.lower():
                     col_num = i
                     break
 
