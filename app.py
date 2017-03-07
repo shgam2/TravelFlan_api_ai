@@ -401,7 +401,7 @@ def conv_weather_cond (condition, lang):
                     print ("end of file")
                     break
                 else:
-                    print ("not found!")
+                    #print ("not found!")
                     row_num += 1
     except IOError as e:
         print('IOError: {}'.format(weather_file), e)
