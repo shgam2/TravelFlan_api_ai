@@ -412,7 +412,7 @@ def conv_weather_cond (condition, lang):
         return w_cond[row_found][1]
     else:
         return w_cond[row_found][2]
-
+    #11
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
