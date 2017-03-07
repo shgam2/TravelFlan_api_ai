@@ -409,11 +409,13 @@ def conv_weather_cond(condition, lang):
     except Exception as e:
         print('Exception', e)
 
+    print ("00")
+
     if (lang == "s_cn"):
-        print("11"+w_cond[row_found][1])
+        print("11 {}".format(w_cond[row_found][1]))
         return w_cond[row_found][1]
     else:
-        print("22"+w_cond[row_found][2])
+        print("22 {}".format(w_cond[row_found][2]))
         return w_cond[row_found][2]
     #11
 
