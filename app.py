@@ -105,7 +105,7 @@ def forecast(date, item_num, forecast_items):
     return fc_weather
 
 
-def grab_answer(from_loc, to_loc, dir_file):
+def grab_answer(from_loc, to_loc, dir_file, lang):
     try:
         with open(dir_file, 'rU') as f:
             direction = list(csv.reader(f))
@@ -113,7 +113,7 @@ def grab_answer(from_loc, to_loc, dir_file):
             row_num = 0
             col_num = 0
 
-            print ("*********")
+
             for i in range(1, 7):
                 print("1.{} -- 2.{}".format(direction[i][0], from_loc.lower()))
                 if direction[i][0] == from_loc.lower():
@@ -124,11 +124,18 @@ def grab_answer(from_loc, to_loc, dir_file):
                 if direction[0][i] == to_loc.lower():
                     col_num = i
                     break
-            print ("111111111")
+
             if row_num and col_num:
                 speech = direction[row_num][col_num]
-                title = "Transportation: From {} - To {}".format(direction[row_num][0],direction[0][col_num])
-                url = 'https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/visit_korea.gif'
+                #title = "Transportation: From {} - To {}".format(direction[row_num][0],direction[0][col_num])
+                title = "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/visit_korea.gif"
+                url = 'http://big5chinese.visitkorea.or.kr/cht/TR/TR_CH_5_18.jsp'
+                if lang == 'zh_TW' or lang == 'zh_HK':
+                    button_title = "視圖"
+                elif lang == 'zh_CN':
+                    button_title = "视图"
+                else:
+                    button_title = "View"
                 data = [
                     {
                         "attachment_type": "template",
@@ -233,7 +240,7 @@ def parse_json(req):
     from_loc = parameters.get('direction1')
     to_loc = parameters.get('direction2')
 
-    speech, data = grab_answer(from_loc, to_loc, dir_file)
+    speech, data = grab_answer(from_loc, to_loc, dir_file, lang)
     if not speech:
         speech, data = get_gmap_directions(from_loc, to_loc, lang)
     return speech, data
