@@ -280,12 +280,14 @@ def process_request(req):
     elif action == 'translation':
         phrase = req['result']['parameters']['Phrase']
         language = req['result']['parameters']['language']
-
+        print(phrase)
+        print(language)
         code = find_language_code(language.lower())
-
+        print(code)
         url = TRANSLATE_BASE_URL + urlencode({'text': phrase, 'to': code, 'authtoken': 'dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
+        print(url)
         _res = urlopen(url).read()
-
+        print(_res)
         speech = '"%s" in %s is "%s"' % (phrase, language, _res.decode())
         res = {
             'speech': speech,
