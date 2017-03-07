@@ -108,23 +108,20 @@ def grab_answer(from_loc, to_loc, dir_file):
 
 def get_gmap_directions(from_loc, to_loc, lang):
     now = datetime.now()
-    directions_result = None
 
-    from_loc_auto = gmaps.places_autocomplete(from_loc)[:3]
-    to_loc_auto = gmaps.places_autocomplete(to_loc)[:3]
+    from_loc = gmaps.places_autocomplete(from_loc, language=lang)[0]['structured_formatting']['main_text']
+    to_loc = gmaps.places_autocomplete(to_loc, language=lang)[0]['structured_formatting']['main_text']
 
-    for f in from_loc_auto:
-        from_loc = f['structured_formatting']['main_text']
-        for t in to_loc_auto:
-            to_loc = t['structured_formatting']['main_text']
+    directions_result = gmaps.directions(from_loc, to_loc, mode='transit', departure_time=now, language=lang)
 
-            directions_result = gmaps.directions(from_loc, to_loc, mode='transit', departure_time=now, language=lang)
-            if directions_result:
-                break
-
-    speech = None
     if directions_result:
-        speech = 'https://www.google.com/maps?saddr=%s&daddr=%s' % (quote(from_loc), quote(to_loc))
+        speech = ''
+        speech += 'https://www.google.com/maps?saddr=%s&daddr=%s&dirflg=r' % (
+            from_loc.replace(' ', '+'), to_loc.replace(' ', '+'))
+    else:
+        speech = 'https://www.google.com/maps?saddr=%s&daddr=%s&dirflg=r' % (
+            from_loc.replace(' ', '+'), to_loc.replace(' ', '+'))
+
     return speech
 
 
