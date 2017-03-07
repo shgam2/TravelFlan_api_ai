@@ -305,7 +305,9 @@ def process_request(req):
         _res = urlopen(url).read()
         print(_res)
         tmpl = get_response_template(userlocale.lower())
+        print(tmpl)
         speech = tmpl % (phrase, language, _res.decode())
+        print(speech)
         res = {
             'speech': speech,
             'displayText': speech,
