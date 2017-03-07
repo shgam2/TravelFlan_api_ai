@@ -330,10 +330,10 @@ def process_request(req):
             else:
                 print ("1111111111")
                 if userlocale == "zh_cn":
-                    speech = '%s天氣預報(10天):' % (city)
+                    speech = ('%s天氣預報(10天):' % city)
                 elif userlocale == "zh_tw" or userlocale == "zh_hk":
                     print("222222222222")
-                    speech = '%s天气预报(10天):' % (city)
+                    speech = ('%s天气预报(10天):' % city)
                 else:
                     speech = ('Here is the 10-day forecast for %s:' % (location['city']))
                 for i in range(0, 10):
