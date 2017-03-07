@@ -112,21 +112,16 @@ def get_gmap_directions(from_loc, to_loc, lang):
     from_loc = gmaps.places(from_loc, language=lang)['results'][0]['formatted_address']
     to_loc = gmaps.places(to_loc, language=lang)['results'][0]['formatted_address']
 
-    print('TEST1')
-
     url = 'https://www.google.com/maps?saddr=%s&daddr=%s&dirflg=r' % (
         from_loc.replace(' ', '+'), to_loc.replace(' ', '+'))
 
     directions_result = gmaps.directions(from_loc, to_loc, mode='transit', departure_time=now, language=lang)
-    print('TEST2')
     if directions_result:
-        print('TEST3')
         fare = directions_result[0]['fare']['text']
         departure_time = directions_result[0]['legs'][0]['departure_time']['text']
         arrival_time = directions_result[0]['legs'][0]['arrival_time']['text']
         distance = directions_result[0]['legs'][0]['distance']['text']
         duration = directions_result[0]['legs'][0]['duration']['text']
-        print('TEST4')
 
         route = ''
         for step in directions_result[0]['legs'][0]['steps']:
@@ -136,31 +131,23 @@ def get_gmap_directions(from_loc, to_loc, lang):
                 route += '- %s: %s ~ %s' % (step['line']['vehicle']['name'],
                                             step['departure_stop'], step['arrival_stop'])
 
-            print('TEST5')
-
-        print('TEST6')
-
-    print('TEST7')
-
-    speech = 'Fare: %s\n' \
-             'Departure Time: %s\n' \
-             'Arrival Time: %s\n' \
-             'Distance: %s\n' \
-             'Duration: %s\n' \
-             'Route:\n%s' % (fare, departure_time, arrival_time, distance, duration, route)
-
-    print('TEST8')
-
+        speech = 'Fare: %s\n' \
+                 'Departure Time: %s\n' \
+                 'Arrival Time: %s\n' \
+                 'Distance: %s\n' \
+                 'Duration: %s\n' \
+                 'Route:\n%s' % (fare, departure_time, arrival_time, distance, duration, route)
+    else:
+        speech = ' '
     data = [
         {
             "attachment_type": "template",
             "attachment_template": {
                 'template_type': 'generic',
-                'text': 'TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
+                'text': speech,
                 'elements': [
                     {
                         'title': 'Map',
-                        'text': speech,
                         'buttons': [
                             {
                                 'type': 'web_url',
@@ -173,8 +160,6 @@ def get_gmap_directions(from_loc, to_loc, lang):
             }
         }
     ]
-
-    print('TEST9')
 
     return speech, data
 
