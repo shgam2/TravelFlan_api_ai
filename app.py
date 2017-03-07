@@ -128,8 +128,7 @@ def grab_answer(from_loc, to_loc, dir_file, lang):
             if row_num and col_num:
                 speech = direction[row_num][col_num]
 
-                #image_url = "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/arex.jpg"
-                image_url = "http://dailygenius.com/wp-content/uploads/2016/04/google-maps-new-interface1.jpg"
+                image_url = "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/arex.jpg"
 
                 if lang == 'zh_TW' or lang == 'zh_HK':
                     button_title = "點擊查看"
@@ -210,7 +209,7 @@ def get_gmap_directions(from_loc, to_loc, lang):
     else:
         speech = ' '
 
-    map_image_url = "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/paris-map-design.jpg"
+    map_image_url = "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/googlemap_image.jpg"
 
     data = [
         {
