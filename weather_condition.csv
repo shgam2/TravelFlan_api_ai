@@ -26,14 +26,11 @@ blustery,大风,大風
 windy,有风,有風
 cold,寒冷,寒冷
 cloudy,多云,多雲
-mostly cloudy (night),晚间大部分时间多云,晚間大部分時間多雲
-mostly cloudy (day),日间大部分时间多云,日間大部分時間多雲
-partly cloudy (night),晚间部分时间多云,晚間部分時間多雲
-partly cloudy (day),日间部分时间多云,日間部分時間多雲
-clear (night),天色明朗,天色明朗
+mostly cloudy,间大部分时间多云,間大部分時間多雲
+partly cloudy,间部分时间多云,間部分時間多雲
+clear,天色明朗,天色明朗
 sunny,天晴,天晴
-fair (night),晚间天气良好,晚間天氣良好
-fair (day),日间天气良好,日間天氣良好
+fair,间天气良好,天氣良好
 mixed rain and hail,雨夹雹,雨夾雹
 hot,炎热,炎熱
 isolated thunderstorms,局部地区有雷暴,局部地區有雷暴
