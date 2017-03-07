@@ -57,7 +57,7 @@ def get_response_template(lang):
     }.get(lang)
 
 def convert_langauge_to_user_locale(targetlang, userlang):
-    if userlang == 'zh_hk' || userlang == 'zh_cn' || userlang == 'zh_tw':
+    if userlang == 'zh_hk' or userlang == 'zh_cn' or userlang == 'zh_tw':
         if targetlang == 'korean':
             return '韩文'
         elif targetlang == 'english':
