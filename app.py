@@ -128,7 +128,7 @@ def grab_answer(from_loc, to_loc, dir_file, lang):
             if row_num and col_num:
                 speech = direction[row_num][col_num]
 
-                image_url = "http://www.cmu.edu/student-affairs/slice/studentactivities/images/pat.bus.png"
+                image_url = "http://iamontheroad.net/wp-content/uploads/2015/10/Arex.jpg"
 
                 if lang == 'zh_TW' or lang == 'zh_HK':
                     button_title = "點擊查看"
