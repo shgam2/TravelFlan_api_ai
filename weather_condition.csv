@@ -1,53 +1,50 @@
-English,Simplified_Chinese,Traditional_Chinese
-tornado,龙卷风,龍捲風
-tropical storm,热带风暴,熱帶風暴
-hurricane,飓风,颶風
-severe thunderstorms,强烈雷暴,強烈雷暴
-thunderstorms,雷暴,雷暴
-mixed rain and snow,雨夹雪,雨夾雪
-mixed rain and sleet,有雨和雪雨,有雨和雪雨
-mixed snow and sleet,有雪和雪雨,有雪和雪雨
-freezing drizzle,冻毛雨,凍毛雨
-drizzle,细雨,細雨
-freezing rain,冻雨,凍雨
-showers,骤雨,驟雨
-showers,骤雨,驟雨
-snow flurries,小阵雪,小陣雪
-light snow showers,小阵雪,小陣雪
-blowing snow,高吹雪,高吹雪
-snow,下雪,下雪
-hail,下冰雹,下冰雹
-sleet,雪雨,雪雨
-dust,灰尘,灰塵
-foggy,雾,霧
-haze,薄雾,薄霧
-smoky,烟霞,煙霞
-blustery,大风,大風
-windy,有风,有風
-cold,寒冷,寒冷
-cloudy,多云,多雲
-mostly cloudy (night),晚间大部分时间多云,晚間大部分時間多雲
-mostly cloudy (day),日间大部分时间多云,日間大部分時間多雲
-partly cloudy (night),晚间部分时间多云,晚間部分時間多雲
-mostly cloudy (day),日间部分时间多云,日間部分時間多雲
-clear,天色明朗,天色明朗
-mostly clear,天气很清楚,天氣很清楚
-sunny,天晴,天晴
-mostly sunny,大部分时间天晴,大部分時間天晴
-fair,间天气良好,天氣良好
-mixed rain and hail,雨夹雹,雨夾雹
-hot,炎热,炎熱
-isolated thunderstorms,局部地区有雷暴,局部地區有雷暴
-scattered thunderstorms,零散雷暴,零散雷暴
-scattered thunderstorms,零散雷暴,零散雷暴
-scattered showers,零散骤雨,零散驟雨
-heavy snow,大雪,大雪
-scattered snow showers,零散阵雪,零散陣雪
-partly cloudy,部分时间多云,部分時間多雲
-mostly cloudy,大部分时间多云,部分時間多雲
-thundershowers,雷阵雨,雷陣雨
-snow showers,阵雪,陣雪
-isolated thundershowers,局部地区有雷雨,局部地區有雷雨
-not available,没有资料,沒有資料
-,,
-,,
+,English,Simplified_Chinese,Traditional_Chinese
+0,tornado,龙卷风,龍捲風
+1,tropical storm,热带风暴,熱帶風暴
+2,hurricane,飓风,颶風
+3,severe thunderstorms,强烈雷暴,強烈雷暴
+4,thunderstorms,雷暴,雷暴
+5,mixed rain and snow,雨夹雪,雨夾雪
+6,mixed rain and sleet,有雨和雪雨,有雨和雪雨
+7,mixed snow and sleet,有雪和雪雨,有雪和雪雨
+8,freezing drizzle,冻毛雨,凍毛雨
+9,drizzle,细雨,細雨
+10,freezing rain,冻雨,凍雨
+11,showers,骤雨,驟雨
+12,showers,骤雨,驟雨
+13,snow flurries,小阵雪,小陣雪
+14,light snow showers,小阵雪,小陣雪
+15,blowing snow,高吹雪,高吹雪
+16,snow,下雪,下雪
+17,hail,下冰雹,下冰雹
+18,sleet,雪雨,雪雨
+19,dust,灰尘,灰塵
+20,foggy,雾,霧
+21,haze,薄雾,薄霧
+22,smoky,烟霞,煙霞
+23,blustery,大风,大風
+24,windy,有风,有風
+25,cold,寒冷,寒冷
+26,cloudy,多云,多雲
+27,mostly cloudy (night),晚间大部分时间多云,晚間大部分時間多雲
+28,mostly cloudy (day),日间大部分时间多云,日間大部分時間多雲
+29,partly cloudy (night),晚间部分时间多云,晚間部分時間多雲
+30,partly cloudy (day),日间部分时间多云,日間部分時間多雲
+31,clear (night),天色明朗,天色明朗
+32,sunny,天晴,天晴
+33,fair (night),晚间天气良好,晚間天氣良好
+34,fair (day),日间天气良好,日間天氣良好
+35,mixed rain and hail,雨夹雹,雨夾雹
+36,hot,炎热,炎熱
+37,isolated thunderstorms,局部地区有雷暴,局部地區有雷暴
+38,scattered thunderstorms,零散雷暴,零散雷暴
+39,scattered thunderstorms,零散雷暴,零散雷暴
+40,scattered showers,零散骤雨,零散驟雨
+41,heavy snow,大雪,大雪
+42,scattered snow showers,零散阵雪,零散陣雪
+43,heavy snow,大雪,大雪
+44,partly cloudy,部分时间多云,部分時間多雲
+45,thundershowers,雷阵雨,雷陣雨
+46,snow showers,阵雪,陣雪
+47,isolated thundershowers,局部地区有雷雨,局部地區有雷雨
+48,not available,没有资料,沒有資料
