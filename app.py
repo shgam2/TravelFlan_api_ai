@@ -194,12 +194,12 @@ def get_gmap_directions(from_loc, to_loc, lang):
 
         route = ''
         for step in directions_result[0]['legs'][0]['steps']:
-            route += '%s: %s(%s, %s)' % (step['travel_mode'], step['html_instructions'],
-                                         step['distance']['text'], step['duration']['text'])
+            route += '%s: %s(%s, %s)\n' % (step['travel_mode'], step['html_instructions'],
+                                           step['distance']['text'], step['duration']['text'])
             if 'transit_details' in step:
-                route += '- %s: %s ~ %s' % (step['transit_details']['line']['vehicle']['name'],
-                                            step['transit_details']['departure_stop']['name'],
-                                            step['transit_details']['arrival_stop']['name'])
+                route += '- %s: %s ~ %s\n' % (step['transit_details']['line']['vehicle']['name'],
+                                              step['transit_details']['departure_stop']['name'],
+                                              step['transit_details']['arrival_stop']['name'])
 
         speech = 'Fare: %s\n' \
                  'Departure Time: %s\n' \
@@ -207,7 +207,12 @@ def get_gmap_directions(from_loc, to_loc, lang):
                  'Distance: %s\n' \
                  'Duration: %s\n' \
                  'Route:\n%s' % (fare, departure_time, arrival_time, distance, duration, route)
-        speech = speech[:600]
+
+        l = 0
+        for x in speech.split('\n'):
+            l += len(x)
+            if l > 500:
+                speech = speech[:l - len(x)] + '\n...'
     else:
         speech = ' '
 
