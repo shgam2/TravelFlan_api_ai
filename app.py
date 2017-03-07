@@ -346,7 +346,11 @@ def process_request(req):
                     print (fc_weather)
 
                     if userlocale.lower() == "zh_cn" or userlocale.lower() == "zh_tw" or userlocale.lower() == "zh_hk":
-                        cond = conv_weather_cond(fc_weather['text'])
+                        if userlocale.lower() == "zh_cn":
+                            lang = "s_cn"
+                        else:
+                            lang = "t_cn"
+                        cond = conv_weather_cond(fc_weather['text'],lang)
                         print("333333333333")
                         print("1. "+fc_weather['date'])
                         print("2. " +cond)
