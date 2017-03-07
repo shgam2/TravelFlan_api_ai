@@ -99,7 +99,7 @@ def grab_answer(from_loc, to_loc, dir_file):
                 speech = direction[row_num][col_num]
             else:
                 speech = None
-            return speech
+            return speech, None
     except IOError as e:
         print('IOError', e)
     except Exception as e:
@@ -155,6 +155,7 @@ def get_gmap_directions(from_loc, to_loc, lang):
 
 
 def parse_json(req):
+    print('TEST!!')
     lang = req['originalRequest']['data'].get('locale')
     if lang == 'zh_TW' or lang == 'zh_HK':
         dir_file = DIR_FILE_TW
@@ -169,9 +170,13 @@ def parse_json(req):
     from_loc = parameters.get('direction1')
     to_loc = parameters.get('direction2')
 
+    print('TEST!!2')
+
     speech, data = grab_answer(from_loc, to_loc, dir_file)
     if not speech:
+        print('TEST!!3')
         speech, data = get_gmap_directions(from_loc, to_loc, lang)
+        print('TEST!!4')
     return speech, data
 
 
