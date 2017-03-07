@@ -384,7 +384,8 @@ def process_request(req):
     return res
 
 
-def conv_weather_cond (condition, lang):
+def conv_weather_cond(condition, lang):
+    print ("lang is {}".format(lang))
     weather_file = "weather_condition.csv"
     try:
         with open(weather_file, 'rU') as f:
@@ -409,7 +410,7 @@ def conv_weather_cond (condition, lang):
         print('Exception', e)
 
     if (lang == "s_cn"):
-        print ("11"+w_cond[row_found][1])
+        print("11"+w_cond[row_found][1])
         return w_cond[row_found][1]
     else:
         print("22"+w_cond[row_found][2])
