@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import csv
+from datetime import datetime
 import json
 import os
-from datetime import datetime
 from urllib.parse import urlencode
 from urllib.request import urlopen
 
@@ -12,29 +12,24 @@ import googlemaps
 
 app = Flask(__name__)
 
+gmaps = googlemaps.Client(key='AIzaSyB8ri2uUrjtGX2tgOoK_vMSo8ByuP31Njs')
+
 YAHOO_YQL_BASE_URL = 'https://query.yahooapis.com/v1/public/yql?'
 TRANSLATE_BASE_URL = 'http://awseb-e-f-AWSEBLoa-VIW6OYVV6CSY-1979702995.us-east-1.elb.amazonaws.com/translate?'
 
-# temporary csv files containing answers for transportation-related questions
-dir_file_en = 'transportation_en.csv'
-dir_file_cn = 'transportation_cn.csv'
-dir_file_tw = 'transportation_tw.csv'
+DIR_FILE_EN = 'transportation_en.csv'
+DIR_FILE_CN = 'transportation_cn.csv'
+DIR_FILE_TW = 'transportation_tw.csv'
 
-# template error messages:
-out_of_bound = "Error occured due to one of the following reasons:\n" \
-               "1. You must use the language that you signed-up with when asking transportation-related question\n" \
-               "2. The origin and/or destination that you've entered is/are not in our database\n" \
-               "Please rephrase your transportation-related question and try again!"
-rephrase_error = "Please rephrase your transportation-related question.\n" \
-                 "Example:\n" \
+OUT_OF_BOUND = 'Error occured due to one of the following reasons:\n' \
+               '1. You must use the language that you signed-up with when asking transportation-related question\n' \
+               '2. The origin and/or destination that you\'ve entered is/are not in our database\n' \
+               'Please rephrase your transportation-related question and try again!'
+REPHRASE_ERROR = 'Please rephrase your transportation-related question.\n' \
+                 'Example:\n' \
                  '- English: "How can I go to Kyoto from Osaka?"\n' \
                  '- 简化字: "从大阪要怎样乘车到京都？"\n' \
                  '- 正體字: "由大阪點搭車去京都？"'
-
-
-def make_yql_query(req):
-    city = req['result']['parameters']['geo-city']
-    return 'select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\'%s\') and u=\'c\'' % (city,)
 
 
 def find_language_code(lang):
@@ -53,15 +48,95 @@ def find_language_code(lang):
     }.get(lang)
 
 
+def make_yql_query(req):
+    city = req['result']['parameters']['geo-city']
+    return 'select * from weather.forecast ' \
+           'where woeid in (select woeid from geo.places(1) where text=\'%s\') and u=\'c\'' % (city,)
+
+
+def forecast(date, item_num, forecast_items):
+    if item_num != -1:
+        fc_weather = forecast_items[item_num]
+        return fc_weather
+
+    fc_weather = None
+
+    for i in forecast_items:
+        if date:
+            i_date = datetime.strptime(i.get('date'), '%d %b %Y').strftime('%Y-%m-%d')
+
+            if date == i_date:
+                fc_weather = {
+                    'date': datetime.strptime(i.get('date'), '%d %b %Y').strftime('%a %b %d'),
+                    'high': i.get('high'),
+                    'low': i.get('low'),
+                    'text': i.get('text')
+                }
+                print(fc_weather)
+                break
+    return fc_weather
+
+
+def grab_answer(from_loc, to_loc, dir_file):
+    try:
+        with open(dir_file, 'rU') as f:
+            direction = list(csv.reader(f))
+
+            row_num = 0
+            col_num = 0
+
+            for i in range(1, 3):
+                if direction[i][0] == from_loc:
+                    row_num = i
+                    break
+
+            for i in range(1, 3):
+                if direction[0][i] == to_loc:
+                    col_num = i
+                    break
+
+            if row_num and col_num:
+                speech = direction[row_num][col_num]
+            else:
+                speech = None
+            return speech
+    except IOError as e:
+        print('IOError', e)
+    except Exception as e:
+        print('Exception', e)
+
+
+def get_gmap_directions(loc1, loc2, lang):
+    now = datetime.now()
+    directions_result = gmaps.directions(loc1, loc2, mode='transit', departure_time=now, language=lang)
+    print(directions_result)
+
+
+def parse_json(req):
+    lang = req['originalRequest']['data'].get('locale')
+    if lang == 'zh_TW' or lang == 'zh_HK':
+        dir_file = DIR_FILE_TW
+    elif lang == 'zh_CN':
+        dir_file = DIR_FILE_CN
+    else:
+        dir_file = DIR_FILE_EN
+
+    result = req.get('result')
+    parameters = result.get('parameters')
+
+    from_loc = parameters.get('direction1')
+    to_loc = parameters.get('direction2')
+
+    speech = grab_answer(from_loc, to_loc, dir_file)
+    if not speech:
+        get_gmap_directions(from_loc, to_loc, lang)
+    return speech
+
+
 def process_request(req):
     res = None
 
     action = req['result']['action']
-    date = req['result']['parameters'].get('date')
-    print("*********date is {}".format(date))
-    date_period = req['result']['parameters'].get('date-period')
-    print("*********date_period is {}".format(date))
-
     if action == 'weather':
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req)}) + '&format=json'
         print('YQL-Request:\n%s' % (url,))
@@ -89,19 +164,24 @@ def process_request(req):
         units = data['query']['results']['channel']['units']
         forecast_items = data['query']['results']['channel']['item']['forecast']
 
-        if date == "":
-            if (date_period == ""):
-                speech = 'Weather in %s (current): %s, the temperature is %s °%s' % (location['city'], condition['text'],
-                                                                          condition['temp'], units['temperature'])
+        date = req['result']['parameters'].get('date')
+        date_period = req['result']['parameters'].get('date-period')
+
+        if not date:
+            if not date_period:
+                speech = 'Weather in %s (current): %s, the temperature is %s °%s' % (
+                    location['city'], condition['text'],
+                    condition['temp'], units['temperature'])
             else:
-                speech = ("Here is the 10-day forecast for %s:" % (location['city']))
+                speech = ('Here is the 10-day forecast for %s:' % (location['city']))
                 for i in range(0, 10):
                     item_num = i
                     fc_weather = forecast(date, item_num, forecast_items)
 
-                    speech = speech + "\n(%s) %s, high: %s °%s, low: %s °%s" % (
-                        datetime.strptime(fc_weather['date'], "%d %b %Y").strftime("%a %b %d"), fc_weather['text'],
-                        fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
+                    speech += '\n(%s) %s, high: %s °%s, low: %s °%s' % (
+                        datetime.strptime(fc_weather['date'], '%d %b %Y').strftime('%a %b %d'),
+                        fc_weather['text'], fc_weather['high'],
+                        units['temperature'], fc_weather['low'], units['temperature'])
 
         else:
             item_num = -1
@@ -111,11 +191,10 @@ def process_request(req):
                 location['city'], fc_weather['date'], fc_weather['text'],
                 fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
 
-
         res = {
             'speech': speech,
             'displayText': speech,
-            'source': 'apiai-weather'#,
+            'source': 'apiai-weather',
             # 'data': [
             #     {
             #         "attachment_type": "template",
@@ -142,7 +221,6 @@ def process_request(req):
             #         "attachment_url": "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/q5_cn.png"
             #     }
             # ]
-
         }
     elif action == 'direction':
         speech = parse_json(req)
@@ -181,91 +259,6 @@ def webhook():
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
     return r
-
-
-def forecast(date, item_num, forecast_items):
-    if item_num != -1:
-        fc_weather = forecast_items[item_num]
-        return fc_weather
-
-    fc_weather = None
-
-    for i in forecast_items:
-        if date:
-            i_date = datetime.strptime(i.get('date'), "%d %b %Y").strftime("%Y-%m-%d")
-
-            if date == i_date:
-                fc_weather = {
-                    'date': datetime.strptime(i.get('date'), "%d %b %Y").strftime("%a %b %d"),
-                    'high': i.get('high'),
-                    'low': i.get('low'),
-                    'text': i.get('text')
-                }
-                print(fc_weather)
-                break
-    return fc_weather
-
-
-# input: JSON-formatted requested data
-# output: JSON-formatted response data
-def parse_json(req):
-    lang_code = req['originalRequest']['data'].get('locale')
-    if lang_code == "zh_TW" or lang_code == "zh_HK":
-        # use traditional chinese
-        dir_file = dir_file_tw
-    elif lang_code == "zh_CN":
-        # use simplified chinese
-        dir_file = dir_file_cn
-    else:
-        # use english
-        dir_file = dir_file_en
-
-    result = req.get("result")
-    parameters = result.get("parameters")
-
-    loc1 = parameters.get("direction1")
-    loc2 = parameters.get("direction2")
-
-    speech = grab_answer(loc1, loc2, dir_file)
-    return speech
-
-
-# input:
-#   - from_location
-#   - to_location
-# output:
-#   - answer speech (String data)
-def grab_answer(loc1, loc2, dir_file):
-
-    try:
-        with open(dir_file, 'rU') as f:
-            direction = list(csv.reader(f))
-
-            from_loc = loc1
-            to_loc = loc2
-            count = 0
-
-            while True:
-                if direction[count][0] == from_loc:
-                    row_num = count
-                    count = 0
-                    break
-                count = count + 1
-
-            while True:
-                if direction[0][count] == to_loc:
-                    col_num = count
-                    count = 0
-                    break
-                count = count + 1
-            speech = direction[row_num][col_num]
-            return speech
-    except IOError:
-        print("exception error")
-        # except IndexError:
-        # return out_of_bound
-    except Exception as e:
-        print("something weird happened: ", e)
 
 
 if __name__ == '__main__':
