@@ -128,7 +128,8 @@ def grab_answer(from_loc, to_loc, dir_file, lang):
             if row_num and col_num:
                 speech = direction[row_num][col_num]
 
-                image_url = "http://iamontheroad.net/wp-content/uploads/2015/10/Arex.jpg"
+                #image_url = "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/arex.jpg"
+                image_url = "https://agentpekka.com/wp-content/uploads/2015/02/AP_Jing_Zhang_Paris_2x.jpg"
 
                 if lang == 'zh_TW' or lang == 'zh_HK':
                     button_title = "點擊查看"
