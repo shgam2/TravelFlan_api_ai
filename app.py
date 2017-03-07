@@ -47,6 +47,14 @@ def find_language_code(lang):
         'chinese traditional': 'zh-tw',
     }.get(lang)
 
+def get_response_template(lang):
+    return {
+        'en_us': '"%s"的%s是%s',
+        'zh_hk': '"%s"的%s是%s',
+        'zh_cn': '"%s"的%s是%s',
+        'zh_tw': '"%s"的%s是%s',
+    }.get(lang)
+
 
 def make_yql_query(req):
     city = req['result']['parameters']['geo-city']
@@ -140,9 +148,30 @@ def get_gmap_directions(from_loc, to_loc, lang):
 
     directions_result = gmaps.directions(from_loc, to_loc, mode='transit', departure_time=now, language=lang)
     if directions_result:
-        pass
+        fare = directions_result[0]['fare']['text']
+        departure_time = directions_result[0]['legs'][0]['departure_time']['text']
+        arrival_time = directions_result[0]['legs'][0]['arrival_time']['text']
+        distance = directions_result[0]['legs'][0]['distance']['text']
+        duration = directions_result[0]['legs'][0]['duration']['text']
 
-    speech = 'TEST!!'
+        route = ''
+        for step in directions_result[0]['legs'][0]['steps']:
+            route += '%s: %s(%s, %s)' % (step['travel_mode'], step['html_instructions'],
+                                         step['distance']['text'], step['duration']['text'])
+            if 'transit_details' in step:
+                route += '- %s: %s ~ %s' % (step['transit_details']['line']['vehicle']['name'],
+                                            step['transit_details']['departure_stop']['name'],
+                                            step['transit_details']['arrival_stop']['name'])
+
+        speech = 'Fare: %s\n' \
+                 'Departure Time: %s\n' \
+                 'Arrival Time: %s\n' \
+                 'Distance: %s\n' \
+                 'Duration: %s\n' \
+                 'Route:\n%s' % (fare, departure_time, arrival_time, distance, duration, route)
+        speech = speech[:600]
+    else:
+        speech = ' '
     data = [
         {
             "attachment_type": "template",
@@ -150,7 +179,7 @@ def get_gmap_directions(from_loc, to_loc, lang):
                 'template_type': 'generic',
                 'elements': [
                     {
-                        'title': '',
+                        'title': 'Map',
                         'buttons': [
                             {
                                 'type': 'web_url',
@@ -190,7 +219,10 @@ def parse_json(req):
 
 def process_request(req):
     res = None
-
+    try:
+        userlocale = req['originalRequest']['data']['locale']
+    except Exception as e:
+        userlocale = 'zh_cn'
     action = req['result']['action']
     if action == 'weather':
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req)}) + '&format=json'
@@ -289,12 +321,16 @@ def process_request(req):
         phrase = req['result']['parameters']['Phrase']
         language = req['result']['parameters']['language'][0]
         code = find_language_code(language.lower())
+
         print(code)
         url = TRANSLATE_BASE_URL + urlencode({'text': phrase, 'to': code, 'authtoken': 'dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
         print(url)
         _res = urlopen(url).read()
         print(_res)
-        speech = '"%s" in %s is "%s"' % (phrase, language, _res.decode())
+        tmpl = get_response_template(userlocale.lower())
+        print(tmpl)
+        speech = tmpl % (phrase, language, _res.decode())
+        print(speech)
         res = {
             'speech': speech,
             'displayText': speech,
