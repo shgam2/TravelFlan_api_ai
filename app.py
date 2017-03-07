@@ -127,15 +127,21 @@ def grab_answer(from_loc, to_loc, dir_file, lang):
 
             if row_num and col_num:
                 speech = direction[row_num][col_num]
-                title = "Transportation: From {} - To {}".format(direction[row_num][0],direction[0][col_num])
+
                 image_url = "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/visit_korea.gif"
-                url = 'http://big5chinese.visitkorea.or.kr/cht/TR/TR_CH_5_18.jsp'
+
                 if lang == 'zh_TW' or lang == 'zh_HK':
                     button_title = "點擊查看"
+                    title = "交通工具"
+                    url = 'http://big5chinese.visitkorea.or.kr/cht/TR/TR_CH_5_18.jsp'
                 elif lang == 'zh_CN':
                     button_title = "点击查看"
+                    title = "交通工具"
+                    url = 'http://big5chinese.visitkorea.or.kr/cht/TR/TR_CH_5_18.jsp'
                 else:
                     button_title = "Click to view"
+                    Title = "Public Transportation"
+                    url = 'http://english.visitkorea.or.kr/enu/TRP/TP_ENG_2_1.jsp'
                 data = [
                     {
                         "attachment_type": "template",
