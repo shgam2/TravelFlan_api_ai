@@ -109,6 +109,10 @@ def grab_answer(from_loc, to_loc, dir_file):
 def get_gmap_directions(from_loc, to_loc, lang):
     now = datetime.now()
 
+    print('from_loc', from_loc)
+    print('to_loc', to_loc)
+    print('lang', lang)
+
     directions_result = None
 
     from_loc_auto = gmaps.places_autocomplete(from_loc)[:3]
@@ -119,19 +123,21 @@ def get_gmap_directions(from_loc, to_loc, lang):
         for t in to_loc_auto:
             to_loc = t['structured_formatting']['main_text']
 
+            print('- from_loc', from_loc)
+            print('- to_loc', to_loc)
+
             directions_result = gmaps.directions(from_loc, to_loc, mode='transit', departure_time=now, language=lang)
             if directions_result:
                 break
 
     if directions_result:
-        print(directions_result)
+        # print(directions_result)
         speech = 'https://www.google.com/maps?saddr=%s&daddr=%s' % (urlencode(from_loc), urlencode(to_loc))
 
     return speech
 
 
 def parse_json(req):
-    print('TEST1')
     lang = req['originalRequest']['data'].get('locale')
     if lang == 'zh_TW' or lang == 'zh_HK':
         dir_file = DIR_FILE_TW
@@ -146,14 +152,9 @@ def parse_json(req):
     from_loc = parameters.get('direction1')
     to_loc = parameters.get('direction2')
 
-    print('TEST2')
-
     speech = grab_answer(from_loc, to_loc, dir_file)
     if not speech:
-        print('TEST3')
         speech = get_gmap_directions(from_loc, to_loc, lang)
-        print('TEST4')
-    print('TEST5')
     return speech
 
 
