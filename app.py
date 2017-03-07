@@ -390,10 +390,12 @@ def conv_weather_cond (condition, lang):
         with open(weather_file, 'rU') as f:
             w_cond = list(csv.reader(f))
             row_num=1
+            print("condition = {}".format(condition))
             while True:
+                print ("w_cond[row_num][0] = {}".format(w_cond[row_num][0]))
                 if w_cond[row_num][0] == condition:
-                    cond_found = w_cond[row_num][0]
-                    print ("found the weather condition! : {}".format(cond_found))
+                    row_found = w_cond[row_num][0]
+                    print ("found the weather condition! : {}".format(row_found))
                     break
                 elif not w_cond[row_num][0]:
                     print ("end of file")
