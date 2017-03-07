@@ -85,21 +85,44 @@ def grab_answer(from_loc, to_loc, dir_file):
             row_num = 0
             col_num = 0
 
-            for i in range(1, 3):
-                if direction[i][0] == from_loc:
+            for i in range(1, 7):
+                if direction[i][0] == from_loc.lower():
                     row_num = i
                     break
 
-            for i in range(1, 3):
-                if direction[0][i] == to_loc:
+            for i in range(1, 11):
+                if direction[0][i] == to_loc.lower():
                     col_num = i
                     break
 
             if row_num and col_num:
                 speech = direction[row_num][col_num]
+                title = "Transportation: From {} - To {}".format(direction[row_num][0],direction[0][col_num])
+                url = 'https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/visit_korea.gif'
+                data = [
+                    {
+                        "attachment_type": "template",
+                        "attachment_template": {
+                            'template_type': 'generic',
+                            'elements': [
+                                {
+                                    'title': title,
+                                    'buttons': [
+                                        {
+                                            'type': 'web_url',
+                                            'url': url,
+                                            'title': 'View'
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
             else:
                 speech = None
-            return speech, None
+                data = None
+            return speech, data
     except IOError as e:
         print('IOError', e)
     except Exception as e:
@@ -201,7 +224,7 @@ def process_request(req):
 
         if not date:
             if not date_period:
-                speech = 'Weather in %s (current): %s, the temperature is %s °%s' % (
+                speech = 'Current weather in %s: %s, the temperature is %s °%s' % (
                     location['city'], condition['text'],
                     condition['temp'], units['temperature'])
             else:
