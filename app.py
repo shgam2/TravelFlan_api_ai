@@ -340,11 +340,13 @@ def process_request(req):
 
                 for i in range(0, 10):
                     item_num = i
+                    print ("1. {}  \n2.{} \n3.{}".format(date, item_num, forecast_items))
                     fc_weather = forecast(date, item_num, forecast_items)
+                    print (fc_weather)
 
                     if userlocale.lower() == "zh_cn" or userlocale.lower() == "zh_tw" or userlocale.lower() == "zh_hk":
                         print("333333333333")
-                        print("1:{}  2:{}".format(fc_weather['date'], conv_weather_cond(fc_weather['text'])))
+                        #print("1:{}  2:{}".format(fc_weather['date'], conv_weather_cond(fc_weather['text'])))
                         speech += '\n(%s) %s, 高溫: %s°%s, 低溫: %s°%s' % (
                             fc_weather['date'], conv_weather_cond(fc_weather['text']), fc_weather['high'],
                             units['temperature'], fc_weather['low'], units['temperature'])
