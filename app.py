@@ -4,7 +4,7 @@ import csv
 from datetime import datetime
 import json
 import os
-from urllib.parse import urlencode
+from urllib.parse import quote, urlencode
 from urllib.request import urlopen
 
 from flask import make_response, request, Flask
@@ -108,11 +108,6 @@ def grab_answer(from_loc, to_loc, dir_file):
 
 def get_gmap_directions(from_loc, to_loc, lang):
     now = datetime.now()
-
-    print('from_loc', from_loc)
-    print('to_loc', to_loc)
-    print('lang', lang)
-
     directions_result = None
 
     from_loc_auto = gmaps.places_autocomplete(from_loc)[:3]
@@ -123,17 +118,13 @@ def get_gmap_directions(from_loc, to_loc, lang):
         for t in to_loc_auto:
             to_loc = t['structured_formatting']['main_text']
 
-            print('- from_loc', from_loc)
-            print('- to_loc', to_loc)
-
             directions_result = gmaps.directions(from_loc, to_loc, mode='transit', departure_time=now, language=lang)
             if directions_result:
                 break
 
+    speech = None
     if directions_result:
-        # print(directions_result)
-        speech = 'https://www.google.com/maps?saddr=%s&daddr=%s' % (urlencode(from_loc), urlencode(to_loc))
-
+        speech = 'https://www.google.com/maps?saddr=%s&daddr=%s' % (quote(from_loc), quote(to_loc))
     return speech
 
 
