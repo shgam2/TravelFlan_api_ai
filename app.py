@@ -49,10 +49,10 @@ def find_language_code(lang):
 
 def get_response_template(lang):
     return {
-        'en_us': '"%s" in %s is "%s"',
-        'zh_hk': '"%s" in %s is "%s"',
-        'zh_cn': '"%s" in %s is "%s"',
-        'zh_tw': '"%s" in %s is "%s"',
+        'en_us': '"%s"的%s是%s',
+        'zh_hk': '"%s"的%s是%s',
+        'zh_cn': '"%s"的%s是%s',
+        'zh_tw': '"%s"的%s是%s',
     }.get(lang)
 
 
