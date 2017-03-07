@@ -328,7 +328,8 @@ def process_request(req):
                         condition['temp'], units['temperature'])
 
             else:
-                print ("1111111111")
+                print ("1111111111 {}".format(userlocale))
+
                 if userlocale == "zh_cn":
                     speech = ('%s天氣預報(10天):' % city)
                 elif userlocale == "zh_tw" or userlocale == "zh_hk":
@@ -336,6 +337,7 @@ def process_request(req):
                     speech = ('%s天气预报(10天):' % city)
                 else:
                     speech = ('Here is the 10-day forecast for %s:' % (location['city']))
+
                 for i in range(0, 10):
                     item_num = i
                     fc_weather = forecast(date, item_num, forecast_items)
