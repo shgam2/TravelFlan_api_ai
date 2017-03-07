@@ -264,9 +264,7 @@ def process_request(req):
         }
     elif action == 'translation':
         phrase = req['result']['parameters']['Phrase']
-        language = req['result']['parameters']['language']
-        print(phrase)
-        print(language)
+        language = req['result']['parameters']['language'][0]
         code = find_language_code(language.lower())
         print(code)
         url = TRANSLATE_BASE_URL + urlencode({'text': phrase, 'to': code, 'authtoken': 'dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
