@@ -347,11 +347,14 @@ def process_request(req):
                         speech += '\n(%s) %s, 高溫: %s °%s, 低溫: %s °%s' % (
                             fc_weather['date'], conv_weather_cond(fc_weather['text']), fc_weather['high'],
                             units['temperature'], fc_weather['low'], units['temperature'])
+                        print ("speech = {}".format(speech))
                     else:
                         speech += '\n(%s) %s, high: %s °%s, low: %s °%s' % (
                             datetime.strptime(fc_weather['date'], '%d %b %Y').strftime('%a %b %d'),
                             fc_weather['text'], fc_weather['high'],
                             units['temperature'], fc_weather['low'], units['temperature'])
+
+           # print("speech = {}".format(speech))
 
         else:
             item_num = -1
