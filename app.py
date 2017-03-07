@@ -193,19 +193,19 @@ def get_gmap_directions(from_loc, to_loc, lang):
         duration = directions_result[0]['legs'][0]['duration']['text']
 
         route = ''
-        for step in directions_result[0]['legs'][0]['steps']:
-            route += '%s: %s(%s, %s)\n' % (step['travel_mode'], step['html_instructions'],
-                                           step['distance']['text'], step['duration']['text'])
+        for i, step in enumerate(directions_result[0]['legs'][0]['steps']):
+            route += '%s. %s: %s(%s, %s)\n' % (i, step['travel_mode'], step['html_instructions'],
+                                               step['distance']['text'], step['duration']['text'])
             if 'transit_details' in step:
-                route += '- %s: %s ~ %s\n' % (step['transit_details']['line']['vehicle']['name'],
-                                              step['transit_details']['departure_stop']['name'],
-                                              step['transit_details']['arrival_stop']['name'])
+                route += '- %s: %s ~ %s\n\n' % (step['transit_details']['line']['vehicle']['name'],
+                                                step['transit_details']['departure_stop']['name'],
+                                                step['transit_details']['arrival_stop']['name'])
 
         speech = 'Fare: %s\n' \
                  'Departure Time: %s\n' \
                  'Arrival Time: %s\n' \
                  'Distance: %s\n' \
-                 'Duration: %s\n' \
+                 'Duration: %s\n\n' \
                  'Route:\n%s' % (fare, departure_time, arrival_time, distance, duration, route)
 
         l = 0
