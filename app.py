@@ -129,8 +129,9 @@ def get_gmap_directions(from_loc, to_loc, lang):
             route += '%s: %s(%s, %s)' % (step['travel_mode'], step['html_instructions'],
                                          step['distance']['text'], step['duration']['text'])
             if 'transit_details' in step:
-                route += '- %s: %s ~ %s' % (step['line']['vehicle']['name'],
-                                            step['departure_stop']['name'], step['arrival_stop']['name'])
+                route += '- %s: %s ~ %s' % (step['transit_details']['line']['vehicle']['name'],
+                                            step['transit_details']['departure_stop']['name'],
+                                            step['transit_details']['arrival_stop']['name'])
 
         speech = 'Fare: %s\n' \
                  'Departure Time: %s\n' \
