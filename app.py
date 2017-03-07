@@ -125,6 +125,7 @@ def get_gmap_directions(from_loc, to_loc, lang):
 
         route = ''
         for step in directions_result[0]['legs'][0]['steps']:
+            print(step)
             route += '%s: %s(%s, %s)' % (step['travel_mode'], step['html_instructions'],
                                          step['distance']['text'], step['duration']['text'])
             if 'transit_details' in step:
