@@ -106,10 +106,28 @@ def grab_answer(from_loc, to_loc, dir_file):
         print('Exception', e)
 
 
-def get_gmap_directions(loc1, loc2, lang):
+def get_gmap_directions(from_loc, to_loc, lang):
     now = datetime.now()
-    directions_result = gmaps.directions(loc1, loc2, mode='transit', departure_time=now, language=lang)
-    print(directions_result)
+
+    directions_result = None
+
+    from_loc_auto = gmaps.places_autocomplete(from_loc)[:3]
+    to_loc_auto = gmaps.places_autocomplete(to_loc)[:3]
+
+    for f in from_loc_auto:
+        from_loc = f['structured_formatting']['main_text']
+        for t in to_loc_auto:
+            to_loc = t['structured_formatting']['main_text']
+
+            directions_result = gmaps.directions(from_loc, to_loc, mode='transit', departure_time=now, language=lang)
+            if directions_result:
+                break
+
+    if directions_result:
+        print(directions_result)
+        speech = 'https://www.google.com/maps?saddr=%s&daddr=%s' % (urlencode(from_loc), urlencode(to_loc))
+
+    return speech
 
 
 def parse_json(req):
@@ -129,7 +147,7 @@ def parse_json(req):
 
     speech = grab_answer(from_loc, to_loc, dir_file)
     if not speech:
-        get_gmap_directions(from_loc, to_loc, lang)
+        speech = get_gmap_directions(from_loc, to_loc, lang)
     return speech
 
 
