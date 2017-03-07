@@ -109,15 +109,23 @@ def grab_answer(from_loc, to_loc, dir_file):
 def get_gmap_directions(from_loc, to_loc, lang):
     now = datetime.now()
 
+    print('TEST1')
+
     from_loc = gmaps.places(from_loc, language=lang)['results'][0]['formatted_address']
     to_loc = gmaps.places(to_loc, language=lang)['results'][0]['formatted_address']
+
+    print('TEST2')
 
     url = 'https://www.google.com/maps?saddr=%s&daddr=%s&dirflg=r' % (
         from_loc.replace(' ', '+'), to_loc.replace(' ', '+'))
 
+    print('TEST3')
+
     directions_result = gmaps.directions(from_loc, to_loc, mode='transit', departure_time=now, language=lang)
     if directions_result:
         pass
+
+    print('TEST4')
 
     speech = ''
     data = [
@@ -140,6 +148,8 @@ def get_gmap_directions(from_loc, to_loc, lang):
             }
         }
     ]
+
+    print('TEST5')
 
     return speech, data
 
