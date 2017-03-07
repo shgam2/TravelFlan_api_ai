@@ -4,7 +4,7 @@ import csv
 from datetime import datetime
 import json
 import os
-from urllib.parse import quote, urlencode
+from urllib.parse import urlencode
 from urllib.request import urlopen
 
 from flask import make_response, request, Flask
@@ -48,6 +48,7 @@ def find_language_code(lang):
         'traditional chinese': 'zh-tw',
     }.get(lang)
 
+
 def get_response_template(lang):
     return {
         'en_us': '"%s" in %s is "%s"',
@@ -55,6 +56,7 @@ def get_response_template(lang):
         'zh_cn': '"%s"的%s是"%s"',
         'zh_tw': '"%s"的%s是"%s"',
     }.get(lang)
+
 
 def convert_langauge_to_user_locale(targetlang, userlang):
     if userlang == 'zh_hk' or userlang == 'zh_cn' or userlang == 'zh_tw':
@@ -75,6 +77,7 @@ def convert_langauge_to_user_locale(targetlang, userlang):
             return 'Japanese'
         else:
             return 'Chinese'
+
 
 def make_yql_query(req):
     city = req['result']['parameters']['geo-city']
@@ -112,7 +115,6 @@ def grab_answer(from_loc, to_loc, dir_file, lang):
 
             row_num = 0
             col_num = 0
-
 
             for i in range(1, 7):
                 print("1.{} -- 2.{}".format(direction[i][0].lower(), from_loc.lower()))
@@ -176,8 +178,8 @@ def grab_answer(from_loc, to_loc, dir_file, lang):
 def get_gmap_directions(from_loc, to_loc, lang):
     now = datetime.now()
 
-    from_loc = gmaps.places(from_loc, language=lang)['results'][0]['formatted_address']
-    to_loc = gmaps.places(to_loc, language=lang)['results'][0]['formatted_address']
+    # from_loc = gmaps.places(from_loc)['results'][0]['formatted_address']
+    # to_loc = gmaps.places(to_loc)['results'][0]['formatted_address']
 
     url = 'https://www.google.com/maps?saddr=%s&daddr=%s&dirflg=r' % (
         from_loc.replace(' ', '+'), to_loc.replace(' ', '+'))
@@ -191,39 +193,57 @@ def get_gmap_directions(from_loc, to_loc, lang):
         duration = directions_result[0]['legs'][0]['duration']['text']
 
         route = ''
-        for step in directions_result[0]['legs'][0]['steps']:
-            route += '%s: %s(%s, %s)' % (step['travel_mode'], step['html_instructions'],
-                                         step['distance']['text'], step['duration']['text'])
+        for i, step in enumerate(directions_result[0]['legs'][0]['steps']):
+            route += '%s. %s: %s(%s, %s)\n' % (i, step['travel_mode'], step['html_instructions'],
+                                               step['distance']['text'], step['duration']['text'])
             if 'transit_details' in step:
-                route += '- %s: %s ~ %s' % (step['transit_details']['line']['vehicle']['name'],
-                                            step['transit_details']['departure_stop']['name'],
-                                            step['transit_details']['arrival_stop']['name'])
+                route += '- %s: %s ~ %s\n' % (step['transit_details']['line']['vehicle']['name'],
+                                              step['transit_details']['departure_stop']['name'],
+                                              step['transit_details']['arrival_stop']['name'])
+            route += '\n'
 
         speech = 'Fare: %s\n' \
                  'Departure Time: %s\n' \
                  'Arrival Time: %s\n' \
                  'Distance: %s\n' \
-                 'Duration: %s\n' \
+                 'Duration: %s\n\n' \
                  'Route:\n%s' % (fare, departure_time, arrival_time, distance, duration, route)
-        speech = speech[:600]
-    else:
-        speech = ' '
 
-    map_image_url = "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/googlemap_image.jpg"
+        l = 0
+        for x in speech.split('\n'):
+            l += len(x)
+            if l > 500:
+                speech = speech[:l - len(x)] + '\n\n...'
+                break
+    else:
+        speech = 'None'
+
+    map_image_url = 'https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/googlemap_image.jpg'
+
+    if lang == 'zh_TW' or lang == 'zh_HK':
+        title = '地圖 - %s -> %s' % (from_loc, to_loc)
+        button_title = '點擊查看'
+    elif lang == 'zh_CN':
+        title = '地图 - %s -> %s' % (from_loc, to_loc)
+        button_title = '点击查看'
+    else:
+        title = 'Map - %s -> %s' % (from_loc, to_loc)
+        button_title = 'Click to view'
 
     data = [
         {
-            "attachment_type": "template",
-            "attachment_template": {
+            'attachment_type': 'template',
+            'attachment_template': {
                 'template_type': 'generic',
                 'elements': [
                     {
-                        'title': 'Map',
+                        'title': title,
+                        'image_url': map_image_url,
                         'buttons': [
                             {
                                 'type': 'web_url',
                                 'url': url,
-                                'title': 'View'
+                                'title': button_title
                             }
                         ]
                     }
@@ -328,33 +348,7 @@ def process_request(req):
         res = {
             'speech': speech,
             'displayText': speech,
-            'source': 'apiai-weather',
-            # 'data': [
-            #     {
-            #         "attachment_type": "template",
-            #         "attachment_template":
-            #             {
-            #                 'template_type': 'generic',
-            #                 'elements': [
-            #                     {
-            #                         'title': 'TEST!!',
-            #                         'image_url': 'https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/q5.png',
-            #                         'buttons': [
-            #                             {
-            #                                 'type': 'web_url',
-            #                                 'url': 'https://travelflan.com',
-            #                                 'title': 'View'
-            #                             }
-            #                         ]
-            #                     }
-            #                 ]
-            #             }
-            #     },
-            #     {
-            #         "attachment_type": "image",
-            #         "attachment_url": "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/q5_cn.png"
-            #     }
-            # ]
+            'source': 'apiai-weather'
         }
     elif action == 'direction':
         speech, data = parse_json(req)
