@@ -128,12 +128,12 @@ def grab_answer(from_loc, to_loc, dir_file, lang):
             if row_num and col_num:
                 speech = direction[row_num][col_num]
 
-                image_url = "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/visit_korea.gif"
+                image_url = "http://www.cmu.edu/student-affairs/slice/studentactivities/images/pat.bus.png"
 
                 if lang == 'zh_TW' or lang == 'zh_HK':
                     button_title = "點擊查看"
                     title = "仁川國際機場前往首爾市區 | 韓國觀光公社"
-                    url = 'http://www.cmu.edu/student-affairs/slice/studentactivities/images/pat.bus.png'
+                    url = 'http://big5chinese.visitkorea.or.kr/cht/TR/TR_CH_5_18.jsp'
                 elif lang == 'zh_CN':
                     button_title = "点击查看"
                     title = "仁川國際機場前往首爾市區 | 韓國觀光公社"
