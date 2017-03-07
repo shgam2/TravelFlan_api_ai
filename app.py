@@ -408,11 +408,10 @@ def conv_weather_cond (condition, lang):
     except Exception as e:
         print('Exception', e)
 
-
-    # if lang == "s_cn":
-
-
-    return "sunny?"
+    if (lang == "s_cn"):
+        return w_cond[row_found][1]
+    else:
+        return w_cond[row_found][2]
 
 
 @app.route('/webhook', methods=['POST'])
