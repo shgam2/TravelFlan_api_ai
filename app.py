@@ -47,6 +47,14 @@ def find_language_code(lang):
         'chinese traditional': 'zh-tw',
     }.get(lang)
 
+def get_response_template(lang):
+    return {
+        'en_us': '"%s" in %s is "%s"',
+        'zh_hk': '"%s" in %s is "%s"',
+        'zh_cn': '"%s" in %s is "%s"',
+        'zh_tw': '"%s" in %s is "%s"',
+    }.get(lang)
+
 
 def make_yql_query(req):
     city = req['result']['parameters']['geo-city']
@@ -182,7 +190,10 @@ def parse_json(req):
 
 def process_request(req):
     res = None
-
+    try:
+        userlocale = req['originalRequest']['data']['locale']
+    except Exception as e:
+        userlocale = 'zh_cn'
     action = req['result']['action']
     if action == 'weather':
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req)}) + '&format=json'
@@ -281,12 +292,14 @@ def process_request(req):
         phrase = req['result']['parameters']['Phrase']
         language = req['result']['parameters']['language'][0]
         code = find_language_code(language.lower())
+
         print(code)
         url = TRANSLATE_BASE_URL + urlencode({'text': phrase, 'to': code, 'authtoken': 'dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
         print(url)
         _res = urlopen(url).read()
         print(_res)
-        speech = '"%s" in %s is "%s"' % (phrase, language, _res.decode())
+        tmpl = get_response_template(userlocale.lower())
+        speech = tmpl % (phrase, language, _res.decode())
         res = {
             'speech': speech,
             'displayText': speech,
