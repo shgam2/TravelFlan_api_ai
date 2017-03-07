@@ -344,12 +344,13 @@ def process_request(req):
 
                     if userlocale.lower() == "zh_cn" or userlocale.lower() == "zh_tw" or userlocale.lower() == "zh_hk":
                         print("333333333333")
-                        speech += '\n(%s) %s, 高溫: %s °%s, 低溫: %s °%s' % (
+                        print("1:{}  2:{}".format(fc_weather['date'], conv_weather_cond(fc_weather['text'])))
+                        speech += '\n(%s) %s, 高溫: %s°%s, 低溫: %s°%s' % (
                             fc_weather['date'], conv_weather_cond(fc_weather['text']), fc_weather['high'],
                             units['temperature'], fc_weather['low'], units['temperature'])
                         print ("speech = {}".format(speech))
                     else:
-                        speech += '\n(%s) %s, high: %s °%s, low: %s °%s' % (
+                        speech += '\n(%s) %s, high: %s°%s, low: %s°%s' % (
                             datetime.strptime(fc_weather['date'], '%d %b %Y').strftime('%a %b %d'),
                             fc_weather['text'], fc_weather['high'],
                             units['temperature'], fc_weather['low'], units['temperature'])
