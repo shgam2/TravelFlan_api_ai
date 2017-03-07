@@ -127,15 +127,15 @@ def grab_answer(from_loc, to_loc, dir_file, lang):
 
             if row_num and col_num:
                 speech = direction[row_num][col_num]
-                #title = "Transportation: From {} - To {}".format(direction[row_num][0],direction[0][col_num])
-                title = "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/visit_korea.gif"
+                title = "Transportation: From {} - To {}".format(direction[row_num][0],direction[0][col_num])
+                image_url = "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/visit_korea.gif"
                 url = 'http://big5chinese.visitkorea.or.kr/cht/TR/TR_CH_5_18.jsp'
                 if lang == 'zh_TW' or lang == 'zh_HK':
-                    button_title = "視圖"
+                    button_title = "點擊查看"
                 elif lang == 'zh_CN':
-                    button_title = "视图"
+                    button_title = "点击查看"
                 else:
-                    button_title = "View"
+                    button_title = "Click to view"
                 data = [
                     {
                         "attachment_type": "template",
@@ -144,11 +144,12 @@ def grab_answer(from_loc, to_loc, dir_file, lang):
                             'elements': [
                                 {
                                     'title': title,
+                                    "image_url": image_url,
                                     'buttons': [
                                         {
                                             'type': 'web_url',
                                             'url': url,
-                                            'title': 'View'
+                                            'title': button_title
                                         }
                                     ]
                                 }
