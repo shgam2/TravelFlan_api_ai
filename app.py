@@ -316,10 +316,10 @@ def process_request(req):
 
         if not date:
             if not date_period:
-                if userlocale == "zh_cn":
+                if userlocale.lower() == "zh_cn":
                     temp = conv_weather_cond(condition['text'], "s_cn")
                     speech = '%s的天气: %s, 温度是华氏%s°%s' % (city, temp, condition['temp'], units['temperature'])
-                elif userlocale == "zh_tw" or userlocale == "zh_hk":
+                elif userlocale.lower() == "zh_tw" or userlocale.lower() == "zh_hk":
                     temp = conv_weather_cond(condition['text'], "t_cn")
                     speech = '%s的天氣: %s, 溫度是華氏%s°%s' % (city, temp, condition['temp'], units['temperature'])
                 else:
@@ -330,9 +330,9 @@ def process_request(req):
             else:
                 print ("1111111111 {}".format(userlocale))
 
-                if userlocale == "zh_cn":
+                if userlocale.lower() == "zh_cn":
                     speech = ('%s天氣預報(10天):' % city)
-                elif userlocale == "zh_tw" or userlocale == "zh_hk":
+                elif userlocale.lower() == "zh_tw" or userlocale.lower() == "zh_hk":
                     print("222222222222")
                     speech = ('%s天气预报(10天):' % city)
                 else:
