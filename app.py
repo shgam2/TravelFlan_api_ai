@@ -138,7 +138,6 @@ def get_gmap_directions(from_loc, to_loc, lang):
                  'Distance: %s\n' \
                  'Duration: %s\n' \
                  'Route:\n%s' % (fare, departure_time, arrival_time, distance, duration, route)
-        print(speech)
     else:
         speech = ' '
     data = [
@@ -146,7 +145,6 @@ def get_gmap_directions(from_loc, to_loc, lang):
             "attachment_type": "template",
             "attachment_template": {
                 'template_type': 'generic',
-                'text': speech,
                 'elements': [
                     {
                         'title': 'Map',
