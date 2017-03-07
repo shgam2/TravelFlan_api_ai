@@ -117,17 +117,36 @@ def get_gmap_directions(from_loc, to_loc, lang):
 
     directions_result = gmaps.directions(from_loc, to_loc, mode='transit', departure_time=now, language=lang)
     if directions_result:
-        pass
+        fare = directions_result[0]['fare']['text']
+        departure_time = directions_result[0]['legs'][0]['departure_time']['text']
+        arrival_time = directions_result[0]['legs'][0]['arrival_time']['text']
+        distance = directions_result[0]['legs'][0]['distance']['text']
+        duration = directions_result[0]['legs'][0]['duration']['text']
 
-    speech = 'TEST!!'
+        route = ''
+        for step in directions_result[0]['legs'][0]['steps']:
+            route += '%s: %s(%s, %s)' % (step['travel_mode'], step['html_instructions'],
+                                         step['distance'], step['duration'])
+            if 'transit_details' in step:
+                route += '- %s: %s ~ %s' % (step['line']['vehicle']['name'],
+                                            step['departure_stop'], step['arrival_stop'])
+
+    speech = 'Fare: %s\n' \
+             'Departure Time: %s\n' \
+             'Arrival Time: %s\n' \
+             'Distance: %s\n' \
+             'Duration: %s\n' \
+             'Route:\n%s' % (fare, departure_time, arrival_time, distance, duration, route)
     data = [
         {
             "attachment_type": "template",
             "attachment_template": {
                 'template_type': 'generic',
+                'text': 'TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
                 'elements': [
                     {
-                        'title': 'TEST!!!',
+                        'title': 'Map',
+                        'text': speech,
                         'buttons': [
                             {
                                 'type': 'web_url',
