@@ -362,17 +362,17 @@ def process_request(req):
             if (date == "明天"):
                 print ("2222222222222")
                 t_date = forecast_items[0]['date']
-                t_text = forecast_items[0]['text']
+                t_code = forecast_items[0]['code']
                 t_high = forecast_items[0]['high']
                 t_low = forecast_items[0]['low']
                 if userlocale.lower() == 'zh_cn':
                     speech = "%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s" % (
-                        city, t_date, conv_weather_cond(t_text, "s_cn"), t_high, units['temperature'], t_low,
+                        city, t_date, conv_weather_cond(t_code, "s_cn"), t_high, units['temperature'], t_low,
                         units['temperature']
                     )
                 else:
                     speech = "%s的天氣(%s): %s, 高溫: %s°%s, 低溫: %s°%s" % (
-                        city, t_date, conv_weather_cond(t_text, "t_cn"), t_high, units['temperature'], t_low,
+                        city, t_date, conv_weather_cond(t_code, "t_cn"), t_high, units['temperature'], t_low,
                         units['temperature']
                     )
             else:
