@@ -115,6 +115,7 @@ def grab_answer(from_loc, to_loc, dir_file):
 
             for i in range(1, 7):
                 if direction[i][0] == from_loc.lower():
+                    print ("1.{} -- 2.{}".format(direction[i][0],from_loc.lower()))
                     row_num = i
                     break
 
