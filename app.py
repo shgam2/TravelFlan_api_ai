@@ -43,18 +43,38 @@ def find_language_code(lang):
         '簡體中文': 'zh-cn',
         '简体中文': 'zh-cn',
         '繁體中文': 'zh-tw',
-        'chinese simplified': 'zh-cn',
-        'chinese traditional': 'zh-tw',
+        'chinese': 'zh-cn',
+        'simplified chinese': 'zh-cn',
+        'traditional chinese': 'zh-tw',
     }.get(lang)
 
 def get_response_template(lang):
     return {
-        'en_us': '"%s"的%s是%s',
+        'en_us': '"%s" in %s is "%s"',
         'zh_hk': '"%s"的%s是%s',
         'zh_cn': '"%s"的%s是%s',
         'zh_tw': '"%s"的%s是%s',
     }.get(lang)
 
+def convert_langauge_to_user_locale(targetlang, userlang):
+    if userlang == 'zh_hk' || userlang == 'zh_cn' || userlang == 'zh_tw':
+        if targetlang == 'korean':
+            return '韩文'
+        elif targetlang == 'english':
+            return '英文'
+        elif targetlang == 'japanese':
+            return '日文'
+        else:
+            return '中文'
+    elif userlang == 'en_us':
+        if targetlang == 'korean':
+            return 'Korean'
+        elif targetlang == 'english':
+            return 'English'
+        elif targetlang == 'japanese':
+            return 'Japanese'
+        else:
+            return 'Chinese'
 
 def make_yql_query(req):
     city = req['result']['parameters']['geo-city']
@@ -297,6 +317,8 @@ def process_request(req):
     elif action == 'translation':
         phrase = req['result']['parameters']['Phrase']
         language = req['result']['parameters']['language'][0]
+        print(language)
+        print(language.lower())
         code = find_language_code(language.lower())
 
         print(code)
@@ -306,6 +328,8 @@ def process_request(req):
         print(_res)
         tmpl = get_response_template(userlocale.lower())
         print(tmpl)
+        print(userlocale.lower())
+        language = convert_langauge_to_user_locale(language.lower(), userlocale.lower())
         speech = tmpl % (phrase, language, _res.decode())
         print(speech)
         res = {
