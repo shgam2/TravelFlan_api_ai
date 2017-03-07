@@ -394,8 +394,13 @@ def conv_weather_cond (condition, lang):
                 if w_cond[row_num][0] == condition:
                     cond_found = w_cond[row_num][0]
                     print ("found the weather condition! : {}".format(cond_found))
+                    break
+                elif not w_cond[row_num][0]:
+                    print ("end of file")
+                    break
                 else:
                     print ("not found!")
+                    row_num += 1
     except IOError as e:
         print('IOError: {}'.format(weather_file), e)
     except Exception as e:
