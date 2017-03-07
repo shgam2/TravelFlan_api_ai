@@ -113,6 +113,7 @@ def grab_answer(from_loc, to_loc, dir_file):
             row_num = 0
             col_num = 0
 
+            print ("*********")
             for i in range(1, 7):
                 if direction[i][0] == from_loc.lower():
                     print ("1.{} -- 2.{}".format(direction[i][0],from_loc.lower()))
@@ -123,7 +124,7 @@ def grab_answer(from_loc, to_loc, dir_file):
                 if direction[0][i] == to_loc.lower():
                     col_num = i
                     break
-
+            print ("111111111")
             if row_num and col_num:
                 speech = direction[row_num][col_num]
                 title = "Transportation: From {} - To {}".format(direction[row_num][0],direction[0][col_num])
