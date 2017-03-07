@@ -140,7 +140,7 @@ def grab_answer(from_loc, to_loc, dir_file, lang):
                     url = 'http://big5chinese.visitkorea.or.kr/cht/TR/TR_CH_5_18.jsp'
                 else:
                     button_title = "Click to view"
-                    Title = "Public Transportation"
+                    title = "Public Transportation"
                     url = 'http://english.visitkorea.or.kr/enu/TRP/TP_ENG_2_1.jsp'
                 data = [
                     {
