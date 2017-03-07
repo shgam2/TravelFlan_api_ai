@@ -295,9 +295,17 @@ def process_request(req):
 
         if not date:
             if not date_period:
-                speech = 'Current weather in %s: %s, the temperature is %s °%s' % (
-                    location['city'], condition['text'],
-                    condition['temp'], units['temperature'])
+                if userlocale == "zh_cn":
+                    temp = conv_weather_cond(condition['text'])
+                    speech = '%s的天气: %s, 温度是华氏%s°%s' % (location['city'], temp, condition['temp'], units['temperature'])
+                elif userlocale == "zh_tw" or userlocale == "zh_hk":
+                    temp = conv_weather_cond(condition['text'])
+                    speech = '%s的天氣: %s, 溫度是華氏%s°%s' % (location['city'], temp, condition['temp'], units['temperature'])
+                else:
+                    speech = 'Current weather in %s: %s, the temperature is %s°%s' % (
+                        location['city'], condition['text'],
+                        condition['temp'], units['temperature'])
+
             else:
                 speech = ('Here is the 10-day forecast for %s:' % (location['city']))
                 for i in range(0, 10):
@@ -313,7 +321,7 @@ def process_request(req):
             item_num = -1
             fc_weather = forecast(date, item_num, forecast_items)
 
-            speech = 'Weather in %s (%s): %s, high: %s °%s, low: %s °%s' % (
+            speech = 'Weather in %s (%s): %s, high: %s°%s, low: %s°%s' % (
                 location['city'], fc_weather['date'], fc_weather['text'],
                 fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
 
@@ -380,6 +388,10 @@ def process_request(req):
             'source': 'apiai-translate'
         }
     return res
+
+def conv_weather_cond (condition):
+    print ("asd")
+    return "sunny?"
 
 
 @app.route('/webhook', methods=['POST'])
