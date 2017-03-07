@@ -132,15 +132,15 @@ def grab_answer(from_loc, to_loc, dir_file, lang):
 
                 if lang == 'zh_TW' or lang == 'zh_HK':
                     button_title = "點擊查看"
-                    title = "交通工具"
+                    title = "仁川國際機場前往首爾市區 | 韓國觀光公社"
                     url = 'http://big5chinese.visitkorea.or.kr/cht/TR/TR_CH_5_18.jsp'
                 elif lang == 'zh_CN':
                     button_title = "点击查看"
-                    title = "交通工具"
+                    title = "仁川國際機場前往首爾市區 | 韓國觀光公社"
                     url = 'http://big5chinese.visitkorea.or.kr/cht/TR/TR_CH_5_18.jsp'
                 else:
                     button_title = "Click to view"
-                    title = "Public Transportation"
+                    title = "Official Site of Korea Tourism Org.: VisitKorea - Transportation - From/to the airport - From Incheon Airport to Seoul"
                     url = 'http://english.visitkorea.or.kr/enu/TRP/TP_ENG_2_1.jsp'
                 data = [
                     {
