@@ -328,15 +328,25 @@ def process_request(req):
                         condition['temp'], units['temperature'])
 
             else:
-                speech = ('Here is the 10-day forecast for %s:' % (location['city']))
+                if userlocale == "zh_cn":
+                    speech = '%s天氣預報(10天):'% (city)
+                elif userlocale == "zh_tw" or userlocale == "zh_hk":
+                    speech = '%s天气预报(10天):'% (city)
+                else:
+                    speech = ('Here is the 10-day forecast for %s:' % (location['city']))
                 for i in range(0, 10):
                     item_num = i
                     fc_weather = forecast(date, item_num, forecast_items)
 
-                    speech += '\n(%s) %s, high: %s °%s, low: %s °%s' % (
-                        datetime.strptime(fc_weather['date'], '%d %b %Y').strftime('%a %b %d'),
-                        fc_weather['text'], fc_weather['high'],
-                        units['temperature'], fc_weather['low'], units['temperature'])
+                    if userlocale == "zh_cn" or userlocale == "zh_tw" or userlocale == "zh_hk":
+                        speech += '\n(%s) %s, 高溫: %s °%s, 低溫: %s °%s' % (
+                            fc_weather['date'], conv_weather_cond(fc_weather['text']), fc_weather['high'],
+                            units['temperature'], fc_weather['low'], units['temperature'])
+                    else:
+                        speech += '\n(%s) %s, high: %s °%s, low: %s °%s' % (
+                            datetime.strptime(fc_weather['date'], '%d %b %Y').strftime('%a %b %d'),
+                            fc_weather['text'], fc_weather['high'],
+                            units['temperature'], fc_weather['low'], units['temperature'])
 
         else:
             item_num = -1
