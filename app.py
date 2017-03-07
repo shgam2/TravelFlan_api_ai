@@ -112,17 +112,36 @@ def get_gmap_directions(from_loc, to_loc, lang):
     from_loc = gmaps.places(from_loc, language=lang)['results'][0]['formatted_address']
     to_loc = gmaps.places(to_loc, language=lang)['results'][0]['formatted_address']
 
+    url = 'https://www.google.com/maps?saddr=%s&daddr=%s&dirflg=r' % (
+        from_loc.replace(' ', '+'), to_loc.replace(' ', '+'))
+
     directions_result = gmaps.directions(from_loc, to_loc, mode='transit', departure_time=now, language=lang)
-
     if directions_result:
-        speech = ''
-        speech += 'https://www.google.com/maps?saddr=%s&daddr=%s&dirflg=r' % (
-            from_loc.replace(' ', '+'), to_loc.replace(' ', '+'))
-    else:
-        speech = 'https://www.google.com/maps?saddr=%s&daddr=%s&dirflg=r' % (
-            from_loc.replace(' ', '+'), to_loc.replace(' ', '+'))
+        pass
 
-    return speech
+    speech = ''
+    data = [
+        {
+            "attachment_type": "template",
+            "attachment_template": {
+                'template_type': 'generic',
+                'elements': [
+                    {
+                        'title': '',
+                        'buttons': [
+                            {
+                                'type': 'web_url',
+                                'url': url,
+                                'title': 'View'
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+
+    return speech, data
 
 
 def parse_json(req):
@@ -140,10 +159,10 @@ def parse_json(req):
     from_loc = parameters.get('direction1')
     to_loc = parameters.get('direction2')
 
-    speech = grab_answer(from_loc, to_loc, dir_file)
+    speech, data = grab_answer(from_loc, to_loc, dir_file)
     if not speech:
-        speech = get_gmap_directions(from_loc, to_loc, lang)
-    return speech
+        speech, data = get_gmap_directions(from_loc, to_loc, lang)
+    return speech, data
 
 
 def process_request(req):
@@ -236,11 +255,12 @@ def process_request(req):
             # ]
         }
     elif action == 'direction':
-        speech = parse_json(req)
+        speech, data = parse_json(req)
         res = {
             'speech': speech,
             'displayText': speech,
-            'source': 'apiai-transportation'
+            'source': 'apiai-transportation',
+            'data': data
         }
     elif action == 'translation':
         phrase = req['result']['parameters']['Phrase']
