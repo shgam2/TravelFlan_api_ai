@@ -138,6 +138,7 @@ def get_gmap_directions(from_loc, to_loc, lang):
                  'Distance: %s\n' \
                  'Duration: %s\n' \
                  'Route:\n%s' % (fare, departure_time, arrival_time, distance, duration, route)
+        speech = speech[:600]
     else:
         speech = ' '
     data = [
