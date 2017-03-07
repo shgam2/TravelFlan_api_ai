@@ -393,7 +393,7 @@ def conv_weather_cond (condition, lang):
             print("condition = {}".format(condition))
             while True:
                 print ("w_cond[row_num][0] = {}".format(w_cond[row_num][0]))
-                if w_cond[row_num][0] == condition:
+                if w_cond[row_num][0] == condition.lower():
                     row_found = w_cond[row_num][0]
                     print ("found the weather condition! : {}".format(row_found))
                     break
