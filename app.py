@@ -398,7 +398,7 @@ def process_request(req):
         }
     elif action == 'translation':
         phrase = req['result']['parameters']['Phrase']
-        language = req['result']['parameters']['language'][0]
+        language = req['result']['parameters']['language']
         print(language)
         print(language.lower())
         code = find_language_code(language.lower())
