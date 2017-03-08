@@ -267,8 +267,8 @@ def parse_json(req):
     result = req.get('result')
     parameters = result.get('parameters')
 
-    from_loc = parameters.get('direction1')
-    to_loc = parameters.get('direction2')
+    from_loc = parameters.get('address-from')
+    to_loc = parameters.get('address-to')
 
     speech, data = grab_answer(from_loc, to_loc, dir_file, lang)
     if not speech:
