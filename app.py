@@ -547,6 +547,13 @@ def process_request(req):
                 i + 1, item['name'], item['summary'], item['address'], item['tel'], item['besinessHours']
             )
 
+        l = 0
+        for x in speech.split('\n'):
+            l += len(x)
+            if l > 500:
+                speech = speech[:l - len(x)] + '\n\n...'
+                break
+
         data = [
             {
                 'attachment_type': 'template',
