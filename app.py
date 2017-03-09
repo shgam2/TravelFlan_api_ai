@@ -463,7 +463,7 @@ def process_request(req):
             'data': data
         }
     elif action == 'translation':
-        phrase = req['result']['parameters']['Phrase']
+        phrase = req['result']['parameters']['phrase']
         language = req['result']['parameters']['language']
         code = find_language_code(language.lower())
         print(code)
