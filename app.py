@@ -346,6 +346,7 @@ def process_request(req):
         userlocale = req['originalRequest']['data']['locale'].lower()
     except Exception as e:
         userlocale = 'zh_cn'
+    print ("userlocale ================== {}".format(userlocale))
     action = req['result']['action']
     if action == 'weather':
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req)}) + '&format=json'
