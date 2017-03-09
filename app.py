@@ -87,7 +87,7 @@ def convert_langauge_to_user_locale(targetlang, userlang):
 
 
 def make_yql_query(req):
-    city = req['result']['parameters']['geo-city']
+    city = req['result']['parameters']['weather_chinese']['city']
     return 'select * from weather.forecast ' \
            'where woeid in (select woeid from geo.places(1) where text=\'%s\') and u=\'c\'' % (city,)
 
