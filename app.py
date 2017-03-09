@@ -2,13 +2,16 @@
 
 import csv
 from datetime import datetime
+import hashlib
 import json
 import os
+import time
 from urllib.parse import urlencode
 from urllib.request import urlopen
 
 from flask import make_response, request, Flask
 import googlemaps
+import requests
 
 app = Flask(__name__)
 
@@ -16,6 +19,10 @@ gmaps = googlemaps.Client(key='AIzaSyB8ri2uUrjtGX2tgOoK_vMSo8ByuP31Njs')
 
 YAHOO_YQL_BASE_URL = 'https://query.yahooapis.com/v1/public/yql?'
 TRANSLATE_BASE_URL = 'http://awseb-e-f-AWSEBLoa-VIW6OYVV6CSY-1979702995.us-east-1.elb.amazonaws.com/translate?'
+
+PENGTAI_URL = 'http://www.hanguoing.cn/exApi/travelFlan'
+PENGTAI_TEST_URL = 'http://test1.hanguoing.com/exApi/travelFlan'
+PENGTAI_KEY = 'xmvoqpfvmffosqksrkqtmqslek'
 
 DIR_FILE_EN = 'transportation_en.csv'
 DIR_FILE_CN = 'transportation_cn.csv'
@@ -108,6 +115,38 @@ def forecast(date, item_num, forecast_items):
     return fc_weather
 
 
+def conv_weather_cond(c_code, lang):
+    print('lang is {}'.format(lang))
+    weather_file = 'weather_condition.csv'
+    try:
+        with open(weather_file, 'rU') as f:
+            w_cond = list(csv.reader(f))
+            row_num = 1
+            print('condition = {}'.format(c_code))
+            while True:
+                print('w_cond[row_num][0] = {}'.format(w_cond[row_num][0]))
+                if w_cond[row_num][0] == c_code:
+                    row_found = row_num
+                    print('found the weather condition! : {}'.format(row_found))
+                    break
+                elif not w_cond[row_num][0]:
+                    print('end of file')
+                    break
+                else:
+                    row_num += 1
+    except IOError as e:
+        print('IOError: {}'.format(weather_file), e)
+    except Exception as e:
+        print('Exception', e)
+
+    if lang == 's_cn':
+        print('11 {}'.format(w_cond[row_found][2]))
+        return w_cond[row_found][2]
+    else:
+        print('22 {}'.format(w_cond[row_found][3]))
+        return w_cond[row_found][3]
+
+
 def grab_answer(from_loc, to_loc, dir_file, lang):
     try:
         with open(dir_file, 'rU') as f:
@@ -117,7 +156,7 @@ def grab_answer(from_loc, to_loc, dir_file, lang):
             col_num = 0
 
             for i in range(1, 7):
-                print("1.{} -- 2.{}".format(direction[i][0].lower(), from_loc.lower()))
+                print('1.{} -- 2.{}'.format(direction[i][0].lower(), from_loc.lower()))
                 if direction[i][0].lower() == from_loc.lower():
                     row_num = i
                     break
@@ -130,29 +169,29 @@ def grab_answer(from_loc, to_loc, dir_file, lang):
             if row_num and col_num:
                 speech = direction[row_num][col_num]
 
-                image_url = "https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/arex.jpg"
+                image_url = 'https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/arex.jpg'
 
                 if lang == 'zh_TW' or lang == 'zh_HK':
-                    button_title = "點擊查看"
-                    title = "仁川國際機場前往首爾市區 | 韓國觀光公社"
+                    button_title = '點擊查看'
+                    title = '仁川國際機場前往首爾市區 | 韓國觀光公社'
                     url = 'http://big5chinese.visitkorea.or.kr/cht/TR/TR_CH_5_18.jsp'
                 elif lang == 'zh_CN':
-                    button_title = "点击查看"
-                    title = "仁川國際機場前往首爾市區 | 韓國觀光公社"
+                    button_title = '点击查看'
+                    title = '仁川國際機場前往首爾市區 | 韓國觀光公社'
                     url = 'http://big5chinese.visitkorea.or.kr/cht/TR/TR_CH_5_18.jsp'
                 else:
-                    button_title = "Click to view"
-                    title = "Korea Tourism Org.: VisitKorea - Transportation - From Incheon Airport to Seoul"
+                    button_title = 'Click to view'
+                    title = 'Korea Tourism Org.: VisitKorea - Transportation - From Incheon Airport to Seoul'
                     url = 'http://english.visitkorea.or.kr/enu/TRP/TP_ENG_2_1.jsp'
                 data = [
                     {
-                        "attachment_type": "template",
-                        "attachment_template": {
+                        'attachment_type': 'template',
+                        'attachment_template': {
                             'template_type': 'generic',
                             'elements': [
                                 {
                                     'title': title,
-                                    "image_url": image_url,
+                                    'image_url': image_url,
                                     'buttons': [
                                         {
                                             'type': 'web_url',
@@ -276,10 +315,35 @@ def parse_json(req):
     return speech, data
 
 
+def exapi_pengtai(data):
+    # data = {
+    #     'lang': '04',
+    #     'category1': '2000',
+    #     'category2': '2002',
+    #     'cityCode': 'SE',
+    #     'areaCode': None,
+    #     'latitude': None,
+    #     'longitude': None,
+    #     'distance': None
+    # }
+    timestamp = str(int(time.time()))
+    plain = '%s|%s' % (PENGTAI_KEY, timestamp)
+    headers = {'X-hash': hashlib.sha256(plain.encode('utf-8')).hexdigest()}
+
+    data['timestamp'] = timestamp
+
+    try:
+        res = requests.get(PENGTAI_TEST_URL, headers=headers, params=data)
+        return json.loads(res.content)
+    except Exception as e:
+        print(e)
+        return None
+
+
 def process_request(req):
     res = None
     try:
-        userlocale = req['originalRequest']['data']['locale']
+        userlocale = req['originalRequest']['data']['locale'].lower()
     except Exception as e:
         userlocale = 'zh_cn'
     action = req['result']['action']
@@ -316,21 +380,20 @@ def process_request(req):
 
         if not date:
             if not date_period:
-                if userlocale.lower() == "zh_cn":
-                    temp = conv_weather_cond(condition['code'], "s_cn")
+                if userlocale == 'zh_cn':
+                    temp = conv_weather_cond(condition['code'], 's_cn')
                     speech = '%s的天气: %s, 温度是华氏%s°%s' % (city, temp, condition['temp'], units['temperature'])
-                elif userlocale.lower() == "zh_tw" or userlocale.lower() == "zh_hk":
-                    temp = conv_weather_cond(condition['code'], "t_cn")
+                elif userlocale in ('zh_tw', 'zh_hk'):
+                    temp = conv_weather_cond(condition['code'], 't_cn')
                     speech = '%s的天氣: %s, 溫度是華氏%s°%s' % (city, temp, condition['temp'], units['temperature'])
                 else:
                     speech = 'Current weather in %s: %s, the temperature is %s°%s' % (
                         location['city'], condition['text'],
                         condition['temp'], units['temperature'])
-
             else:
-                if userlocale.lower() == "zh_cn":
+                if userlocale == 'zh_cn':
                     speech = ('%s天氣預報(10天):' % city)
-                elif userlocale.lower() == "zh_tw" or userlocale.lower() == "zh_hk":
+                elif userlocale in ('zh_tw', 'zh_hk'):
                     speech = ('%s天气预报(10天):' % city)
                 else:
                     speech = ('Here is the 10-day forecast for %s:' % (location['city']))
@@ -339,41 +402,39 @@ def process_request(req):
                     item_num = i
                     fc_weather = forecast(date, item_num, forecast_items)
 
-                    if userlocale.lower() == "zh_cn" or userlocale.lower() == "zh_tw" or userlocale.lower() == "zh_hk":
-                        if userlocale.lower() == "zh_cn":
-                            lang = "s_cn"
+                    if userlocale in ('zh_cn', 'zh_tw', 'zh_hk'):
+                        if userlocale == 'zh_cn':
+                            lang = 's_cn'
                         else:
-                            lang = "t_cn"
-                        w_cond = conv_weather_cond(fc_weather['code'],lang)
+                            lang = 't_cn'
+                        w_cond = conv_weather_cond(fc_weather['code'], lang)
 
                         speech += '\n(%s) %s, 高溫: %s°%s, 低溫: %s°%s' % (
-                            datetime.strptime(fc_weather['date'], '%d %b %Y').strftime('%m/%d'), w_cond, fc_weather['high'],
-                            units['temperature'], fc_weather['low'], units['temperature'])
-                        print ("speech = {}".format(speech))
+                            datetime.strptime(fc_weather['date'], '%d %b %Y').strftime('%m/%d'), w_cond,
+                            fc_weather['high'], units['temperature'],
+                            fc_weather['low'], units['temperature'])
+                        print('speech = {}'.format(speech))
                     else:
                         speech += '\n(%s) %s, high: %s°%s, low: %s°%s' % (
                             datetime.strptime(fc_weather['date'], '%d %b %Y').strftime('%a %b %d'),
                             fc_weather['text'], fc_weather['high'],
                             units['temperature'], fc_weather['low'], units['temperature'])
-
-
-        else: #tomorrow portion
-            print ("11111111111")
-            if (date == "明天"):
-                # display "tomorrow"'s weather
+        else:  # tomorrow portion
+            if date == '明天':
+                # display 'tomorrow''s weather
                 t_date = datetime.strptime(forecast_items[1]['date'], '%d %b %Y').strftime('%m/%d')
                 t_code = forecast_items[1]['code']
                 t_high = forecast_items[1]['high']
                 t_low = forecast_items[1]['low']
-                if userlocale.lower() == 'zh_cn':
-                    speech = "%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s" % (
-                        city, t_date, conv_weather_cond(t_code, "s_cn"), t_high, units['temperature'], t_low,
-                        units['temperature']
+                if userlocale == 'zh_cn':
+                    speech = '%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
+                        city, t_date, conv_weather_cond(t_code, 's_cn'),
+                        t_high, units['temperature'], t_low, units['temperature']
                     )
                 else:
-                    speech = "%s的天氣(%s): %s, 高溫: %s°%s, 低溫: %s°%s" % (
-                        city, t_date, conv_weather_cond(t_code, "t_cn"), t_high, units['temperature'], t_low,
-                        units['temperature']
+                    speech = '%s的天氣(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
+                        city, t_date, conv_weather_cond(t_code, 't_cn'),
+                        t_high, units['temperature'], t_low, units['temperature']
                     )
             else:
                 item_num = -1
@@ -399,19 +460,16 @@ def process_request(req):
     elif action == 'translation':
         phrase = req['result']['parameters']['Phrase']
         language = req['result']['parameters']['language']
-        print(language)
-        print(language.lower())
         code = find_language_code(language.lower())
-
         print(code)
         url = TRANSLATE_BASE_URL + urlencode({'text': phrase, 'to': code, 'authtoken': 'dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
         print(url)
         _res = urlopen(url).read()
         print(_res)
-        tmpl = get_response_template(userlocale.lower())
+        tmpl = get_response_template(userlocale)
         print(tmpl)
-        print(userlocale.lower())
-        language = convert_langauge_to_user_locale(language.lower(), userlocale.lower())
+        language = convert_langauge_to_user_locale(language.lower(), userlocale)
+        print(language)
         speech = tmpl % (phrase, language, _res.decode())
         print(speech)
         res = {
@@ -419,40 +477,57 @@ def process_request(req):
             'displayText': speech,
             'source': 'apiai-translate'
         }
+    elif action == 'restaurant':
+        if userlocale == 'zh_cn':
+            lang = '01'
+        elif userlocale in ('zh_tw', 'zh_hk'):
+            lang = '02'
+        else:
+            lang = '04'
+
+        _data = {
+            'lang': lang,
+            'category1': '2000',
+            'category2': '2002',
+            'cityCode': 'SE',
+            'areaCode': None,
+            'latitude': None,
+            'longitude': None,
+            'distance': None
+        }
+        _res = exapi_pengtai(_data)
+
+        speech = ''
+        data = [
+            # {
+            #     'attachment_type': 'template',
+            #     'attachment_template': {
+            #         'template_type': 'generic',
+            #         'elements': [
+            #             {
+            #                 'title': title,
+            #                 'image_url': map_image_url,
+            #                 'buttons': [
+            #                     {
+            #                         'type': 'web_url',
+            #                         'url': url,
+            #                         'title': button_title
+            #                     }
+            #                 ]
+            #             }
+            #         ]
+            #     }
+            # }
+        ]
+
+        res = {
+            'speech': speech,
+            'displayText': speech,
+            'source': 'apiai-restaurant',
+            'data': data
+        }
     return res
 
-
-def conv_weather_cond(c_code, lang):
-    print ("lang is {}".format(lang))
-    weather_file = "weather_condition.csv"
-    try:
-        with open(weather_file, 'rU') as f:
-            w_cond = list(csv.reader(f))
-            row_num=1
-            print("condition = {}".format(c_code))
-            while True:
-                print ("w_cond[row_num][0] = {}".format(w_cond[row_num][0]))
-                if w_cond[row_num][0] == c_code:
-                    row_found = row_num
-                    print ("found the weather condition! : {}".format(row_found))
-                    break
-                elif not w_cond[row_num][0]:
-                    print ("end of file")
-                    break
-                else:
-                    row_num += 1
-    except IOError as e:
-        print('IOError: {}'.format(weather_file), e)
-    except Exception as e:
-        print('Exception', e)
-
-    if (lang == "s_cn"):
-        print("11 {}".format(w_cond[row_found][2]))
-        return w_cond[row_found][2]
-    else:
-        print("22 {}".format(w_cond[row_found][3]))
-        return w_cond[row_found][3]
-    #11
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
