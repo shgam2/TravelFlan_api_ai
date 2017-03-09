@@ -346,7 +346,7 @@ def process_request(req):
         userlocale = req['originalRequest']['data']['locale'].lower()
     except Exception as e:
         userlocale = 'zh_cn'
-    print ("userlocale ================== {}".format(userlocale))
+    print("userlocale ================== {}".format(userlocale))
     action = req['result']['action']
     if action == 'weather':
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req)}) + '&format=json'
@@ -437,6 +437,10 @@ def process_request(req):
                         city, t_date, conv_weather_cond(t_code, 't_cn'),
                         t_high, units['temperature'], t_low, units['temperature']
                     )
+            elif date.lower() == 'now':
+                speech = 'Current weather in %s: %s, the temperature is %s°%s' % (
+                    location['city'], condition['text'],
+                    condition['temp'], units['temperature'])
             else:
                 item_num = -1
                 fc_weather = forecast(date, item_num, forecast_items)
