@@ -326,14 +326,11 @@ def exapi_pengtai(data):
     #     'longitude': None,
     #     'distance': None
     # }
-    print('data')
     timestamp = str(int(time.time()))
     plain = '%s|%s' % (PENGTAI_KEY, timestamp)
     headers = {'X-hash': hashlib.sha256(plain.encode('utf-8')).hexdigest()}
 
     data['timestamp'] = timestamp
-
-    print('TEST!!')
 
     try:
         res = requests.get(PENGTAI_TEST_URL, headers=headers, params=data)
@@ -528,11 +525,9 @@ def process_request(req):
         }
         _res = exapi_pengtai(_data)
 
-        print('TEST!', _res)
-
         speech = 'None'
 
-        elements = None
+        elements = list()
         for item in _res['list']:
             fb_item = {
                 'title': item['name'],
