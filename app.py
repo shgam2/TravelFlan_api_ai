@@ -155,6 +155,8 @@ def grab_answer(from_loc, to_loc, dir_file, lang):
             row_num = 0
             col_num = 0
 
+            print ("1.{} 2.{}".format(from_loc,to_loc))
+
             for i in range(1, 7):
                 print('1.{} -- 2.{}'.format(direction[i][0].lower(), from_loc.lower()))
                 if direction[i][0].lower() == from_loc.lower():
