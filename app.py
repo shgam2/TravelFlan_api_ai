@@ -488,6 +488,8 @@ def process_request(req):
             lang = '04'
             button_title = 'Click to view'
 
+        print(1, userlocale)
+
         cuisine = req['result']['parameters']['cuisine'].lower()
         if cuisine == 'korean':
             category2 = '3101'
@@ -508,10 +510,15 @@ def process_request(req):
         else:
             category2 = None
 
+        print(2, cuisine)
+        print(3, category2)
+
         address = req['result']['parameters']['address']
         geocode_result = gmaps.geocode(address)
         latitude = geocode_result[0]['geometry']['location']['lat']
         longitude = geocode_result[0]['geometry']['location']['lng']
+
+        print('TEST4', latitude, longitude)
 
         _data = {
             'lang': lang,
