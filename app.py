@@ -228,7 +228,8 @@ def get_gmap_directions(from_loc, to_loc, lang):
 
     directions_result = gmaps.directions(from_loc, to_loc, mode='transit', departure_time=now, language=lang)
 
-    print ("22222222222")
+    print ("22222222222 {}".format(directions_result))
+
     if directions_result:
         fare = directions_result[0]['fare']['text']
         departure_time = directions_result[0]['legs'][0]['departure_time']['text']
