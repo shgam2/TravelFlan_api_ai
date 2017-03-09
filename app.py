@@ -219,6 +219,7 @@ def grab_answer(from_loc, to_loc, dir_file, lang):
 def get_gmap_directions(from_loc, to_loc, lang):
     now = datetime.now()
 
+    print ("111111111")
     # from_loc = gmaps.places(from_loc)['results'][0]['formatted_address']
     # to_loc = gmaps.places(to_loc)['results'][0]['formatted_address']
 
