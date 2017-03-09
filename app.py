@@ -155,7 +155,7 @@ def grab_answer(from_loc, to_loc, dir_file, lang):
             row_num = 0
             col_num = 0
 
-            print ("1.{} 2.{}".format(from_loc,to_loc))
+            print("1.{} 2.{}".format(from_loc, to_loc))
 
             for i in range(1, 7):
                 print('1.{} -- 2.{}'.format(direction[i][0].lower(), from_loc.lower()))
@@ -219,7 +219,6 @@ def grab_answer(from_loc, to_loc, dir_file, lang):
 def get_gmap_directions(from_loc, to_loc, lang):
     now = datetime.now()
 
-    print ("111111111")
     # from_loc = gmaps.places(from_loc)['results'][0]['formatted_address']
     # to_loc = gmaps.places(to_loc)['results'][0]['formatted_address']
 
@@ -227,34 +226,38 @@ def get_gmap_directions(from_loc, to_loc, lang):
         from_loc.replace(' ', '+'), to_loc.replace(' ', '+'))
 
     directions_result = gmaps.directions(from_loc, to_loc, mode='transit', departure_time=now, language=lang)
-
-    print ("22222222222 {}".format(directions_result))
-
     if directions_result:
-        fare = directions_result[0]['fare']['text']
-        departure_time = directions_result[0]['legs'][0]['departure_time']['text']
-        arrival_time = directions_result[0]['legs'][0]['arrival_time']['text']
-        distance = directions_result[0]['legs'][0]['distance']['text']
-        duration = directions_result[0]['legs'][0]['duration']['text']
-        print("333333333333")
+        fare = None
+        departure_time = None
+        arrival_time = None
+        distance = None
+        duration = None
+        if 'fare' in directions_result[0]:
+            fare = directions_result[0]['fare']['text']
+        if 'departure_time' in directions_result[0]:
+            departure_time = directions_result[0]['legs'][0]['departure_time']['text']
+        if 'arrival_time' in directions_result[0]:
+            arrival_time = directions_result[0]['legs'][0]['arrival_time']['text']
+        if 'distance' in directions_result[0]:
+            distance = directions_result[0]['legs'][0]['distance']['text']
+        if 'duration' in directions_result[0]:
+            duration = directions_result[0]['legs'][0]['duration']['text']
         route = ''
         for i, step in enumerate(directions_result[0]['legs'][0]['steps']):
             route += '%s. %s: %s(%s, %s)\n' % (i, step['travel_mode'], step['html_instructions'],
                                                step['distance']['text'], step['duration']['text'])
-            print("444444444")
             if 'transit_details' in step:
                 route += '- %s: %s ~ %s\n' % (step['transit_details']['line']['vehicle']['name'],
                                               step['transit_details']['departure_stop']['name'],
                                               step['transit_details']['arrival_stop']['name'])
             route += '\n'
-        print("55555555555")
         speech = 'Fare: %s\n' \
                  'Departure Time: %s\n' \
                  'Arrival Time: %s\n' \
                  'Distance: %s\n' \
                  'Duration: %s\n\n' \
                  'Route:\n%s' % (fare, departure_time, arrival_time, distance, duration, route)
-        print("6666666 speech = {}".format(speech))
+
         l = 0
         for x in speech.split('\n'):
             l += len(x)
@@ -276,7 +279,6 @@ def get_gmap_directions(from_loc, to_loc, lang):
         title = 'Map - %s -> %s' % (from_loc, to_loc)
         button_title = 'Click to view'
 
-    print("7777777777777")
     data = [
         {
             'attachment_type': 'template',
