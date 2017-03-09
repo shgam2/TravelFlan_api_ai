@@ -227,30 +227,33 @@ def get_gmap_directions(from_loc, to_loc, lang):
         from_loc.replace(' ', '+'), to_loc.replace(' ', '+'))
 
     directions_result = gmaps.directions(from_loc, to_loc, mode='transit', departure_time=now, language=lang)
+
+    print ("22222222222")
     if directions_result:
         fare = directions_result[0]['fare']['text']
         departure_time = directions_result[0]['legs'][0]['departure_time']['text']
         arrival_time = directions_result[0]['legs'][0]['arrival_time']['text']
         distance = directions_result[0]['legs'][0]['distance']['text']
         duration = directions_result[0]['legs'][0]['duration']['text']
-
+        print("333333333333")
         route = ''
         for i, step in enumerate(directions_result[0]['legs'][0]['steps']):
             route += '%s. %s: %s(%s, %s)\n' % (i, step['travel_mode'], step['html_instructions'],
                                                step['distance']['text'], step['duration']['text'])
+            print("444444444")
             if 'transit_details' in step:
                 route += '- %s: %s ~ %s\n' % (step['transit_details']['line']['vehicle']['name'],
                                               step['transit_details']['departure_stop']['name'],
                                               step['transit_details']['arrival_stop']['name'])
             route += '\n'
-
+        print("55555555555")
         speech = 'Fare: %s\n' \
                  'Departure Time: %s\n' \
                  'Arrival Time: %s\n' \
                  'Distance: %s\n' \
                  'Duration: %s\n\n' \
                  'Route:\n%s' % (fare, departure_time, arrival_time, distance, duration, route)
-
+        print("6666666 speech = {}".format(speech))
         l = 0
         for x in speech.split('\n'):
             l += len(x)
@@ -272,6 +275,7 @@ def get_gmap_directions(from_loc, to_loc, lang):
         title = 'Map - %s -> %s' % (from_loc, to_loc)
         button_title = 'Click to view'
 
+    print("7777777777777")
     data = [
         {
             'attachment_type': 'template',
