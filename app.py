@@ -525,13 +525,13 @@ def process_request(req):
         }
         _res = exapi_pengtai(_data)
 
-        speech = 'None'
+        speech = ''
 
         elements = list()
-        for item in _res['list']:
+        for i, item in enumerate(_res['list']):
             fb_item = {
                 'title': item['name'],
-                'subtitle': item['summary'],
+                'subtitle': '%s\n%s' % (item['summary'], item['address']),
                 'image_url': item['imagePath'],
                 'buttons': [
                     {
@@ -542,6 +542,10 @@ def process_request(req):
                 ]
             }
             elements.append(fb_item)
+
+            speech += '%s. name: %s\nsummary: %s\naddress: %s\ntel: %s\nbusiness hours: %s\n\n' % (
+                i + 1, item['name'], item['summary'], item['address'], item['tel'], item['besinessHours']
+            )
 
         data = [
             {
