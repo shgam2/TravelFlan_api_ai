@@ -306,8 +306,12 @@ def parse_json(req):
     result = req.get('result')
     parameters = result.get('parameters')
 
-    from_loc = parameters.get('address-from')
-    to_loc = parameters.get('address-to')
+    if lang in ('zh_CN', 'zh_TW', 'zh_HK'):
+        from_loc = parameters['direction_chinese']['address-from']
+        to_loc = parameters['direction_chinese']['address-to']
+    else:
+        from_loc = parameters.get('address-from')
+        to_loc = parameters.get('address-to')
 
     speech, data = grab_answer(from_loc, to_loc, dir_file, lang)
     if not speech:
