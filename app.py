@@ -480,44 +480,77 @@ def process_request(req):
     elif action == 'restaurant':
         if userlocale == 'zh_cn':
             lang = '01'
+            button_title = '点击查看'
         elif userlocale in ('zh_tw', 'zh_hk'):
             lang = '02'
+            button_title = '點擊查看'
         else:
             lang = '04'
+            button_title = 'Click to view'
+
+        cuisine = req['result']['parameters']['cuisine'].lower()
+        if cuisine == 'korean':
+            category2 = '3101'
+        elif cuisine == 'japanese':
+            category2 = '3102'
+        elif cuisine == 'chinese':
+            category2 = '3103'
+        elif cuisine == 'western':
+            category2 = '3104'
+        elif cuisine == 'foreign':
+            category2 = '3105'
+        elif cuisine == 'caffe':
+            category2 = '3106'
+        elif cuisine == 'fastfood':
+            category2 = '3107'
+        elif cuisine == 'pub':
+            category2 = '3108'
+        else:
+            category2 = None
+
+        address = req['result']['parameters']['address']
+        geocode_result = gmaps.geocode(address)
+        latitude = geocode_result[0]['geometry']['location']['lat']
+        longitude = geocode_result[0]['geometry']['location']['lng']
 
         _data = {
             'lang': lang,
-            'category1': '2000',
-            'category2': '2002',
-            'cityCode': 'SE',
-            'areaCode': None,
-            'latitude': None,
-            'longitude': None,
-            'distance': None
+            'category1': '3000',
+            'category2': category2,
+            # 'cityCode': None,
+            # 'areaCode': None,
+            'latitude': str(latitude),
+            'longitude': str(longitude),
+            'distance': '500'
         }
         _res = exapi_pengtai(_data)
 
-        speech = ''
+        speech = 'None'
+
+        elements = None
+        for item in _res['list']:
+            fb_item = {
+                'title': item['name'],
+                'subtitle': item['summary'],
+                'image_url': item['imagePath'],
+                'buttons': [
+                    {
+                        'type': 'web_url',
+                        'url': item['url'],
+                        'title': button_title
+                    }
+                ]
+            }
+            elements.append(fb_item)
+
         data = [
-            # {
-            #     'attachment_type': 'template',
-            #     'attachment_template': {
-            #         'template_type': 'generic',
-            #         'elements': [
-            #             {
-            #                 'title': title,
-            #                 'image_url': map_image_url,
-            #                 'buttons': [
-            #                     {
-            #                         'type': 'web_url',
-            #                         'url': url,
-            #                         'title': button_title
-            #                     }
-            #                 ]
-            #             }
-            #         ]
-            #     }
-            # }
+            {
+                'attachment_type': 'template',
+                'attachment_template': {
+                    'template_type': 'generic',
+                    'elements': elements
+                }
+            }
         ]
 
         res = {
