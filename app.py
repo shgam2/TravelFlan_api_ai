@@ -225,8 +225,12 @@ def get_gmap_directions(from_loc, to_loc, lang):
     # from_loc = gmaps.places(from_loc)['results'][0]['formatted_address']
     # to_loc = gmaps.places(to_loc)['results'][0]['formatted_address']
 
-    url = 'https://www.google.com/maps?saddr=%s&daddr=%s&dirflg=r' % (
-        from_loc.replace(' ', '+'), to_loc.replace(' ', '+'))
+    if lang in ('zh_CN', 'zh_TW', 'zh_HK'):
+        url = 'http://maps.google.cn/maps?saddr=%s&daddr=%s&dirflg=r' % (
+            from_loc.replace(' ', '+'), to_loc.replace(' ', '+'))
+    else:
+        url = 'https://www.google.com/maps?saddr=%s&daddr=%s&dirflg=r' % (
+            from_loc.replace(' ', '+'), to_loc.replace(' ', '+'))
 
     directions_result = gmaps.directions(from_loc, to_loc, mode='transit', departure_time=now, language=lang)
     if directions_result:
