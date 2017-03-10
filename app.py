@@ -391,25 +391,22 @@ def process_request(req):
         date = req['result']['parameters'].get('date')
         date_period = req['result']['parameters'].get('date-period')
 
+        print ("date = {}".format(date))
+        print ("f_date = {}".format(forecast_items[1]['date']))
+        #if datetime.strptime(date, '%d %b %Y') < datetime.strptime(forecast_items[1]['date'], '%d %b %Y')
+
         if not date:
             if not date_period:
-
-                print ("555555")
                 if userlocale == 'zh_cn':
                     temp = conv_weather_cond(condition['code'], 's_cn')
                     speech = '%s的天气: %s, 温度是华氏%s°%s' % (city, temp, condition['temp'], units['temperature'])
-                    print ("666666")
                 elif userlocale in ('zh_tw', 'zh_hk'):
                     temp = conv_weather_cond(condition['code'], 't_cn')
                     speech = '%s的天氣: %s, 溫度是華氏%s°%s' % (city, temp, condition['temp'], units['temperature'])
-                    print("7777777")
                 else:
                     speech = 'Current weather in %s: %s, the temperature is %s°%s' % (
                         location['city'], condition['text'],
                         condition['temp'], units['temperature'])
-                    print("88888888")
-
-
             else:
                 if userlocale == 'zh_cn':
                     speech = ('%s天氣預報(10天):' % city)
