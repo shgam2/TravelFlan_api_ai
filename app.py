@@ -358,12 +358,9 @@ def process_request(req):
         userlocale = req['originalRequest']['data']['locale'].lower()
     except Exception as e:
         userlocale = 'zh_cn'
-    print("userlocale ================== {}".format(userlocale))
     action = req['result']['action']
 
-    print("1 action = {}".format(action))
     if action == 'weather':
-        print ("HERE")
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req)}) + '&format=json'
         print('YQL-Request:\n%s' % (url,))
         _res = urlopen(url).read()
@@ -385,19 +382,14 @@ def process_request(req):
         if 'condition' not in data['query']['results']['channel']['item']:
             return res
 
-        print("22222 ")
         location = data['query']['results']['channel']['location']
         condition = data['query']['results']['channel']['item']['condition']
         units = data['query']['results']['channel']['units']
         forecast_items = data['query']['results']['channel']['item']['forecast']
         city = req['result']['parameters']['city']
 
-        print("33333")
-
         date = req['result']['parameters'].get('date')
         date_period = req['result']['parameters'].get('date-period')
-
-        print("4444444")
 
         if not date:
             if not date_period:
