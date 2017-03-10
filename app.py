@@ -362,6 +362,8 @@ def process_request(req):
         userlocale = 'zh_cn'
     print("userlocale ================== {}".format(userlocale))
     action = req['result']['action']
+
+    print("1 action = {}".format(action))
     if action == 'weather':
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req)}) + '&format=json'
         print('YQL-Request:\n%s' % (url,))
@@ -384,27 +386,39 @@ def process_request(req):
         if 'condition' not in data['query']['results']['channel']['item']:
             return res
 
+        print("22222 ")
         location = data['query']['results']['channel']['location']
         condition = data['query']['results']['channel']['item']['condition']
         units = data['query']['results']['channel']['units']
         forecast_items = data['query']['results']['channel']['item']['forecast']
         city = req['result']['parameters']['geo-city']
 
+        print("33333")
+
         date = req['result']['parameters'].get('date')
         date_period = req['result']['parameters'].get('date-period')
 
+        print("4444444")
+
         if not date:
             if not date_period:
+
+                print ("555555")
                 if userlocale == 'zh_cn':
                     temp = conv_weather_cond(condition['code'], 's_cn')
                     speech = '%s的天气: %s, 温度是华氏%s°%s' % (city, temp, condition['temp'], units['temperature'])
+                    print ("666666")
                 elif userlocale in ('zh_tw', 'zh_hk'):
                     temp = conv_weather_cond(condition['code'], 't_cn')
                     speech = '%s的天氣: %s, 溫度是華氏%s°%s' % (city, temp, condition['temp'], units['temperature'])
+                    print("7777777")
                 else:
                     speech = 'Current weather in %s: %s, the temperature is %s°%s' % (
                         location['city'], condition['text'],
                         condition['temp'], units['temperature'])
+                    print("88888888")
+
+
             else:
                 if userlocale == 'zh_cn':
                     speech = ('%s天氣預報(10天):' % city)
@@ -483,6 +497,7 @@ def process_request(req):
             'displayText': speech,
             'source': 'apiai-weather'
         }
+        print ("9999999 res = {}".format(res))
     elif action == 'direction':
         speech, data = parse_json(req)
         res = {
