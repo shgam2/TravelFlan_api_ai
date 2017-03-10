@@ -87,7 +87,8 @@ def convert_langauge_to_user_locale(targetlang, userlang):
 
 
 def make_yql_query(req):
-    city = req['result']['parameters']['weather_chinese']['city']
+
+    city = req['result']['parameters']['city']
     return 'select * from weather.forecast ' \
            'where woeid in (select woeid from geo.places(1) where text=\'%s\') and u=\'c\'' % (city,)
 
@@ -108,7 +109,8 @@ def forecast(date, item_num, forecast_items):
                     'date': datetime.strptime(i.get('date'), '%d %b %Y').strftime('%a %b %d'),
                     'high': i.get('high'),
                     'low': i.get('low'),
-                    'text': i.get('text')
+                    'text': i.get('text'),
+                    'code': i.get('code')
                 }
                 print(fc_weather)
                 break
@@ -360,8 +362,8 @@ def process_request(req):
         userlocale = req['originalRequest']['data']['locale'].lower()
     except Exception as e:
         userlocale = 'zh_cn'
-    print("userlocale ================== {}".format(userlocale))
     action = req['result']['action']
+
     if action == 'weather':
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req)}) + '&format=json'
         print('YQL-Request:\n%s' % (url,))
@@ -388,10 +390,14 @@ def process_request(req):
         condition = data['query']['results']['channel']['item']['condition']
         units = data['query']['results']['channel']['units']
         forecast_items = data['query']['results']['channel']['item']['forecast']
-        city = req['result']['parameters']['geo-city']
+        city = req['result']['parameters']['city']
 
         date = req['result']['parameters'].get('date')
         date_period = req['result']['parameters'].get('date-period')
+
+        print ("date = {}".format(date))
+        print ("f_date = {}".format(forecast_items[1]['date']))
+        #if datetime.strptime(date, '%d %b %Y') < datetime.strptime(forecast_items[1]['date'], '%d %b %Y')
 
         if not date:
             if not date_period:
@@ -456,24 +462,30 @@ def process_request(req):
                     location['city'], condition['text'],
                     condition['temp'], units['temperature'])
             else:
-                t_date = datetime.strptime(forecast_items[1]['date'], '%d %b %Y').strftime('%m/%d')
-                t_code = forecast_items[1]['code']
-                t_high = forecast_items[1]['high']
-                t_low = forecast_items[1]['low']
+                # t_date = datetime.strptime(forecast_items[1]['date'], '%d %b %Y').strftime('%m/%d')
+                # t_code = forecast_items[1]['code']
+                # t_high = forecast_items[1]['high']
+                # t_low = forecast_items[1]['low']
+                item_num = -1
+                fc_weather = forecast(date, item_num, forecast_items)
+                print("fc_weather: \n{}".format(fc_weather))
+
                 if userlocale == 'zh_cn':
+                    print ("AAAAAAAA")
+
+
                     speech = '%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
-                        city, t_date, conv_weather_cond(t_code, 's_cn'),
-                        t_high, units['temperature'], t_low, units['temperature']
+                        city, fc_weather['date'], conv_weather_cond(fc_weather['code'], 's_cn'),
+                        fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature']
                     )
-                elif userlocale == 'zh_hk':
+                elif userlocale in ('zh_tw', 'zh_hk'):
+                    print("BBBBBBBBB")
                     speech = '%s的天氣(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
-                        city, t_date, conv_weather_cond(t_code, 't_cn'),
-                        t_high, units['temperature'], t_low, units['temperature']
+                        city, fc_weather['date'], conv_weather_cond(fc_weather['code'], 't_cn'),
+                        fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature']
                     )
                 else:
-                    item_num = -1
-                    fc_weather = forecast(date, item_num, forecast_items)
-
+                    print("CCCCCCCCC")
                     speech = 'Weather in %s (%s): %s, high: %s°%s, low: %s°%s' % (
                         location['city'], fc_weather['date'], fc_weather['text'],
                         fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
@@ -483,6 +495,7 @@ def process_request(req):
             'displayText': speech,
             'source': 'apiai-weather'
         }
+        print ("9999999 res = {}".format(res))
     elif action == 'direction':
         speech, data = parse_json(req)
         res = {
