@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import csv
-from datetime import datetime
+import datetime
+from datetime import datetime, timedelta
 import hashlib
 import json
 import os
@@ -393,7 +394,11 @@ def process_request(req):
 
         print ("date = {}".format(date))
         print ("f_date = {}".format(forecast_items[1]['date']))
-        #if datetime.strptime(date, '%d %b %Y') < datetime.strptime(forecast_items[1]['date'], '%d %b %Y')
+        if datetime.strptime(date, '%Y-%m-%d') < datetime.strptime(forecast_items[0]['date'], '%d %b %Y'):
+            temp_date = datetime.strptime(date, '%Y-%m-%d') + timedelta(days=7)
+            print("temp_date = {}".format(temp_date))
+            date = temp_date.strftime("%Y-%m-%d")
+            print("date now = {}".format(date))
 
         if not date:
             if not date_period:
