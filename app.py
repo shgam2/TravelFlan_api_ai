@@ -306,22 +306,18 @@ def get_gmap_directions(from_loc, to_loc, lang):
 
 def parse_json(req):
     lang = req['originalRequest']['data'].get('locale')
-    if lang == 'zh_TW' or lang == 'zh_HK':
-        dir_file = DIR_FILE_TW
-    elif lang == 'zh_CN':
+    if lang == 'zh_CN':
         dir_file = DIR_FILE_CN
+    elif lang in ('zh_TW', 'zh_HK'):
+        dir_file = DIR_FILE_TW
     else:
         dir_file = DIR_FILE_EN
 
     result = req.get('result')
     parameters = result.get('parameters')
 
-    if lang in ('zh_CN', 'zh_TW', 'zh_HK'):
-        from_loc = parameters['direction_chinese']['address-from']
-        to_loc = parameters['direction_chinese']['address-to']
-    else:
-        from_loc = parameters.get('address-from')
-        to_loc = parameters.get('address-to')
+    from_loc = parameters.get('address-from')
+    to_loc = parameters.get('address-to')
 
     speech, data = grab_answer(from_loc, to_loc, dir_file, lang)
     if not speech:
