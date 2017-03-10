@@ -401,7 +401,9 @@ def process_request(req):
             date = temp_date.strftime("%Y-%m-%d")
 
         if not date:
+            print ("//////////////")
             if not date_period:
+                print ("we should be here")
                 if userlocale == 'zh_cn':
                     temp = conv_weather_cond(condition['code'], 's_cn')
                     speech = '%s的天气: %s, 温度是华氏%s°%s' % (city, temp, condition['temp'], units['temperature'])
