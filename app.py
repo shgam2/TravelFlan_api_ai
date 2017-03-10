@@ -445,23 +445,24 @@ def process_request(req):
             if datetime.strptime(date, '%Y-%m-%d') < datetime.strptime(forecast_items[0]['date'], '%d %b %Y'):
                 temp_date = datetime.strptime(date, '%Y-%m-%d') + timedelta(days=7)
                 date = temp_date.strftime("%Y-%m-%d")
-            if date == '明天':
-                # display 'tomorrow''s weather
-                t_date = datetime.strptime(forecast_items[1]['date'], '%d %b %Y').strftime('%m/%d')
-                t_code = forecast_items[1]['code']
-                t_high = forecast_items[1]['high']
-                t_low = forecast_items[1]['low']
-                if userlocale == 'zh_cn':
-                    speech = '%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
-                        city, t_date, conv_weather_cond(t_code, 's_cn'),
-                        t_high, units['temperature'], t_low, units['temperature']
-                    )
-                else:
-                    speech = '%s的天氣(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
-                        city, t_date, conv_weather_cond(t_code, 't_cn'),
-                        t_high, units['temperature'], t_low, units['temperature']
-                    )
-            elif date.lower() == 'now':
+            # if date == '明天':
+            #     # display 'tomorrow''s weather
+            #     t_date = datetime.strptime(forecast_items[1]['date'], '%d %b %Y').strftime('%m/%d')
+            #     t_code = forecast_items[1]['code']
+            #     t_high = forecast_items[1]['high']
+            #     t_low = forecast_items[1]['low']
+            #     if userlocale == 'zh_cn':
+            #         speech = '%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
+            #             city, t_date, conv_weather_cond(t_code, 's_cn'),
+            #             t_high, units['temperature'], t_low, units['temperature']
+            #         )
+            #     else:
+            #         speech = '%s的天氣(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
+            #             city, t_date, conv_weather_cond(t_code, 't_cn'),
+            #             t_high, units['temperature'], t_low, units['temperature']
+            #         )
+            # el
+            if date.lower() == 'now':
                 speech = 'Current weather in %s: %s, the temperature is %s°%s' % (
                     location['city'], condition['text'],
                     condition['temp'], units['temperature'])
