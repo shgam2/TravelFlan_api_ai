@@ -438,6 +438,7 @@ def process_request(req):
                             fc_weather['text'], fc_weather['high'],
                             units['temperature'], fc_weather['low'], units['temperature'])
         else:  # tomorrow portion
+            print("1 DATE IS {}".format(date))
             if datetime.strptime(date, '%Y-%m-%d') < datetime.strptime(forecast_items[0]['date'], '%d %b %Y'):
                 temp_date = datetime.strptime(date, '%Y-%m-%d') + timedelta(days=7)
                 date = temp_date.strftime("%Y-%m-%d")
@@ -458,7 +459,7 @@ def process_request(req):
             #             t_high, units['temperature'], t_low, units['temperature']
             #         )
             # el
-            print ("DATE IS {}".format(date))
+            print ("2 DATE IS {}".format(date))
             if date.lower() in ('now', "现在"):
                 if userlocale == 'zh_cn':
                     speech = '%s的天气: %s, 温度是华氏%s°%s' % (city, conv_weather_cond(condition['code'], 's_cn'), condition['temp'], units['temperature'])
