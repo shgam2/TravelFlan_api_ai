@@ -397,9 +397,7 @@ def process_request(req):
         date_period = req['result']['parameters'].get('date-period')
 
         if not date:
-            print ("//////////////")
             if not date_period:
-                print ("we should be here")
                 if userlocale == 'zh_cn':
                     temp = conv_weather_cond(condition['code'], 's_cn')
                     speech = '%s的天气: %s, 温度是华氏%s°%s' % (city, temp, condition['temp'], units['temperature'])
@@ -411,7 +409,6 @@ def process_request(req):
                         location['city'], condition['text'],
                         condition['temp'], units['temperature'])
             else:
-                print("*******************")
                 if userlocale == 'zh_cn':
                     speech = ('%s天氣預報(10天):' % city)
                 elif userlocale in ('zh_tw', 'zh_hk'):
@@ -419,7 +416,6 @@ def process_request(req):
                 else:
                     speech = ('Here is the 10-day forecast for %s:' % (location['city']))
 
-                print("speech now is: {}".format(speech))
                 for i in range(0, 10):
                     item_num = i
                     fc_weather = forecast(date, item_num, forecast_items)
@@ -462,10 +458,16 @@ def process_request(req):
             #             t_high, units['temperature'], t_low, units['temperature']
             #         )
             # el
-            if date.lower() == 'now':
-                speech = 'Current weather in %s: %s, the temperature is %s°%s' % (
+            if date.lower() in ('now', "现在"):
+                if userlocale == 'zh_cn':
+                    speech = '%s的天气: %s, 温度是华氏%s°%s' % (city, conv_weather_cond(condition['code'], 's_cn'), condition['temp'], units['temperature'])
+                elif userlocale in ('zh_tw', 'zh_hk'):
+                    speech = '%s的天氣: %s, 溫度是華氏%s°%s' % (city, conv_weather_cond(condition['code'], 's_cn'), condition['temp'], units['temperature'])
+                else:
+                    speech = 'Current weather in %s: %s, the temperature is %s°%s' % (
                     location['city'], condition['text'],
                     condition['temp'], units['temperature'])
+
             else:
                 # t_date = datetime.strptime(forecast_items[1]['date'], '%d %b %Y').strftime('%m/%d')
                 # t_code = forecast_items[1]['code']
