@@ -458,6 +458,7 @@ def process_request(req):
             #             t_high, units['temperature'], t_low, units['temperature']
             #         )
             # el
+            print ("DATE IS {}".format(date))
             if date.lower() in ('now', "现在"):
                 if userlocale == 'zh_cn':
                     speech = '%s的天气: %s, 温度是华氏%s°%s' % (city, conv_weather_cond(condition['code'], 's_cn'), condition['temp'], units['temperature'])
