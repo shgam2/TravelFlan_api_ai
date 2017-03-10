@@ -396,10 +396,6 @@ def process_request(req):
         date = req['result']['parameters'].get('date')
         date_period = req['result']['parameters'].get('date-period')
 
-        if datetime.strptime(date, '%Y-%m-%d') < datetime.strptime(forecast_items[0]['date'], '%d %b %Y'):
-            temp_date = datetime.strptime(date, '%Y-%m-%d') + timedelta(days=7)
-            date = temp_date.strftime("%Y-%m-%d")
-
         if not date:
             print ("//////////////")
             if not date_period:
@@ -446,6 +442,9 @@ def process_request(req):
                             fc_weather['text'], fc_weather['high'],
                             units['temperature'], fc_weather['low'], units['temperature'])
         else:  # tomorrow portion
+            if datetime.strptime(date, '%Y-%m-%d') < datetime.strptime(forecast_items[0]['date'], '%d %b %Y'):
+                temp_date = datetime.strptime(date, '%Y-%m-%d') + timedelta(days=7)
+                date = temp_date.strftime("%Y-%m-%d")
             if date == '明天':
                 # display 'tomorrow''s weather
                 t_date = datetime.strptime(forecast_items[1]['date'], '%d %b %Y').strftime('%m/%d')
