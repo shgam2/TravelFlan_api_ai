@@ -389,7 +389,7 @@ def process_request(req):
         condition = data['query']['results']['channel']['item']['condition']
         units = data['query']['results']['channel']['units']
         forecast_items = data['query']['results']['channel']['item']['forecast']
-        city = req['result']['parameters']['geo-city']
+        city = req['result']['parameters']['city']
 
         print("33333")
 
