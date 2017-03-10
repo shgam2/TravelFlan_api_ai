@@ -396,13 +396,9 @@ def process_request(req):
         date = req['result']['parameters'].get('date')
         date_period = req['result']['parameters'].get('date-period')
 
-        print ("date = {}".format(date))
-        print ("f_date = {}".format(forecast_items[1]['date']))
         if datetime.strptime(date, '%Y-%m-%d') < datetime.strptime(forecast_items[0]['date'], '%d %b %Y'):
             temp_date = datetime.strptime(date, '%Y-%m-%d') + timedelta(days=7)
-            print("temp_date = {}".format(temp_date))
             date = temp_date.strftime("%Y-%m-%d")
-            print("date now = {}".format(date))
 
         if not date:
             if not date_period:
@@ -417,6 +413,7 @@ def process_request(req):
                         location['city'], condition['text'],
                         condition['temp'], units['temperature'])
             else:
+                print("*******************")
                 if userlocale == 'zh_cn':
                     speech = ('%s天氣預報(10天):' % city)
                 elif userlocale in ('zh_tw', 'zh_hk'):
@@ -424,23 +421,24 @@ def process_request(req):
                 else:
                     speech = ('Here is the 10-day forecast for %s:' % (location['city']))
 
+                print("speech now is: {}".format(speech))
                 for i in range(0, 10):
                     item_num = i
                     fc_weather = forecast(date, item_num, forecast_items)
-
+                    print("fc_weather: {}".format(fc_weather))
                     if userlocale in ('zh_cn', 'zh_tw', 'zh_hk'):
                         if userlocale == 'zh_cn':
                             lang = 's_cn'
                         else:
                             lang = 't_cn'
                         w_cond = conv_weather_cond(fc_weather['code'], lang)
-
+                        print("11111")
                         speech += '\n(%s) %s, 高溫: %s°%s, 低溫: %s°%s' % (
                             datetime.strptime(fc_weather['date'], '%d %b %Y').strftime('%m/%d'), w_cond,
                             fc_weather['high'], units['temperature'],
                             fc_weather['low'], units['temperature'])
-                        print('speech = {}'.format(speech))
                     else:
+                        print("22222")
                         speech += '\n(%s) %s, high: %s°%s, low: %s°%s' % (
                             datetime.strptime(fc_weather['date'], '%d %b %Y').strftime('%a %b %d'),
                             fc_weather['text'], fc_weather['high'],
@@ -473,24 +471,18 @@ def process_request(req):
                 # t_low = forecast_items[1]['low']
                 item_num = -1
                 fc_weather = forecast(date, item_num, forecast_items)
-                print("fc_weather: \n{}".format(fc_weather))
 
                 if userlocale == 'zh_cn':
-                    print ("AAAAAAAA")
-
-
                     speech = '%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
                         city, fc_weather['date'], conv_weather_cond(fc_weather['code'], 's_cn'),
                         fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature']
                     )
                 elif userlocale in ('zh_tw', 'zh_hk'):
-                    print("BBBBBBBBB")
                     speech = '%s的天氣(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
                         city, fc_weather['date'], conv_weather_cond(fc_weather['code'], 't_cn'),
                         fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature']
                     )
                 else:
-                    print("CCCCCCCCC")
                     speech = 'Weather in %s (%s): %s, high: %s°%s, low: %s°%s' % (
                         location['city'], fc_weather['date'], fc_weather['text'],
                         fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
@@ -500,7 +492,6 @@ def process_request(req):
             'displayText': speech,
             'source': 'apiai-weather'
         }
-        print ("9999999 res = {}".format(res))
     elif action == 'direction':
         speech, data = parse_json(req)
         res = {
