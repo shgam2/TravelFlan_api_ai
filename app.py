@@ -109,7 +109,8 @@ def forecast(date, item_num, forecast_items):
                     'date': datetime.strptime(i.get('date'), '%d %b %Y').strftime('%a %b %d'),
                     'high': i.get('high'),
                     'low': i.get('low'),
-                    'text': i.get('text')
+                    'text': i.get('text'),
+                    'code': i.get('code')
                 }
                 print(fc_weather)
                 break
@@ -474,7 +475,7 @@ def process_request(req):
                 # t_low = forecast_items[1]['low']
                 item_num = -1
                 fc_weather = forecast(date, item_num, forecast_items)
-                print ("fc_weather: \n{}".format(fc_weather))
+                print("fc_weather: \n{}".format(fc_weather))
 
                 if userlocale == 'zh_cn':
                     print ("AAAAAAAA")
