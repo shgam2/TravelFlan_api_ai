@@ -476,16 +476,20 @@ def process_request(req):
                 fc_weather = forecast(date, item_num, forecast_items)
 
                 if userlocale == 'zh_cn':
+                    print ("AAAAAAAA")
+
                     speech = '%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
                         city, fc_weather['date'], conv_weather_cond(fc_weather['code'], 's_cn'),
                         fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature']
                     )
                 elif userlocale in ('zh_tw', 'zh_hk'):
+                    print("BBBBBBBBB")
                     speech = '%s的天氣(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
                         city, fc_weather['date'], conv_weather_cond(fc_weather['code'], 't_cn'),
                         fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature']
                     )
                 else:
+                    print("CCCCCCCCC")
                     speech = 'Weather in %s (%s): %s, high: %s°%s, low: %s°%s' % (
                         location['city'], fc_weather['date'], fc_weather['text'],
                         fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
