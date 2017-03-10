@@ -477,7 +477,7 @@ def process_request(req):
                         city, t_date, conv_weather_cond(t_code, 's_cn'),
                         t_high, units['temperature'], t_low, units['temperature']
                     )
-                elif userlocale == 'zh_hk':
+                elif userlocale in ('zh_tw', 'zh_hk'):
                     speech = '%s的天氣(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
                         city, t_date, conv_weather_cond(t_code, 't_cn'),
                         t_high, units['temperature'], t_low, units['temperature']
