@@ -474,9 +474,11 @@ def process_request(req):
                 # t_low = forecast_items[1]['low']
                 item_num = -1
                 fc_weather = forecast(date, item_num, forecast_items)
+                print ("fc_weather: \n{}".format(fc_weather))
 
                 if userlocale == 'zh_cn':
                     print ("AAAAAAAA")
+
 
                     speech = '%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
                         city, fc_weather['date'], conv_weather_cond(fc_weather['code'], 's_cn'),
