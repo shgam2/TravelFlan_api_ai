@@ -439,9 +439,6 @@ def process_request(req):
                             units['temperature'], fc_weather['low'], units['temperature'])
         else:  # tomorrow portion
             print("1 DATE IS {}".format(date))
-            if datetime.strptime(date, '%Y-%m-%d') < datetime.strptime(forecast_items[0]['date'], '%d %b %Y'):
-                temp_date = datetime.strptime(date, '%Y-%m-%d') + timedelta(days=7)
-                date = temp_date.strftime("%Y-%m-%d")
             # if date == '明天':
             #     # display 'tomorrow''s weather
             #     t_date = datetime.strptime(forecast_items[1]['date'], '%d %b %Y').strftime('%m/%d')
@@ -471,6 +468,9 @@ def process_request(req):
                     condition['temp'], units['temperature'])
 
             else:
+                if datetime.strptime(date, '%Y-%m-%d') < datetime.strptime(forecast_items[0]['date'], '%d %b %Y'):
+                    temp_date = datetime.strptime(date, '%Y-%m-%d') + timedelta(days=7)
+                    date = temp_date.strftime("%Y-%m-%d")
                 # t_date = datetime.strptime(forecast_items[1]['date'], '%d %b %Y').strftime('%m/%d')
                 # t_code = forecast_items[1]['code']
                 # t_high = forecast_items[1]['high']
