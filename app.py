@@ -456,7 +456,6 @@ def process_request(req):
             #             t_high, units['temperature'], t_low, units['temperature']
             #         )
             # el
-            print ("2 DATE IS {}".format(date))
             if date.lower() in ('now', "现在"):
                 if userlocale == 'zh_cn':
                     speech = '%s的天气: %s, 温度是华氏%s°%s' % (city, conv_weather_cond(condition['code'], 's_cn'), condition['temp'], units['temperature'])
@@ -466,8 +465,8 @@ def process_request(req):
                     speech = 'Current weather in %s: %s, the temperature is %s°%s' % (
                     location['city'], condition['text'],
                     condition['temp'], units['temperature'])
-
             else:
+                print ("2 in the date area")
                 if datetime.strptime(date, '%Y-%m-%d') < datetime.strptime(forecast_items[0]['date'], '%d %b %Y'):
                     temp_date = datetime.strptime(date, '%Y-%m-%d') + timedelta(days=7)
                     date = temp_date.strftime("%Y-%m-%d")
@@ -477,7 +476,7 @@ def process_request(req):
                 # t_low = forecast_items[1]['low']
                 item_num = -1
                 fc_weather = forecast(date, item_num, forecast_items)
-
+                print("3 in the date area")
                 if userlocale == 'zh_cn':
                     speech = '%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
                         city, fc_weather['date'], conv_weather_cond(fc_weather['code'], 's_cn'),
@@ -489,9 +488,11 @@ def process_request(req):
                         fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature']
                     )
                 else:
+                    print("4 in the date area")
                     speech = 'Weather in %s (%s): %s, high: %s°%s, low: %s°%s' % (
                         location['city'], fc_weather['date'], fc_weather['text'],
                         fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
+                    print("5 speech is {}".format(speech))
 
         res = {
             'speech': speech,
