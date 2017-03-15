@@ -517,7 +517,6 @@ def process_request(req):
     #         lang = '04'
     #         button_title = 'Click to view'
 
-
     elif action == 'restaurant' or action == 'attraction':
         if userlocale == 'zh_cn':
             lang = '01'
@@ -552,6 +551,7 @@ def process_request(req):
                 category2 = None
                 print("Restaurant category2 is None")
         elif action == 'attraction':
+            print ("In attraction *********")
             category1 = 4000
             attraction = req['result']['parameters']['attraction'].lower()
             if attraction == 'historical site':
