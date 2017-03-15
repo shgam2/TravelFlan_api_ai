@@ -530,7 +530,7 @@ def process_request(req):
             button_title = 'Click to view'
 
         if action == 'restaurant':
-            category1 = 3000
+            category1 = '3000'
             cuisine = req['result']['parameters']['cuisine'].lower()
             if cuisine == 'korean':
                 category2 = '3101'
@@ -553,7 +553,7 @@ def process_request(req):
                 print("Restaurant category2 is None")
         elif action == 'attraction':
             print("In attraction *********")
-            category1 = 4000
+            category1 = '4000'
             attraction = req['result']['parameters']['attraction'].lower()
             if attraction == 'historical site':
                 category2 = '4101'
