@@ -640,6 +640,7 @@ def process_request(req):
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
+    print("request: {}".format(request))
     req = request.get_json(silent=True, force=True)
     print('Request:\n%s' % (json.dumps(req, indent=4),))
 
