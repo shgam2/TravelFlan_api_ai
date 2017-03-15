@@ -506,7 +506,19 @@ def process_request(req):
             'displayText': speech,
             'source': 'apiai-translate'
         }
-    elif action == 'restaurant':
+    # elif action == 'attraction':
+    #     if userlocale == 'zh_cn':
+    #         lang = '01'
+    #         button_title = '点击查看'
+    #     elif userlocale in ('zh_tw', 'zh_hk'):
+    #         lang = '02'
+    #         button_title = '點擊查看'
+    #     else:
+    #         lang = '04'
+    #         button_title = 'Click to view'
+
+
+    elif action == 'restaurant' or action == 'attraction':
         if userlocale == 'zh_cn':
             lang = '01'
             button_title = '点击查看'
@@ -517,25 +529,41 @@ def process_request(req):
             lang = '04'
             button_title = 'Click to view'
 
-        cuisine = req['result']['parameters']['cuisine'].lower()
-        if cuisine == 'korean':
-            category2 = '3101'
-        elif cuisine == 'japanese':
-            category2 = '3102'
-        elif cuisine == 'chinese':
-            category2 = '3103'
-        elif cuisine == 'western':
-            category2 = '3104'
-        elif cuisine == 'foreign':
-            category2 = '3105'
-        elif cuisine == 'caffe':
-            category2 = '3106'
-        elif cuisine == 'fastfood':
-            category2 = '3107'
-        elif cuisine == 'pub':
-            category2 = '3108'
+        if action == 'restaurant':
+            category1 = 3000
+            cuisine = req['result']['parameters']['cuisine'].lower()
+            if cuisine == 'korean':
+                category2 = '3101'
+            elif cuisine == 'japanese':
+                category2 = '3102'
+            elif cuisine == 'chinese':
+                category2 = '3103'
+            elif cuisine == 'western':
+                category2 = '3104'
+            elif cuisine == 'foreign':
+                category2 = '3105'
+            elif cuisine == 'caffe':
+                category2 = '3106'
+            elif cuisine == 'fastfood':
+                category2 = '3107'
+            elif cuisine == 'pub':
+                category2 = '3108'
+            else:
+                category2 = None
+                print("Restaurant category2 is None")
+        elif action == 'attraction':
+            category1 = 4000
+            attraction = req['result']['parameters']['attraction'].lower()
+            if attraction == 'historical site':
+                category2 = '4101'
+            elif attraction == 'shooting site':
+                category2 = '4102'
+            else:
+                category2 = None
+                print("Attraction category2 is None")
         else:
-            category2 = None
+            category1 = None
+            print("action is none")
 
         address = req['result']['parameters']['address']
         geocode_result = gmaps.geocode(address)
@@ -544,7 +572,7 @@ def process_request(req):
 
         _data = {
             'lang': lang,
-            'category1': '3000',
+            'category1': category1,
             'category2': category2,
             # 'cityCode': None,
             # 'areaCode': None,
@@ -553,7 +581,7 @@ def process_request(req):
             'distance': '500'
         }
         _res = exapi_pengtai(_data)
-        print ("_res: {}".format(_res))
+        print("_res: {}".format(_res))
 
         speech = ''
 
