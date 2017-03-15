@@ -551,13 +551,15 @@ def process_request(req):
                 category2 = None
                 print("Restaurant category2 is None")
         elif action == 'attraction':
-            print ("In attraction *********")
+            print("In attraction *********")
             category1 = 4000
             attraction = req['result']['parameters']['attraction'].lower()
             if attraction == 'historical site':
                 category2 = '4101'
+                print("1111111111")
             elif attraction == 'shooting site':
                 category2 = '4102'
+                print("22222222222")
             else:
                 category2 = None
                 print("Attraction category2 is None")
@@ -580,6 +582,7 @@ def process_request(req):
             'longitude': str(longitude),
             'distance': '500'
         }
+        print ('_data: {}'.format(_data))
         _res = exapi_pengtai(_data)
         print("_res: {}".format(_res))
 
