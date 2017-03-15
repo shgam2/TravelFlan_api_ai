@@ -640,12 +640,13 @@ def process_request(req):
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
-    try:
-        print("request: {}".format(request))
-    except Exception as e:
-        print(e)
+    print('123123')
+    # try:
+    #     print("request: {}".format(request))
+    # except Exception as e:
+    #     print(e)
     req = request.get_json(silent=True, force=True)
-    print('Request:\n%s' % (json.dumps(req, indent=4),))
+    # print('Request:\n%s' % (json.dumps(req, indent=4),))
 
     res = process_request(req)
     res = json.dumps(res, indent=4)
