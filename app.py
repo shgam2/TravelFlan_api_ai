@@ -553,6 +553,7 @@ def process_request(req):
             'distance': '500'
         }
         _res = exapi_pengtai(_data)
+        print ("_res: {}".format(_res))
 
         speech = ''
 
