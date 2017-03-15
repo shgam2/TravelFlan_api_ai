@@ -439,23 +439,6 @@ def process_request(req):
                             units['temperature'], fc_weather['low'], units['temperature'])
         else:  # tomorrow portion
             print("1 DATE IS {}".format(date))
-            # if date == '明天':
-            #     # display 'tomorrow''s weather
-            #     t_date = datetime.strptime(forecast_items[1]['date'], '%d %b %Y').strftime('%m/%d')
-            #     t_code = forecast_items[1]['code']
-            #     t_high = forecast_items[1]['high']
-            #     t_low = forecast_items[1]['low']
-            #     if userlocale == 'zh_cn':
-            #         speech = '%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
-            #             city, t_date, conv_weather_cond(t_code, 's_cn'),
-            #             t_high, units['temperature'], t_low, units['temperature']
-            #         )
-            #     else:
-            #         speech = '%s的天氣(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
-            #             city, t_date, conv_weather_cond(t_code, 't_cn'),
-            #             t_high, units['temperature'], t_low, units['temperature']
-            #         )
-            # el
             if date.lower() in ('now', "现在"):
                 if userlocale == 'zh_cn':
                     speech = '%s的天气: %s, 温度是华氏%s°%s' % (city, conv_weather_cond(condition['code'], 's_cn'), condition['temp'], units['temperature'])
@@ -466,14 +449,10 @@ def process_request(req):
                     location['city'], condition['text'],
                     condition['temp'], units['temperature'])
             else:
-                print ("2 in the date area")
+                print("2 in the date area")
                 if datetime.strptime(date, '%Y-%m-%d') < datetime.strptime(forecast_items[0]['date'], '%d %b %Y'):
                     temp_date = datetime.strptime(date, '%Y-%m-%d') + timedelta(days=7)
                     date = temp_date.strftime("%Y-%m-%d")
-                # t_date = datetime.strptime(forecast_items[1]['date'], '%d %b %Y').strftime('%m/%d')
-                # t_code = forecast_items[1]['code']
-                # t_high = forecast_items[1]['high']
-                # t_low = forecast_items[1]['low']
                 item_num = -1
                 fc_weather = forecast(date, item_num, forecast_items)
                 print("3 in the date area")
@@ -515,7 +494,7 @@ def process_request(req):
         url = TRANSLATE_BASE_URL + urlencode({'text': phrase, 'to': code, 'authtoken': 'dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
         print(url)
         _res = urlopen(url).read()
-        print(_res)
+        print("_res: {}".format(_res))
         tmpl = get_response_template(userlocale)
         print(tmpl)
         language = convert_langauge_to_user_locale(language.lower(), userlocale)
