@@ -640,7 +640,7 @@ def process_request(req):
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
-    print('123123')
+    # print('123123')
     # try:
     #     print("request: {}".format(request))
     # except Exception as e:
