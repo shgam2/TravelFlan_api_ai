@@ -517,9 +517,6 @@ def process_request(req):
     #     else:
     #         lang = '04'
     #         button_title = 'Click to view'
-    elif action == 'attraction':
-        print("Hello!!!!!!!!")
-
     elif action in ('attraction', 'restaurant'):
         print("Hello!")
         if userlocale == 'zh_cn':
