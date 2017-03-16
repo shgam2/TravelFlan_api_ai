@@ -414,6 +414,8 @@ def process_request(req):
                 check_date = date_period.partition('/')[0]
                 print('check_date is {}'.format(check_date))
                 check_date = datetime.datetime.strftime(check_date,'%Y-%m-%d')
+                print("1: {}".format(check_date))
+                print("2: {}".format(datetime.datetime.strftime(forecast_items[0].date,'%d %b %Y')))
                 if check_date > datetime.datetime.strftime(forecast_items[0].date,'%d %b %Y') or check_date < datetime.datetime.strftime(forecast_items[0].date,'%d %b %Y'):
                     return None
 
