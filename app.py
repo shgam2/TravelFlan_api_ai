@@ -121,7 +121,7 @@ def forecast(date, item_num, forecast_items):
 
 
 def conv_weather_cond(c_code, lang):
-    print('lang is {}'.format(lang))
+    #print('lang is {}'.format(lang))
     weather_file = 'weather_condition.csv'
     try:
         with open(weather_file, 'rU') as f:
@@ -129,7 +129,7 @@ def conv_weather_cond(c_code, lang):
             row_num = 1
             print('condition = {}'.format(c_code))
             while True:
-                print('w_cond[row_num][0] = {}'.format(w_cond[row_num][0]))
+                #print('w_cond[row_num][0] = {}'.format(w_cond[row_num][0]))
                 if w_cond[row_num][0] == c_code:
                     row_found = row_num
                     print('found the weather condition! : {}'.format(row_found))
