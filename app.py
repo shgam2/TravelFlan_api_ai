@@ -517,17 +517,7 @@ def process_request(req):
             'displayText': speech,
             'source': 'apiai-translate'
         }
-    # elif action == 'attraction':
-    #     if userlocale == 'zh_cn':
-    #         lang = '01'
-    #         button_title = '点击查看'
-    #     elif userlocale in ('zh_tw', 'zh_hk'):
-    #         lang = '02'
-    #         button_title = '點擊查看'
-    #     else:
-    #         lang = '04'
-    #         button_title = 'Click to view'
-    elif action in ('attraction', 'accomodation', 'restaurant', ):
+    elif action in ('attraction', 'accomodation', 'restaurant', 'shopping'):
         if userlocale == 'zh_cn':
             lang = '01'
             button_title = '点击查看'
@@ -568,17 +558,62 @@ def process_request(req):
                 category2 = '4102'
             else:
                 category2 = None
-        elif action == 'accomodation':
+        elif action == 'accommodation':
             category1 = '2000'
-            accomodation = req['result']['parameters']['accomodation'].lower()
-            if accomodation== 'hotel':
+            accommodation = req['result']['parameters']['accommodation'].lower()
+            if accommodation== 'hotel':
                 category2 = '2101'
-            elif accomodation == 'motel':
+            elif accommodation == 'motel':
                 category2 = '2102'
-            elif accomodation == 'guest house':
+            elif accommodation == 'guest house':
                 category2 = '2105'
-            elif accomodation == 'bed and breakfast':
+            elif accommodation == 'bed and breakfast':
                 category2 = '2106'
+            else:
+                category2 = None
+        elif action == 'shopping':
+            category1 = '5000'
+            shopping = req['result']['parameters']['shopping'].lower()
+            if shopping == 'duty free':
+                category2 = '5101'
+            elif shopping == 'department store':
+                category2 = '5102'
+            elif shopping == 'shopping district':
+                category2 = '5103'
+            elif shopping == 'accessories':
+                category2 = '5104'
+            elif shopping == 'clothing':
+                category2 = '5105'
+            elif shopping == 'high-end':
+                category2 = '5106'
+            elif shopping == 'sports':
+                category2 = '5107'
+            elif shopping == 'underwear':
+                category2 = '5108'
+            elif shopping == 'kids':
+                category2 = '5109'
+            elif shopping == 'jewellery':
+                category2 = '5110'
+            elif shopping == 'cosmetics':
+                category2 = '5111'
+            elif shopping == 'electronics':
+                category2 = '5112'
+            elif shopping == 'glasses':
+                category2 = '5113'
+            elif shopping == 'specialty':
+                category2 = '5114'
+            elif shopping == 'shoes':
+                category2 = '5115'
+            elif shopping == 'retailer':
+                category2 = '5116'
+            elif shopping == 'market':
+                category2 = '5117'
+            elif shopping == 'shopping center':
+                category2 = '5118'
+            elif shopping == 'outlet':
+                category2 = '5119'
+            elif shopping == 'mall':
+                category2 = '5120'
             else:
                 category2 = None
         else:
