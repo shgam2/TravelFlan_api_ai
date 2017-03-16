@@ -99,12 +99,11 @@ def forecast(date, item_num, forecast_items):
         fc_weather = forecast_items[item_num]
         return fc_weather
 
-    fc_weather = None
-
     for i in forecast_items:
         if date:
             i_date = datetime.strptime(i.get('date'), '%d %b %Y').strftime('%Y-%m-%d')
 
+            print ("date = {}, i_date = {}".format(date,i_date))
             if date == i_date:
                 fc_weather = {
                     'date': datetime.strptime(i.get('date'), '%d %b %Y').strftime('%a %b %d'),
@@ -116,6 +115,8 @@ def forecast(date, item_num, forecast_items):
                 print(fc_weather)
                 return fc_weather
                 #break
+
+    print("We've got past the forecast_items")
     return None
 
 
