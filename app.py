@@ -114,8 +114,10 @@ def forecast(date, item_num, forecast_items):
                     'code': i.get('code')
                 }
                 print(fc_weather)
-                break
-    return fc_weather
+                return fc_weather
+                #break
+    return None
+
 
 
 def conv_weather_cond(c_code, lang):
@@ -410,6 +412,9 @@ def process_request(req):
                         location['city'], condition['text'],
                         condition['temp'], units['temperature'])
             else:
+                print('date_period = {}'.format(date_period))
+                # if the date_period is out of the 10 day range provided by the YahooWeather, speech is None
+
                 if userlocale == 'zh_cn':
                     speech = ('%s天氣預報(10天):' % city)
                 elif userlocale in ('zh_tw', 'zh_hk'):
@@ -420,6 +425,9 @@ def process_request(req):
                 for i in range(0, 10):
                     item_num = i
                     fc_weather = forecast(date, item_num, forecast_items)
+                    if fc_weather == None:
+                        speech = None
+                        break
                     print("fc_weather: {}".format(fc_weather))
                     if userlocale in ('zh_cn', 'zh_tw', 'zh_hk'):
                         if userlocale == 'zh_cn':
@@ -427,13 +435,11 @@ def process_request(req):
                         else:
                             lang = 't_cn'
                         w_cond = conv_weather_cond(fc_weather['code'], lang)
-                        print("11111")
                         speech += '\n(%s) %s, 高溫: %s°%s, 低溫: %s°%s' % (
                             datetime.strptime(fc_weather['date'], '%d %b %Y').strftime('%m/%d'), w_cond,
                             fc_weather['high'], units['temperature'],
                             fc_weather['low'], units['temperature'])
                     else:
-                        print("22222")
                         speech += '\n(%s) %s, high: %s°%s, low: %s°%s' % (
                             datetime.strptime(fc_weather['date'], '%d %b %Y').strftime('%a %b %d'),
                             fc_weather['text'], fc_weather['high'],
@@ -517,8 +523,7 @@ def process_request(req):
     #     else:
     #         lang = '04'
     #         button_title = 'Click to view'
-    elif action in ('attraction', 'restaurant'):
-        print("Hello!")
+    elif action in ('attraction', 'accomodation', 'restaurant', ):
         if userlocale == 'zh_cn':
             lang = '01'
             button_title = '点击查看'
@@ -550,23 +555,30 @@ def process_request(req):
                 category2 = '3108'
             else:
                 category2 = None
-                print("Restaurant category2 is None")
         elif action == 'attraction':
-            print("In attraction *********")
             category1 = '4000'
             attraction = req['result']['parameters']['attraction'].lower()
             if attraction == 'historical site':
                 category2 = '4101'
-                print("1111111111")
             elif attraction == 'shooting site':
                 category2 = '4102'
-                print("22222222222")
             else:
                 category2 = None
-                print("Attraction category2 is None")
+        elif action == 'accomodation':
+            category1 = '2000'
+            accomodation = req['result']['parameters']['accomodation'].lower()
+            if accomodation== 'hotel':
+                category2 = '2101'
+            elif accomodation == 'motel':
+                category2 = '2102'
+            elif accomodation == 'guest house':
+                category2 = '2105'
+            elif accomodation == 'bed and breakfast':
+                category2 = '2106'
+            else:
+                category2 = None
         else:
             category1 = None
-            print("action is none")
 
         address = req['result']['parameters']['address']
         geocode_result = gmaps.geocode(address)
