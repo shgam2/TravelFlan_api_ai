@@ -115,7 +115,6 @@ def forecast(date, item_num, forecast_items):
                 print(fc_weather)
                 return fc_weather
                 #break
-
     print("We've got past the forecast_items")
     return None
 
