@@ -411,8 +411,8 @@ def process_request(req):
             else:
                 print('date_period = {}'.format(date_period))
                 # if the date_period is out of the 10 day range provided by the YahooWeather, speech is None
-                check_date = date_period.partition('/')[0]
-                print('check_date is {}'.check_date)
+                #check_date = date_period.partition('/')[0]
+                #print('check_date is {}'.check_date)
 
                 if userlocale == 'zh_cn':
                     speech = ('%s天氣預報(10天):' % city)
