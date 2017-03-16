@@ -102,8 +102,6 @@ def forecast(date, item_num, forecast_items):
     for i in forecast_items:
         if date:
             i_date = datetime.strptime(i.get('date'), '%d %b %Y').strftime('%Y-%m-%d')
-
-            print ("date = {}, i_date = {}".format(date,i_date))
             if date == i_date:
                 fc_weather = {
                     'date': datetime.strptime(i.get('date'), '%d %b %Y').strftime('%a %b %d'),
@@ -112,7 +110,6 @@ def forecast(date, item_num, forecast_items):
                     'text': i.get('text'),
                     'code': i.get('code')
                 }
-                print(fc_weather)
                 return fc_weather
                 #break
     print("We've got past the forecast_items")
@@ -414,6 +411,8 @@ def process_request(req):
             else:
                 print('date_period = {}'.format(date_period))
                 # if the date_period is out of the 10 day range provided by the YahooWeather, speech is None
+                check_date = date_period.partition('/')[0]
+                print('check_date is {}'.check_date)
 
                 if userlocale == 'zh_cn':
                     speech = ('%s天氣預報(10天):' % city)
