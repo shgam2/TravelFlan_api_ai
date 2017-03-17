@@ -422,8 +422,8 @@ def process_request(req):
                 print("1: {}".format(check_date1))
                 print("2: {}".format(check_date2))
                 print("here: {}".format(forecast_items[0]['date']))
-                print("3: {}".format(datetime.strptime(forecast_items[0].date, '%d %b %Y')))
-                print("4: {}".format(datetime.strptime(forecast_items[9].date, '%d %b %Y')))
+                print("3: {}".format(datetime.strptime(forecast_items[0]['date'], '%d %b %Y')))
+                print("4: {}".format(datetime.strptime(forecast_items[9]['date'], '%d %b %Y')))
                 if check_date1 > datetime.strptime(forecast_items[9]['date'], '%d %b %Y') or check_date2 < datetime.strftime(forecast_items[0]['date'], '%d %b %Y'):
                     return None
 
