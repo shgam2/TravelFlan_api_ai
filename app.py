@@ -363,11 +363,15 @@ def process_request(req):
     except Exception as e:
         userlocale = 'zh_cn'
     action = req['result']['action']
+    print("00000")
     if action == 'prev_context':
+        print("11111")
         action = req['result']['parameters']['prev-action']
+        print("22222")
         city = req['result']['parameters']['city']
+        print("33333")
     print('action is {}'.format(action))
-    print('city is {}'.format(action))
+    print('city is {}'.format(city))
 
     if action == 'weather':
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req)}) + '&format=json'
