@@ -370,6 +370,8 @@ def process_request(req):
         print("22222")
         city = req['result']['parameters']['city']
         print("33333")
+    else:
+        city = None
     print('action is {}'.format(action))
     #print('city is {}'.format(city))
 
