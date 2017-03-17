@@ -396,7 +396,7 @@ def process_request(req):
         date = req['result']['parameters'].get('date')
         date_period = req['result']['parameters'].get('date-period')
 
-        if not date:
+        if not date or (date and date_period):
             # current weather
             if not date_period:
                 if userlocale == 'zh_cn':
