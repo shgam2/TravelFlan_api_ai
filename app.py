@@ -397,6 +397,7 @@ def process_request(req):
         date_period = req['result']['parameters'].get('date-period')
 
         if not date:
+            # current weather
             if not date_period:
                 if userlocale == 'zh_cn':
                     temp = conv_weather_cond(condition['code'], 's_cn')
@@ -408,15 +409,21 @@ def process_request(req):
                     speech = 'Current weather in %s: %s, the temperature is %s°%s' % (
                         location['city'], condition['text'],
                         condition['temp'], units['temperature'])
+            # 10-day weather forecast
             else:
                 print('date_period = {}'.format(date_period))
                 # if the date_period is out of the 10 day range provided by the YahooWeather, speech is None
-                check_date = date_period.partition('/')[0]
-                print('check_date is {}'.format(check_date))
-                check_date = datetime.strftime(check_date, '%Y-%m-%d')
-                print("1: {}".format(check_date))
-                print("2: {}".format(datetime.strftime(forecast_items[0].date, '%d %b %Y')))
-                if check_date > datetime.strftime(forecast_items[0].date, '%d %b %Y') or check_date < datetime.strftime(forecast_items[0].date, '%d %b %Y'):
+                check_date1 = date_period.partition('/')[0]
+                check_date2 = date_period.partition('/')[2]
+                print('check_date1 is {}'.format(check_date1))
+                print('check_date2 is {}'.format(check_date2))
+                check_date1 = datetime.strptime(check_date1, '%Y-%m-%d')
+                check_date2 = datetime.strptime(check_date2, '%Y-%m-%d')
+                print("1: {}".format(check_date1))
+                print("2: {}".format(check_date2))
+                print("3: {}".format(datetime.strptime(forecast_items[0].date, '%d %b %Y')))
+                print("4: {}".format(datetime.strptime(forecast_items[9].date, '%d %b %Y')))
+                if check_date1 > datetime.strptime(forecast_items[9].date, '%d %b %Y') or check_date2 < datetime.strftime(forecast_items[0].date, '%d %b %Y'):
                     return None
 
                 if userlocale == 'zh_cn':
@@ -561,7 +568,7 @@ def process_request(req):
         elif action == 'accommodation':
             category1 = '2000'
             accommodation = req['result']['parameters']['accommodation'].lower()
-            if accommodation== 'hotel':
+            if accommodation == 'hotel':
                 category2 = '2101'
             elif accommodation == 'motel':
                 category2 = '2102'
