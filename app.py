@@ -517,7 +517,7 @@ def process_request(req):
             'displayText': speech,
             'source': 'apiai-translate'
         }
-    elif action in ('attraction', 'accomodation', 'restaurant', 'shopping'):
+    elif action in ('attraction', 'accommodation', 'restaurant', 'shopping'):
         if userlocale == 'zh_cn':
             lang = '01'
             button_title = '点击查看'
