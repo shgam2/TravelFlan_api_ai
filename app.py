@@ -368,7 +368,10 @@ def process_request(req):
         print("11111")
         action = req['result']['parameters']['prev-action']
         print("22222")
-        city = req['result']['parameters']['city']
+        if not req['result']['parameters']['city'] == '':
+            city = req['result']['parameters']['city']
+        else:
+            city = req['result']['parameters']['prev-city']
         print("33333")
     else:
         city = None
