@@ -394,16 +394,21 @@ def process_request(req):
 
         if 'condition' not in data['query']['results']['channel']['item']:
             return res
-
+        print ("aaaaaa")
         location = data['query']['results']['channel']['location']
         condition = data['query']['results']['channel']['item']['condition']
         units = data['query']['results']['channel']['units']
         forecast_items = data['query']['results']['channel']['item']['forecast']
+        print("bbbbbb")
         if not city:
+            print("ccccccc")
             city = req['result']['parameters']['city']
 
+        print("dddddd")
         date = req['result']['parameters'].get('date')
+        print("eeeeeee")
         date_period = req['result']['parameters'].get('date-period')
+        print("ffffff")
 
         if not date or (date and date_period):
             # current weather
