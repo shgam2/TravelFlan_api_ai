@@ -363,7 +363,11 @@ def process_request(req):
     except Exception as e:
         userlocale = 'zh_cn'
     action = req['result']['action']
+    if action == 'prev_context':
+        action = req['result']['parameters']['prev-action']
+        city = req['result']['parameters']['city']
     print('action is {}'.format(action))
+    print('city is {}'.format(action))
 
     if action == 'weather':
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req)}) + '&format=json'
@@ -391,7 +395,8 @@ def process_request(req):
         condition = data['query']['results']['channel']['item']['condition']
         units = data['query']['results']['channel']['units']
         forecast_items = data['query']['results']['channel']['item']['forecast']
-        city = req['result']['parameters']['city']
+        if not city:
+            city = req['result']['parameters']['city']
 
         date = req['result']['parameters'].get('date')
         date_period = req['result']['parameters'].get('date-period')
