@@ -425,7 +425,10 @@ def process_request(req):
                 print("3: {}".format(datetime.strptime(forecast_items[0]['date'], '%d %b %Y')))
                 print("4: {}".format(datetime.strptime(forecast_items[9]['date'], '%d %b %Y')))
                 if check_date1 > datetime.strptime(forecast_items[9]['date'], '%d %b %Y') or check_date2 < datetime.strftime(forecast_items[0]['date'], '%d %b %Y'):
+                    print("YES!")
                     return None
+                else:
+                    print("NO!")
 
                 if userlocale == 'zh_cn':
                     speech = ('%s天氣預報(10天):' % city)
