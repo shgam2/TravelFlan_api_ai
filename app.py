@@ -470,7 +470,7 @@ def process_request(req):
                             fc_weather['text'], fc_weather['high'],
                             units['temperature'], fc_weather['low'], units['temperature'])
         else:  # tomorrow portion
-            # print("1 DATE IS {}".format(date))
+            print('here in the tomorrow portion')
             if date.lower() in ('now', "现在"):
                 if userlocale == 'zh_cn':
                     speech = '%s的天气: %s, 温度是华氏%s°%s' % (city, conv_weather_cond(condition['code'], 's_cn'), condition['temp'], units['temperature'])
