@@ -404,12 +404,12 @@ def process_request(req):
 
         date = req['result']['parameters'].get('date')
         prev_date = req['result']['parameters'].get('prev-date')
-        if prev_date:
-            date = prev_date
         date_period = req['result']['parameters'].get('date-period')
         prev_dp = req['result']['parameters'].get('prev-dp')
-        if prev_dp:
+        if prev_dp and not date:
             date_period = prev_dp
+        if prev_date and not date_period:
+            date = prev_date
 
         if not date or (date and date_period):
             # current weather
