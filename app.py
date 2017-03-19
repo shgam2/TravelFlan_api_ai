@@ -365,16 +365,13 @@ def process_request(req):
     action = req['result']['action']
     print("00000")
     if action == 'prev_context':
-        print("11111")
         action = req['result']['parameters']['prev-action']
-        print("22222")
         if not req['result']['parameters']['city'] == '':
             city = req['result']['parameters']['city']
         else:
             city = req['result']['parameters']['prev-city']
-        print("33333")
     else:
-        city = None
+        city = req['result']['parameters']['city']
     print('action is {}'.format(action))
 
     if action == 'weather':
@@ -402,8 +399,8 @@ def process_request(req):
         condition = data['query']['results']['channel']['item']['condition']
         units = data['query']['results']['channel']['units']
         forecast_items = data['query']['results']['channel']['item']['forecast']
-        if not city:
-            city = req['result']['parameters']['city']
+        # if not city:
+        #     city = req['result']['parameters']['city']
 
         date = req['result']['parameters'].get('date')
         prev_date = req['result']['parameters'].get('prev-date')
