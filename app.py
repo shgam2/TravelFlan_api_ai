@@ -401,7 +401,7 @@ def process_request(req):
         forecast_items = data['query']['results']['channel']['item']['forecast']
         # if not city:
         #     city = req['result']['parameters']['city']
-        print('4444444')
+        print("zzxzxzx")
         date = req['result']['parameters'].get('date')
         prev_date = req['result']['parameters'].get('prev-date')
         date_period = req['result']['parameters'].get('date-period')
@@ -410,7 +410,7 @@ def process_request(req):
             date_period = prev_dp
         if prev_date and not date_period:
             date = prev_date
-        print('5555555')
+        print("abcabc")
         if not date or (date and date_period):
             # current weather
             if not date_period:
@@ -438,6 +438,7 @@ def process_request(req):
                 #print("2: {}".format(check_date2))
                 #print("3: {}".format(datetime.strptime(forecast_items[0]['date'], '%d %b %Y')))
                 #print("4: {}".format(datetime.strptime(forecast_items[9]['date'], '%d %b %Y')))
+                if check_date1 > datetime.strptime(forecast_items[9]['date'], '%d %b %Y') or check_date2 < datetime.strptime(forecast_items[0]['date'], '%d %b %Y'):
                     return None
 
                 if userlocale == 'zh_cn':
