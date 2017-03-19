@@ -406,7 +406,13 @@ def process_request(req):
             city = req['result']['parameters']['city']
 
         date = req['result']['parameters'].get('date')
+        prev_date = req['result']['parameters'].get('prev-date')
+        if prev_date:
+            print('AAAAAAAA')
         date_period = req['result']['parameters'].get('date-period')
+        prev_dp = req['result']['parameters'].get('prev-dp')
+        if prev_dp:
+            print('BBBBBBBB')
 
         if not date or (date and date_period):
             # current weather
@@ -436,7 +442,6 @@ def process_request(req):
                 print("3: {}".format(datetime.strptime(forecast_items[0]['date'], '%d %b %Y')))
                 print("4: {}".format(datetime.strptime(forecast_items[9]['date'], '%d %b %Y')))
                 if check_date1 > datetime.strptime(forecast_items[9]['date'], '%d %b %Y') or check_date2 < datetime.strptime(forecast_items[0]['date'], '%d %b %Y'):
-                    print("YES!")
                     return None
 
                 if userlocale == 'zh_cn':
@@ -452,7 +457,6 @@ def process_request(req):
                     if fc_weather == None:
                         speech = None
                         break
-                    print("fc_weather: {}".format(fc_weather))
                     if userlocale in ('zh_cn', 'zh_tw', 'zh_hk'):
                         if userlocale == 'zh_cn':
                             lang = 's_cn'
