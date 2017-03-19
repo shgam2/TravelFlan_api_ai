@@ -376,7 +376,6 @@ def process_request(req):
     else:
         city = None
     print('action is {}'.format(action))
-    #print('city is {}'.format(city))
 
     if action == 'weather':
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req)}) + '&format=json'
@@ -399,21 +398,15 @@ def process_request(req):
 
         if 'condition' not in data['query']['results']['channel']['item']:
             return res
-        print ("aaaaaa")
         location = data['query']['results']['channel']['location']
         condition = data['query']['results']['channel']['item']['condition']
         units = data['query']['results']['channel']['units']
         forecast_items = data['query']['results']['channel']['item']['forecast']
-        print("bbbbbb")
         if not city:
-            print("ccccccc")
             city = req['result']['parameters']['city']
 
-        print("dddddd")
         date = req['result']['parameters'].get('date')
-        print("eeeeeee")
         date_period = req['result']['parameters'].get('date-period')
-        print("ffffff")
 
         if not date or (date and date_period):
             # current weather
@@ -445,8 +438,6 @@ def process_request(req):
                 if check_date1 > datetime.strptime(forecast_items[9]['date'], '%d %b %Y') or check_date2 < datetime.strptime(forecast_items[0]['date'], '%d %b %Y'):
                     print("YES!")
                     return None
-                else:
-                    print("NO!")
 
                 if userlocale == 'zh_cn':
                     speech = ('%s天氣預報(10天):' % city)
