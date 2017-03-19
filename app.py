@@ -377,8 +377,11 @@ def process_request(req):
     if action == 'weather':
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req)}) + '&format=json'
         print('YQL-Request:\n%s' % (url,))
+        print('ONE')
         _res = urlopen(url).read()
+        print('TWO')
         print('YQL-Response:\n%s' % (_res,))
+        print('THREE')
 
         data = json.loads(_res)
 
