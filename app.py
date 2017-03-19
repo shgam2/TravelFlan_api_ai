@@ -87,9 +87,9 @@ def convert_langauge_to_user_locale(targetlang, userlang):
             return 'Chinese'
 
 
-def make_yql_query(req):
+def make_yql_query(req, city):
 
-    city = req['result']['parameters']['city']
+    #city = req['result']['parameters']['city']
     return 'select * from weather.forecast ' \
            'where woeid in (select woeid from geo.places(1) where text=\'%s\') and u=\'c\'' % (city,)
 
@@ -376,7 +376,7 @@ def process_request(req):
     print('city is {}'.format(city));
 
     if action == 'weather':
-        url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req)}) + '&format=json'
+        url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req, city)}) + '&format=json'
         print('YQL-Request:\n%s' % (url,))
         print('ONE')
         _res = urlopen(url).read()
