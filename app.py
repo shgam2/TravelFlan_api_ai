@@ -408,11 +408,11 @@ def process_request(req):
         date = req['result']['parameters'].get('date')
         prev_date = req['result']['parameters'].get('prev-date')
         if prev_date:
-            print('AAAAAAAA')
+            date = prev_date
         date_period = req['result']['parameters'].get('date-period')
         prev_dp = req['result']['parameters'].get('prev-dp')
         if prev_dp:
-            print('BBBBBBBB')
+            date_period = prev_dp
 
         if not date or (date and date_period):
             # current weather
@@ -433,14 +433,14 @@ def process_request(req):
                 # if the date_period is out of the 10 day range provided by the YahooWeather, speech is None
                 check_date1 = date_period.partition('/')[0]
                 check_date2 = date_period.partition('/')[2]
-                print('check_date1 is {}'.format(check_date1))
-                print('check_date2 is {}'.format(check_date2))
+                #print('check_date1 is {}'.format(check_date1))
+                #print('check_date2 is {}'.format(check_date2))
                 check_date1 = datetime.strptime(check_date1, '%Y-%m-%d')
                 check_date2 = datetime.strptime(check_date2, '%Y-%m-%d')
-                print("1: {}".format(check_date1))
-                print("2: {}".format(check_date2))
-                print("3: {}".format(datetime.strptime(forecast_items[0]['date'], '%d %b %Y')))
-                print("4: {}".format(datetime.strptime(forecast_items[9]['date'], '%d %b %Y')))
+                #print("1: {}".format(check_date1))
+                #print("2: {}".format(check_date2))
+                #print("3: {}".format(datetime.strptime(forecast_items[0]['date'], '%d %b %Y')))
+                #print("4: {}".format(datetime.strptime(forecast_items[9]['date'], '%d %b %Y')))
                 if check_date1 > datetime.strptime(forecast_items[9]['date'], '%d %b %Y') or check_date2 < datetime.strptime(forecast_items[0]['date'], '%d %b %Y'):
                     return None
 
@@ -473,7 +473,7 @@ def process_request(req):
                             fc_weather['text'], fc_weather['high'],
                             units['temperature'], fc_weather['low'], units['temperature'])
         else:  # tomorrow portion
-            print("1 DATE IS {}".format(date))
+            # print("1 DATE IS {}".format(date))
             if date.lower() in ('now', "现在"):
                 if userlocale == 'zh_cn':
                     speech = '%s的天气: %s, 温度是华氏%s°%s' % (city, conv_weather_cond(condition['code'], 's_cn'), condition['temp'], units['temperature'])
@@ -484,13 +484,13 @@ def process_request(req):
                     location['city'], condition['text'],
                     condition['temp'], units['temperature'])
             else:
-                print("2 in the date area")
+                # print("2 in the date area")
                 if datetime.strptime(date, '%Y-%m-%d') < datetime.strptime(forecast_items[0]['date'], '%d %b %Y'):
                     temp_date = datetime.strptime(date, '%Y-%m-%d') + timedelta(days=7)
                     date = temp_date.strftime("%Y-%m-%d")
                 item_num = -1
                 fc_weather = forecast(date, item_num, forecast_items)
-                print("3 in the date area")
+                # print("3 in the date area")
                 if userlocale == 'zh_cn':
                     speech = '%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
                         city, fc_weather['date'], conv_weather_cond(fc_weather['code'], 's_cn'),
@@ -502,11 +502,11 @@ def process_request(req):
                         fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature']
                     )
                 else:
-                    print("4 in the date area")
+                    # print("4 in the date area")
                     speech = 'Weather in %s (%s): %s, high: %s°%s, low: %s°%s' % (
                         location['city'], fc_weather['date'], fc_weather['text'],
                         fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
-                    print("5 speech is {}".format(speech))
+                    # print("5 speech is {}".format(speech))
 
         res = {
             'speech': speech,
