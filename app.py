@@ -372,9 +372,9 @@ def process_request(req):
         else:
             city = req['result']['parameters']['prev-city']
     else:
-        city = req['result']['parameters'].get(['city'])
+        city = req['result']['parameters'].get('city')
     print('action is {}'.format(action))
-    print('city is {}'.format(city));
+    print('city is {}'.format(city))
 
     if action == 'weather':
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req, city)}) + '&format=json'
