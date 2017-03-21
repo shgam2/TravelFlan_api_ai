@@ -587,11 +587,13 @@ def process_request(req):
             else:
                 category2 = None
         elif action == 'accommodation':
+            print("hello")
             category1 = '2000'
             accommodation = req['result']['parameters']['accommodation'].lower()
             if accommodation == 'hotel' or accommodation == '饭店':
                 category2 = '2101'
             elif accommodation == 'motel' or accommodation == '汽车旅馆':
+                print("hello2")
                 category2 = '2102'
             elif accommodation == 'guest house' or accommodation == '背包客栈':
                 category2 = '2105'
@@ -646,12 +648,12 @@ def process_request(req):
                 category2 = None
         else:
             category1 = None
-
+        print("What")
         address = req['result']['parameters']['address']
         geocode_result = gmaps.geocode(address)
         latitude = geocode_result[0]['geometry']['location']['lat']
         longitude = geocode_result[0]['geometry']['location']['lng']
-
+        print("What??")
         _data = {
             'lang': lang,
             'category1': category1,
