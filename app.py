@@ -580,9 +580,9 @@ def process_request(req):
         elif action == 'attraction':
             category1 = '4000'
             attraction = req['result']['parameters']['attraction'].lower()
-            if attraction == 'historical site':
+            if attraction == 'historical site' or attraction == '遗址':
                 category2 = '4101'
-            elif attraction == 'shooting site':
+            elif attraction == 'shooting site' or attraction == '拍摄场所':
                 category2 = '4102'
             else:
                 category2 = None
@@ -689,6 +689,7 @@ def process_request(req):
             speech += '%s. name: %s\nsummary: %s\naddress: %s\ntel: %s\nbusiness hours: %s\n\n' % (
                 i + 1, item['name'], item['summary'], item['address'], item['tel'], item['besinessHours']
             )
+            print("speech is {}.".format(speech))
 
         l = 0
         for x in speech.split('\n'):
