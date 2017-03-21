@@ -604,7 +604,7 @@ def process_request(req):
         elif action == 'shopping':
             category1 = '5000'
             shopping = req['result']['parameters']['shopping'].lower()
-            if shopping == 'duty free':
+            if shopping == 'duty-free':
                 category2 = '5101'
             elif shopping == 'department store':
                 category2 = '5102'
@@ -612,7 +612,7 @@ def process_request(req):
                 category2 = '5103'
             elif shopping == 'accessories':
                 category2 = '5104'
-            elif shopping == 'clothing':
+            elif shopping == 'fashion':
                 category2 = '5105'
             elif shopping == 'high-end':
                 category2 = '5106'
@@ -628,7 +628,7 @@ def process_request(req):
                 category2 = '5111'
             elif shopping == 'electronics':
                 category2 = '5112'
-            elif shopping == 'glasses':
+            elif shopping == 'optics':
                 category2 = '5113'
             elif shopping == 'specialty':
                 category2 = '5114'
