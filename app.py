@@ -88,9 +88,8 @@ def convert_langauge_to_user_locale(targetlang, userlang):
 
 
 def make_yql_query(req, city):
-
-    #city = req['result']['parameters']['city']
-    #print ("city here is {}".format(req['result']['parameters']['city']))
+    # city = req['result']['parameters']['city']
+    # print ("city here is {}".format(req['result']['parameters']['city']))
     return 'select * from weather.forecast ' \
            'where woeid in (select woeid from geo.places(1) where text=\'%s\') and u=\'c\'' % (city,)
 
@@ -112,14 +111,13 @@ def forecast(date, item_num, forecast_items):
                     'code': i.get('code')
                 }
                 return fc_weather
-                #break
+                # break
     print("We've got past the forecast_items")
     return None
 
 
-
 def conv_weather_cond(c_code, lang):
-    #print('lang is {}'.format(lang))
+    # print('lang is {}'.format(lang))
     weather_file = 'weather_condition.csv'
     try:
         with open(weather_file, 'rU') as f:
@@ -127,7 +125,7 @@ def conv_weather_cond(c_code, lang):
             row_num = 1
             print('condition = {}'.format(c_code))
             while True:
-                #print('w_cond[row_num][0] = {}'.format(w_cond[row_num][0]))
+                # print('w_cond[row_num][0] = {}'.format(w_cond[row_num][0]))
                 if w_cond[row_num][0] == c_code:
                     row_found = row_num
                     print('found the weather condition! : {}'.format(row_found))
@@ -375,7 +373,7 @@ def process_request(req):
         if req['result']['parameters'].get('city'):
             city = req['result']['parameters'].get('city')
     print('action is {}'.format(action))
-    #print('city is {}'.format(city))
+    # print('city is {}'.format(city))
 
     if action == 'weather':
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req, city)}) + '&format=json'
@@ -436,15 +434,17 @@ def process_request(req):
                 # if the date_period is out of the 10 day range provided by the YahooWeather, speech is None
                 check_date1 = date_period.partition('/')[0]
                 check_date2 = date_period.partition('/')[2]
-                #print('check_date1 is {}'.format(check_date1))
-                #print('check_date2 is {}'.format(check_date2))
+                # print('check_date1 is {}'.format(check_date1))
+                # print('check_date2 is {}'.format(check_date2))
                 check_date1 = datetime.strptime(check_date1, '%Y-%m-%d')
                 check_date2 = datetime.strptime(check_date2, '%Y-%m-%d')
-                #print("1: {}".format(check_date1))
-                #print("2: {}".format(check_date2))
-                #print("3: {}".format(datetime.strptime(forecast_items[0]['date'], '%d %b %Y')))
-                #print("4: {}".format(datetime.strptime(forecast_items[9]['date'], '%d %b %Y')))
-                if check_date1 > datetime.strptime(forecast_items[9]['date'], '%d %b %Y') or check_date2 < datetime.strptime(forecast_items[0]['date'], '%d %b %Y'):
+                # print("1: {}".format(check_date1))
+                # print("2: {}".format(check_date2))
+                # print("3: {}".format(datetime.strptime(forecast_items[0]['date'], '%d %b %Y')))
+                # print("4: {}".format(datetime.strptime(forecast_items[9]['date'], '%d %b %Y')))
+                if check_date1 > datetime.strptime(forecast_items[9]['date'],
+                                                   '%d %b %Y') or check_date2 < datetime.strptime(
+                        forecast_items[0]['date'], '%d %b %Y'):
                     return None
 
                 if userlocale == 'zh_cn':
@@ -479,13 +479,15 @@ def process_request(req):
             print('here in the tomorrow portion')
             if date.lower() in ('now', "现在"):
                 if userlocale == 'zh_cn':
-                    speech = '%s的天气: %s, 温度是华氏%s°%s' % (city, conv_weather_cond(condition['code'], 's_cn'), condition['temp'], units['temperature'])
+                    speech = '%s的天气: %s, 温度是华氏%s°%s' % (
+                    city, conv_weather_cond(condition['code'], 's_cn'), condition['temp'], units['temperature'])
                 elif userlocale in ('zh_tw', 'zh_hk'):
-                    speech = '%s的天氣: %s, 溫度是華氏%s°%s' % (city, conv_weather_cond(condition['code'], 's_cn'), condition['temp'], units['temperature'])
+                    speech = '%s的天氣: %s, 溫度是華氏%s°%s' % (
+                    city, conv_weather_cond(condition['code'], 's_cn'), condition['temp'], units['temperature'])
                 else:
                     speech = 'Current weather in %s: %s, the temperature is %s°%s' % (
-                    location['city'], condition['text'],
-                    condition['temp'], units['temperature'])
+                        location['city'], condition['text'],
+                        condition['temp'], units['temperature'])
             else:
                 # print("2 in the date area")
                 if datetime.strptime(date, '%Y-%m-%d') < datetime.strptime(forecast_items[0]['date'], '%d %b %Y'):
@@ -659,11 +661,11 @@ def process_request(req):
             # 'areaCode': None,
             'latitude': str(latitude),
             'longitude': str(longitude),
-            'distance': '500'
+            'distance': '10000'
         }
-        #print ('_data: {}'.format(_data))
+        # print ('_data: {}'.format(_data))
         _res = exapi_pengtai(_data)
-        #print("_res: {}".format(_res))
+        # print("_res: {}".format(_res))
 
         speech = ''
 
@@ -725,7 +727,7 @@ def webhook():
 
     res = process_request(req)
     res = json.dumps(res, indent=4)
-    #print('Response:\n%s' % (res,))
+    # print('Response:\n%s' % (res,))
 
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
