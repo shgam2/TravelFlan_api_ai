@@ -373,7 +373,6 @@ def process_request(req):
         if req['result']['parameters'].get('city'):
             city = req['result']['parameters'].get('city')
     print('action is {}'.format(action))
-    # print('city is {}'.format(city))
 
     if action == 'weather':
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req, city)}) + '&format=json'
@@ -590,13 +589,13 @@ def process_request(req):
         elif action == 'accommodation':
             category1 = '2000'
             accommodation = req['result']['parameters']['accommodation'].lower()
-            if accommodation == 'hotel':
+            if accommodation == 'hotel' or accommodation == '饭店':
                 category2 = '2101'
-            elif accommodation == 'motel':
+            elif accommodation == 'motel' or accommodation == '汽车旅馆':
                 category2 = '2102'
-            elif accommodation == 'guest house':
+            elif accommodation == 'guest house' or accommodation == '背包客栈':
                 category2 = '2105'
-            elif accommodation == 'bed and breakfast':
+            elif accommodation == 'bed and breakfast' or accommodation == '民宿':
                 category2 = '2106'
             else:
                 category2 = None
