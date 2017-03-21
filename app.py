@@ -671,32 +671,36 @@ def process_request(req):
         speech = ''
 
         elements = list()
-        for i, item in enumerate(_res['list']):
-            fb_item = {
-                'title': item['name'],
-                'subtitle': '%s\n%s' % (item['summary'], item['address']),
-                'image_url': item['imagePath'],
-                'buttons': [
-                    {
-                        'type': 'web_url',
-                        'url': item['url'],
-                        'title': button_title
-                    }
-                ]
-            }
-            elements.append(fb_item)
+        if not _res['list']:
+            speech = ''
+            print("speech is empty")
+        else:
+            for i, item in enumerate(_res['list']):
+                fb_item = {
+                    'title': item['name'],
+                    'subtitle': '%s\n%s' % (item['summary'], item['address']),
+                    'image_url': item['imagePath'],
+                    'buttons': [
+                        {
+                            'type': 'web_url',
+                            'url': item['url'],
+                            'title': button_title
+                        }
+                    ]
+                }
+                elements.append(fb_item)
 
-            speech += '%s. name: %s\nsummary: %s\naddress: %s\ntel: %s\nbusiness hours: %s\n\n' % (
-                i + 1, item['name'], item['summary'], item['address'], item['tel'], item['besinessHours']
-            )
-            print("speech is {}.".format(speech))
+                speech += '%s. name: %s\nsummary: %s\naddress: %s\ntel: %s\nbusiness hours: %s\n\n' % (
+                    i + 1, item['name'], item['summary'], item['address'], item['tel'], item['besinessHours']
+                )
+                print("speech is {}.".format(speech))
 
-        l = 0
-        for x in speech.split('\n'):
-            l += len(x)
-            if l > 500:
-                speech = speech[:l - len(x)] + '\n\n...'
-                break
+            l = 0
+            for x in speech.split('\n'):
+                l += len(x)
+                if l > 500:
+                    speech = speech[:l - len(x)] + '\n\n...'
+                    break
 
         data = [
             {
