@@ -381,7 +381,7 @@ def process_request(req):
             None
         print('Hello2')
         # Translation context portion
-        print('language is {}'.format(req['result']['parameters'].get('language')))
+        print('language is {}'.format(req['result']['parameters']['translation'].get('language')))
         print('prev-language is {}'.format(req['result']['parameters'].get('prev-language')))
         print('phrase is {}'.format(req['result']['parameters'].get('phrase')))
         print('prev-phrase is {}'.format(req['result']['parameters'].get('prev-phrase')))
@@ -538,38 +538,20 @@ def process_request(req):
             'data': data
         }
     elif action == 'translation':
-        print('1111')
-        if req['result']['parameters'].get('language'):
-            print('2222')
-            language = req['result']['parameters']['language']
-            print('3333')
+        if req['result']['parameters']['translation'].get('language'):
+            language = req['result']['parameters']['translation']['language']
         else:
-            print('4444')
             language = req['result']['parameters'].get('prev-language')
-            print('5555')
         if req['result']['parameters'].get('phrase'):
-            print('6666')
             phrase = req['result']['parameters']['phrase']
-            print('7777')
         else:
-            print('8888')
             phrase = req['result']['parameters'].get('prev-phrase')
-            print('9999')
-        #phrase = req['result']['parameters']['phrase']
-        #language = req['result']['parameters']['language']
-        print('****')
-        print('now language {}'.format(language))
-        print('now phrase{}'.format(phrase))
+
         code = find_language_code(language.lower())
-        #print(code)
         url = TRANSLATE_BASE_URL + urlencode({'text': phrase, 'to': code, 'authtoken': 'dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
-        #print(url)
         _res = urlopen(url).read()
-        print("_res: {}".format(_res))
         tmpl = get_response_template(userlocale)
-        #print(tmpl)
         language = convert_langauge_to_user_locale(language.lower(), userlocale)
-        #print(language)
         speech = tmpl % (phrase, language, _res.decode())
         print(speech)
         res = {
