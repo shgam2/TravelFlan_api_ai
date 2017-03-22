@@ -365,20 +365,21 @@ def process_request(req):
     print('action here is {}'.format(action))
     if action == 'prev_context':
         print('in context area')
-        action = req['result']['parameters']['prev-action']
-
+        action = req['result']['parameters'].get('prev-action')
         # Weather context portion
         # if not req['result']['parameters']['city'] == '':
         #     city = req['result']['parameters']['city']
         # else:
         #     city = req['result']['parameters']['prev-city']
+        print('Hello1')
+        print('Yes {}'.format(req['result']['parameters'].get('city')))
         if req['result']['parameters'].get('city'):
             city = req['result']['parameters']['city']
         elif not req['result']['parameters'].get('city') and req['result']['parameters'].get('prev-city'):
             city = req['result']['parameters'].get('prev-city')
         else:
             None
-
+        print('Hello2')
         # Translation context portion
         print('language is {}'.format(['result']['parameters']['language']))
         print('prev-language is {}'.format(['result']['parameters']['prev-language']))
