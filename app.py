@@ -539,7 +539,7 @@ def process_request(req):
         }
     elif action == 'translation':
         print('1111')
-        if req['result']['parameters']['language']:
+        if req['result']['parameters'].get('language'):
             print('2222')
             language = req['result']['parameters']['language']
             print('3333')
@@ -547,7 +547,7 @@ def process_request(req):
             print('4444')
             language = req['result']['parameters'].get('prev-language')
             print('5555')
-        if req['result']['parameters']['phrase']:
+        if req['result']['parameters'].get('phrase'):
             print('6666')
             phrase = req['result']['parameters']['phrase']
             print('7777')
