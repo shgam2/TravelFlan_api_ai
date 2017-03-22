@@ -381,10 +381,10 @@ def process_request(req):
             None
         print('Hello2')
         # Translation context portion
-        print('language is {}'.format(['result']['parameters'].get('language')))
-        print('prev-language is {}'.format(['result']['parameters'].get('prev-language')))
-        print('phrase is {}'.format(['result']['parameters'].get('phrase')))
-        print('prev-phrase is {}'.format(['result']['parameters'].get('prev-phrase')))
+        print('language is {}'.format(req['result']['parameters'].get('language')))
+        print('prev-language is {}'.format(req['result']['parameters'].get('prev-language')))
+        print('phrase is {}'.format(req['result']['parameters'].get('phrase')))
+        print('prev-phrase is {}'.format(req['result']['parameters'].get('prev-phrase')))
 
     else:
         if req['result']['parameters'].get('city'):
