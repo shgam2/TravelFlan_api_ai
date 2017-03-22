@@ -362,8 +362,9 @@ def process_request(req):
     except Exception as e:
         userlocale = 'zh_cn'
     action = req['result']['action']
+    print('action here is {}'.format(action))
     if action == 'prev_context':
-
+        print('in context area')
         # Weather context portion
         action = req['result']['parameters']['prev-action']
         if not req['result']['parameters']['city'] == '':
