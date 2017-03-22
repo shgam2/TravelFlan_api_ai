@@ -529,17 +529,28 @@ def process_request(req):
             'data': data
         }
     elif action == 'translation':
+        print("trans1")
         if req['result']['parameters']['translation'].get('language'):
+            print("1111")
             language = req['result']['parameters']['translation']['language']
+            print("2222")
         elif req['result']['parameters'].get('language'):
+            print("3333")
             language = req['result']['parameters']['language']
+            print("4444")
         else:
+            print("5555")
             language = req['result']['parameters'].get('prev-language')
+            print("6666")
         if req['result']['parameters'].get('phrase'):
+            print("7777")
             phrase = req['result']['parameters']['phrase']
+            print("8888")
         else:
+            print("9999")
             phrase = req['result']['parameters'].get('prev-phrase')
-
+            print("****")
+        print("trans2")
         code = find_language_code(language.lower())
         url = TRANSLATE_BASE_URL + urlencode({'text': phrase, 'to': code, 'authtoken': 'dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
         _res = urlopen(url).read()
