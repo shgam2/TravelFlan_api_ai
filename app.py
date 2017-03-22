@@ -362,42 +362,33 @@ def process_request(req):
     except Exception as e:
         userlocale = 'zh_cn'
     action = req['result']['action']
-    print('action here is {}'.format(action))
+    print('action1 is {}'.format(action))
     if action == 'prev_context':
         print('in context area')
         action = req['result']['parameters'].get('prev-action')
-        # Weather context portion
-        # if not req['result']['parameters']['city'] == '':
-        #     city = req['result']['parameters']['city']
-        # else:
-        #     city = req['result']['parameters']['prev-city']
-        print('Hello1')
-        print('Yes {}'.format(req['result']['parameters'].get('city')))
+
         if req['result']['parameters'].get('city'):
             city = req['result']['parameters']['city']
         elif not req['result']['parameters'].get('city') and req['result']['parameters'].get('prev-city'):
             city = req['result']['parameters'].get('prev-city')
         else:
             None
-        print('Hello2')
         # Translation context portion
-        print('language is {}'.format(req['result']['parameters']['translation'].get('language')))
+        print('language(en) is {}'.format(req['result']['parameters']['translation'].get('language')))
+        print('language(cn) is {}'.format(req['result']['parameters'].get('language')))
         print('prev-language is {}'.format(req['result']['parameters'].get('prev-language')))
         print('phrase is {}'.format(req['result']['parameters'].get('phrase')))
         print('prev-phrase is {}'.format(req['result']['parameters'].get('prev-phrase')))
     else:
         if req['result']['parameters'].get('city'):
             city = req['result']['parameters'].get('city')
-    print('action is {}'.format(action))
+    print('action2 is {}'.format(action))
 
     if action == 'weather':
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req, city)}) + '&format=json'
         print('YQL-Request:\n%s' % (url,))
-        print('ONE')
         _res = urlopen(url).read()
-        print('TWO')
         print('YQL-Response:\n%s' % (_res,))
-        print('THREE')
 
         data = json.loads(_res)
 
@@ -540,6 +531,8 @@ def process_request(req):
     elif action == 'translation':
         if req['result']['parameters']['translation'].get('language'):
             language = req['result']['parameters']['translation']['language']
+        elif req['result']['parameters'].get('language'):
+            language = req['result']['parameters']['language']
         else:
             language = req['result']['parameters'].get('prev-language')
         if req['result']['parameters'].get('phrase'):
