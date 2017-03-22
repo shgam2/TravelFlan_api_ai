@@ -362,13 +362,20 @@ def process_request(req):
     except Exception as e:
         userlocale = 'zh_cn'
     action = req['result']['action']
-    print("00000")
     if action == 'prev_context':
+
+        # Weather context portion
         action = req['result']['parameters']['prev-action']
         if not req['result']['parameters']['city'] == '':
             city = req['result']['parameters']['city']
         else:
             city = req['result']['parameters']['prev-city']
+
+        # Translation context portion
+        print('language is {}'.format(['result']['parameters']['language']))
+        print('prev-language is {}'.format(['result']['parameters']['prev-language']))
+        print('phrase is {}'.format(['result']['parameters']['phrase']))
+        print('prev-phrase is {}'.format(['result']['parameters']['prev-phrase']))
     else:
         if req['result']['parameters'].get('city'):
             city = req['result']['parameters'].get('city')
@@ -402,9 +409,6 @@ def process_request(req):
         condition = data['query']['results']['channel']['item']['condition']
         units = data['query']['results']['channel']['units']
         forecast_items = data['query']['results']['channel']['item']['forecast']
-        # if not city:
-        #     city = req['result']['parameters']['city']
-        print("zzxzxzx")
         date = req['result']['parameters'].get('date')
         prev_date = req['result']['parameters'].get('prev-date')
         date_period = req['result']['parameters'].get('date-period')
@@ -413,7 +417,6 @@ def process_request(req):
             date_period = prev_dp
         if prev_date and not date_period:
             date = prev_date
-        print("abcabc")
         if not date or (date and date_period):
             # current weather
             if not date_period:
@@ -664,7 +667,7 @@ def process_request(req):
             'longitude': str(longitude),
             'distance': '10000'
         }
-        print ('_data: {}'.format(_data))
+        print('_data: {}'.format(_data))
         _res = exapi_pengtai(_data)
         print("_res: {}".format(_res))
 
@@ -723,14 +726,8 @@ def process_request(req):
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
-    # print('123123')
-    # try:
-    #     print("request: {}".format(request))
-    # except Exception as e:
-    #     print(e)
     req = request.get_json(silent=True, force=True)
     # print('Request:\n%s' % (json.dumps(req, indent=4),))
-
     res = process_request(req)
     res = json.dumps(res, indent=4)
     # print('Response:\n%s' % (res,))
