@@ -117,7 +117,6 @@ def forecast(date, item_num, forecast_items):
 
 
 def conv_weather_cond(c_code, lang):
-    # print('lang is {}'.format(lang))
     weather_file = 'weather_condition.csv'
     try:
         with open(weather_file, 'rU') as f:
@@ -331,16 +330,6 @@ def parse_json(req):
 
 
 def exapi_pengtai(data):
-    # data = {
-    #     'lang': '04',
-    #     'category1': '2000',
-    #     'category2': '2002',
-    #     'cityCode': 'SE',
-    #     'areaCode': None,
-    #     'latitude': None,
-    #     'longitude': None,
-    #     'distance': None
-    # }
     timestamp = str(int(time.time()))
     plain = '%s|%s' % (PENGTAI_KEY, timestamp)
     headers = {'X-hash': hashlib.sha256(plain.encode('utf-8')).hexdigest()}
@@ -433,17 +422,10 @@ def process_request(req):
             # 10-day weather forecast
             else:
                 print('date_period = {}'.format(date_period))
-                # if the date_period is out of the 10 day range provided by the YahooWeather, speech is None
                 check_date1 = date_period.partition('/')[0]
                 check_date2 = date_period.partition('/')[2]
-                # print('check_date1 is {}'.format(check_date1))
-                # print('check_date2 is {}'.format(check_date2))
                 check_date1 = datetime.strptime(check_date1, '%Y-%m-%d')
                 check_date2 = datetime.strptime(check_date2, '%Y-%m-%d')
-                # print("1: {}".format(check_date1))
-                # print("2: {}".format(check_date2))
-                # print("3: {}".format(datetime.strptime(forecast_items[0]['date'], '%d %b %Y')))
-                # print("4: {}".format(datetime.strptime(forecast_items[9]['date'], '%d %b %Y')))
                 if check_date1 > datetime.strptime(forecast_items[9]['date'],
                                                    '%d %b %Y') or check_date2 < datetime.strptime(
                         forecast_items[0]['date'], '%d %b %Y'):
@@ -491,13 +473,11 @@ def process_request(req):
                         location['city'], condition['text'],
                         condition['temp'], units['temperature'])
             else:
-                # print("2 in the date area")
                 if datetime.strptime(date, '%Y-%m-%d') < datetime.strptime(forecast_items[0]['date'], '%d %b %Y'):
                     temp_date = datetime.strptime(date, '%Y-%m-%d') + timedelta(days=7)
                     date = temp_date.strftime("%Y-%m-%d")
                 item_num = -1
                 fc_weather = forecast(date, item_num, forecast_items)
-                # print("3 in the date area")
                 if userlocale == 'zh_cn':
                     speech = '%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
                         city, fc_weather['date'], conv_weather_cond(fc_weather['code'], 's_cn'),
@@ -509,12 +489,9 @@ def process_request(req):
                         fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature']
                     )
                 else:
-                    # print("4 in the date area")
                     speech = 'Weather in %s (%s): %s, high: %s°%s, low: %s°%s' % (
                         location['city'], fc_weather['date'], fc_weather['text'],
                         fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
-                    # print("5 speech is {}".format(speech))
-
         res = {
             'speech': speech,
             'displayText': speech,
@@ -530,7 +507,7 @@ def process_request(req):
         }
     elif action == 'translation':
         print("trans1")
-        print("hey: {}".format(req['result']['parameters'].get('language')))
+        print("hey: {}".format(req['result']['parameters'].get(['translation']['language'])))
         print("hey: {}".format(req['result']['parameters']['translation'].get('language')))
         if req['result']['parameters']['translation'].get('language'):
             print("1111")
