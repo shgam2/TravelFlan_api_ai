@@ -363,11 +363,11 @@ def process_request(req):
         else:
             None
         # Translation context portion
-        print('language(en) is {}'.format(req['result']['parameters']['translation'].get('language')))
-        print('language(cn) is {}'.format(req['result']['parameters'].get('language')))
-        print('prev-language is {}'.format(req['result']['parameters'].get('prev-language')))
-        print('phrase is {}'.format(req['result']['parameters'].get('phrase')))
-        print('prev-phrase is {}'.format(req['result']['parameters'].get('prev-phrase')))
+        # print('language(en) is {}'.format(req['result']['parameters']['translation'].get('language')))
+        # print('language(cn) is {}'.format(req['result']['parameters'].get('language')))
+        # print('prev-language is {}'.format(req['result']['parameters'].get('prev-language')))
+        # print('phrase is {}'.format(req['result']['parameters'].get('phrase')))
+        # print('prev-phrase is {}'.format(req['result']['parameters'].get('prev-phrase')))
     else:
         if req['result']['parameters'].get('city'):
             city = req['result']['parameters'].get('city')
@@ -510,26 +510,15 @@ def process_request(req):
         #print("hey: {}".format(req['result']['parameters'].get('translation')))
         #print("hey: {}".format(req['result']['parameters']['translation'].get('language')))
         if req['result']['parameters'].get('translation'):
-            print("1111")
             language = req['result']['parameters']['translation']['language']
-            print("2222")
         elif req['result']['parameters'].get('language'):
-            print("3333")
             language = req['result']['parameters']['language']
-            print("4444")
         else:
-            print("5555")
             language = req['result']['parameters'].get('prev-language')
-            print("6666")
         if req['result']['parameters'].get('phrase'):
-            print("7777")
             phrase = req['result']['parameters']['phrase']
-            print("8888")
         else:
-            print("9999")
             phrase = req['result']['parameters'].get('prev-phrase')
-            print("****")
-        print("trans2")
         code = find_language_code(language.lower())
         url = TRANSLATE_BASE_URL + urlencode({'text': phrase, 'to': code, 'authtoken': 'dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
         _res = urlopen(url).read()
