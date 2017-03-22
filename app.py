@@ -538,16 +538,26 @@ def process_request(req):
             'data': data
         }
     elif action == 'translation':
+        print('1111')
         if req['result']['parameters']['language']:
+            print('2222')
             language = req['result']['parameters']['language']
+            print('3333')
         else:
+            print('4444')
             language = req['result']['parameters'].get('prev-language')
+            print('5555')
         if req['result']['parameters']['phrase']:
+            print('6666')
             phrase = req['result']['parameters']['phrase']
+            print('7777')
         else:
+            print('8888')
             phrase = req['result']['parameters'].get('prev-phrase')
+            print('9999')
         #phrase = req['result']['parameters']['phrase']
         #language = req['result']['parameters']['language']
+        print('****')
         print('now language {}'.format(language))
         print('now phrase{}'.format(phrase))
         code = find_language_code(language.lower())
