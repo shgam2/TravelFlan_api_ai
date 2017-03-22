@@ -385,7 +385,6 @@ def process_request(req):
         print('prev-language is {}'.format(req['result']['parameters'].get('prev-language')))
         print('phrase is {}'.format(req['result']['parameters'].get('phrase')))
         print('prev-phrase is {}'.format(req['result']['parameters'].get('prev-phrase')))
-
     else:
         if req['result']['parameters'].get('city'):
             city = req['result']['parameters'].get('city')
@@ -539,18 +538,28 @@ def process_request(req):
             'data': data
         }
     elif action == 'translation':
-        phrase = req['result']['parameters']['phrase']
-        language = req['result']['parameters']['language']
+        if req['result']['parameters']['language']:
+            language = req['result']['parameters']['language']
+        else:
+            language = req['result']['parameters'].get('prev-language')
+        if req['result']['parameters']['phrase']:
+            phrase = req['result']['parameters']['phrase']
+        else:
+            phrase = req['result']['parameters'].get('prev-phrase')
+        #phrase = req['result']['parameters']['phrase']
+        #language = req['result']['parameters']['language']
+        print('now language {}'.format(language))
+        print('now phrase{}'.format(phrase))
         code = find_language_code(language.lower())
-        print(code)
+        #print(code)
         url = TRANSLATE_BASE_URL + urlencode({'text': phrase, 'to': code, 'authtoken': 'dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
-        print(url)
+        #print(url)
         _res = urlopen(url).read()
         print("_res: {}".format(_res))
         tmpl = get_response_template(userlocale)
-        print(tmpl)
+        #print(tmpl)
         language = convert_langauge_to_user_locale(language.lower(), userlocale)
-        print(language)
+        #print(language)
         speech = tmpl % (phrase, language, _res.decode())
         print(speech)
         res = {
