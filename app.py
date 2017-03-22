@@ -530,6 +530,8 @@ def process_request(req):
         }
     elif action == 'translation':
         print("trans1")
+        print("hey: {}".format(req['result']['parameters']['translation'].get('language')))
+        print("hey: {}".format(req['result']['parameters'].get('language')))
         if req['result']['parameters']['translation'].get('language'):
             print("1111")
             language = req['result']['parameters']['translation']['language']
