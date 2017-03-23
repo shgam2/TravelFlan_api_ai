@@ -362,12 +362,6 @@ def process_request(req):
             city = req['result']['parameters'].get('prev-city')
         else:
             None
-        # Translation context portion
-        # print('language(en) is {}'.format(req['result']['parameters']['translation'].get('language')))
-        # print('language(cn) is {}'.format(req['result']['parameters'].get('language')))
-        # print('prev-language is {}'.format(req['result']['parameters'].get('prev-language')))
-        # print('phrase is {}'.format(req['result']['parameters'].get('phrase')))
-        # print('prev-phrase is {}'.format(req['result']['parameters'].get('prev-phrase')))
     else:
         if req['result']['parameters'].get('city'):
             city = req['result']['parameters'].get('city')
@@ -539,7 +533,10 @@ def process_request(req):
 
         if action == 'restaurant':
             category1 = '3000'
-            cuisine = req['result']['parameters']['cuisine'].lower()
+            if req['result']['parameters'].get('cuisine'):
+                cuisine = req['result']['parameters']['cuisine'].lower()
+            else:
+                cuisine = req['result']['parameters'].get('prev-cuisine').lower()
             if cuisine == 'korean':
                 category2 = '3101'
             elif cuisine == 'japanese':
@@ -560,7 +557,10 @@ def process_request(req):
                 category2 = None
         elif action == 'attraction':
             category1 = '4000'
-            attraction = req['result']['parameters']['attraction'].lower()
+            if req['result']['parameters'].get('attraction'):
+                attraction = req['result']['parameters']['attraction'].lower()
+            else:
+                attraction = req['result']['parameters'].get('prev-attraction').lower()
             if attraction == 'historical site' or attraction == '遗址':
                 category2 = '4101'
             elif attraction == 'shooting site' or attraction == '拍摄场所':
@@ -572,7 +572,7 @@ def process_request(req):
             if req['result']['parameters'].get('accommodation'):
                 accommodation = req['result']['parameters']['accommodation'].lower()
             else:
-                accommodation = req['result']['parameters']['prev-accommodation'].lower()
+                accommodation = req['result']['parameters'].get('prev-accommodation').lower()
             print('accommodation is {}'.format(accommodation))
             if accommodation == 'hotel' or accommodation == '饭店':
                 category2 = '2101'
@@ -586,7 +586,10 @@ def process_request(req):
                 category2 = None
         elif action == 'shopping':
             category1 = '5000'
-            shopping = req['result']['parameters']['shopping'].lower()
+            if req['result']['parameters'].get('shopping'):
+                shopping = req['result']['parameters']['shopping'].lower()
+            else:
+                shopping = req['result']['parameters'].get('prev-shopping').lower()
             if shopping == 'duty-free':
                 category2 = '5101'
             elif shopping == 'department store':
