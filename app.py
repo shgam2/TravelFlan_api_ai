@@ -421,7 +421,6 @@ def process_request(req):
                         condition['temp'], units['temperature'])
             # 10-day weather forecast
             else:
-                print('date_period = {}'.format(date_period))
                 check_date1 = date_period.partition('/')[0]
                 check_date2 = date_period.partition('/')[2]
                 check_date1 = datetime.strptime(check_date1, '%Y-%m-%d')
@@ -460,7 +459,6 @@ def process_request(req):
                             fc_weather['text'], fc_weather['high'],
                             units['temperature'], fc_weather['low'], units['temperature'])
         else:  # tomorrow portion
-            print('here in the tomorrow portion')
             if date.lower() in ('now', "现在"):
                 if userlocale == 'zh_cn':
                     speech = '%s的天气: %s, 温度是华氏%s°%s' % (
@@ -506,9 +504,6 @@ def process_request(req):
             'data': data
         }
     elif action == 'translation':
-        print("trans1")
-        #print("hey: {}".format(req['result']['parameters'].get('translation')))
-        #print("hey: {}".format(req['result']['parameters']['translation'].get('language')))
         if req['result']['parameters'].get('translation'):
             language = req['result']['parameters']['translation']['language']
         elif req['result']['parameters'].get('language'):
@@ -573,13 +568,15 @@ def process_request(req):
             else:
                 category2 = None
         elif action == 'accommodation':
-            print("hello")
             category1 = '2000'
-            accommodation = req['result']['parameters']['accommodation'].lower()
+            if req['result']['parameters'].get('accommodation'):
+                accommodation = req['result']['parameters']['accommodation'].lower()
+            else:
+                accommodation = req['result']['parameters']['prev-accommodation'].lower()
+            print('accommodation is {}'.format(accommodation))
             if accommodation == 'hotel' or accommodation == '饭店':
                 category2 = '2101'
             elif accommodation == 'motel' or accommodation == '汽车旅馆':
-                print("hello2")
                 category2 = '2102'
             elif accommodation == 'guest house' or accommodation == '背包客栈':
                 category2 = '2105'
@@ -634,12 +631,15 @@ def process_request(req):
                 category2 = None
         else:
             category1 = None
-        print("What")
-        address = req['result']['parameters']['address']
+        if req['result']['parameters'].get('address'):
+            address = req['result']['parameters']['address']
+        else:
+            address = req['result']['parameters']['prev-address']
+        print('address is {}'.format(address))
+
         geocode_result = gmaps.geocode(address)
         latitude = geocode_result[0]['geometry']['location']['lat']
         longitude = geocode_result[0]['geometry']['location']['lng']
-        print("What??")
         _data = {
             'lang': lang,
             'category1': category1,
