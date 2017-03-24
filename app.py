@@ -320,8 +320,15 @@ def parse_json(req):
     result = req.get('result')
     parameters = result.get('parameters')
 
-    from_loc = parameters.get('address-from')
-    to_loc = parameters.get('address-to')
+    if parameters.get('address-from'):
+        from_loc = parameters.get('address-from')
+    else:
+        from_loc = parameters.get('prev-address-from')
+
+    if parameters.get('address-to'):
+        to_loc = parameters.get('address-to')
+    else:
+        to_loc = parameters.get('prev-address-to')
 
     speech, data = grab_answer(from_loc, to_loc, dir_file, lang)
     if not speech:
