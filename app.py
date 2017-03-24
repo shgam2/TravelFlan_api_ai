@@ -368,11 +368,15 @@ def process_request(req):
     if action == 'prev_context':
         print('in context area')
         action = req['result']['parameters'].get('prev-action')
-
+        print('123123')
         if req['result']['parameters'].get('city'):
+            print('aaaaaa')
             city = req['result']['parameters']['city']
+            print('cccccc')
         elif not req['result']['parameters'].get('city') and req['result']['parameters'].get('prev-city'):
+            print('dddddd')
             city = req['result']['parameters'].get('prev-city')
+            print('eeeeee')
         else:
             None
     else:
