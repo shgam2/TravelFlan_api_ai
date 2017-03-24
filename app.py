@@ -367,6 +367,7 @@ def process_request(req):
     print('action1 is {}'.format(action))
     if action == 'prev_context':
         print('in context area')
+        print('parameters: {}'.format(req['result'].get('parameters')))
         print('action2 is {}'.format(req['result']['parameters'].get('prev-action')))
         action = req['result']['parameters'].get('prev-action')
         print('123123')
