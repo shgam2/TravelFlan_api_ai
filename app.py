@@ -367,6 +367,7 @@ def process_request(req):
     print('action1 is {}'.format(action))
     if action == 'prev_context':
         print('in context area')
+        print('action2 is {}'.format(req['result']['parameters'].get('prev-action')))
         action = req['result']['parameters'].get('prev-action')
         print('123123')
         if req['result']['parameters'].get('city'):
@@ -382,7 +383,7 @@ def process_request(req):
     else:
         if req['result']['parameters'].get('city'):
             city = req['result']['parameters'].get('city')
-    print('action2 is {}'.format(action))
+    print('action3 is {}'.format(action))
 
     if action == 'weather':
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req, city)}) + '&format=json'
