@@ -320,6 +320,11 @@ def parse_json(req):
     result = req.get('result')
     parameters = result.get('parameters')
 
+    print('1. {}'.format(parameters.get('address-from')))
+    print('2. {}'.format(parameters.get('prev-address-from')))
+    print('3. {}'.format(parameters.get('address-to')))
+    print('4. {}'.format(parameters.get('prev-address-to')))
+
     if parameters.get('address-from'):
         from_loc = parameters.get('address-from')
     else:
@@ -497,6 +502,7 @@ def process_request(req):
             'source': 'apiai-weather'
         }
     elif action == 'direction':
+        print("yes here")
         speech, data = parse_json(req)
         res = {
             'speech': speech,
