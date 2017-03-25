@@ -363,6 +363,7 @@ def process_request(req):
         userlocale = req['originalRequest']['data']['locale'].lower()
     except Exception as e:
         userlocale = 'zh_cn'
+    print('req is {}'.format(req))
     action = req['result']['action']
     print('action1 is {}'.format(action))
     if action == 'prev_context':
