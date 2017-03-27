@@ -605,6 +605,7 @@ def process_request(req):
                 category2 = '2106'
             else:
                 category2 = None
+            print('category2 = {}'.format(category2))
         elif action == 'shopping':
             category1 = '5000'
             if req['result']['parameters'].get('shopping'):
