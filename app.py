@@ -674,9 +674,9 @@ def process_request(req):
             'longitude': str(longitude),
             'distance': '10000'
         }
-        print('_data: {}'.format(_data))
+        #print('_data: {}'.format(_data))
         _res = exapi_pengtai(_data)
-        print("_res: {}".format(_res))
+        #print("_res: {}".format(_res))
 
         speech = ''
 
@@ -703,7 +703,7 @@ def process_request(req):
                 speech += '%s. name: %s\nsummary: %s\naddress: %s\ntel: %s\nbusiness hours: %s\n\n' % (
                     i + 1, item['name'], item['summary'], item['address'], item['tel'], item['besinessHours']
                 )
-                print("speech is {}.".format(speech))
+                #print("speech is {}.".format(speech))
 
             l = 0
             for x in speech.split('\n'):
