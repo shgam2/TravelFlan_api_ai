@@ -535,7 +535,7 @@ def process_request(req):
         tmpl = get_response_template(userlocale)
         language = convert_langauge_to_user_locale(language.lower(), userlocale)
         speech = tmpl % (phrase, language, _res.decode())
-        print(speech)
+        print('Speech: \n%s' % (speech))
         res = {
             'speech': speech,
             'displayText': speech,
@@ -594,7 +594,6 @@ def process_request(req):
                 accommodation = req['result']['parameters']['accommodation'].lower()
             else:
                 accommodation = req['result']['parameters'].get('prev-accommodation').lower()
-            print('accommodation is {}'.format(accommodation))
             if accommodation == 'hotel' or accommodation == '饭店':
                 category2 = '2101'
             elif accommodation == 'motel' or accommodation == '汽车旅馆':
@@ -605,7 +604,6 @@ def process_request(req):
                 category2 = '2106'
             else:
                 return None
-            print('category2 = {}'.format(category2))
         elif action == 'shopping':
             category1 = '5000'
             if req['result']['parameters'].get('shopping'):
@@ -660,7 +658,6 @@ def process_request(req):
             address = req['result']['parameters']['address']
         else:
             address = req['result']['parameters']['prev-address']
-        print('address is {}'.format(address))
 
         geocode_result = gmaps.geocode(address)
         latitude = geocode_result[0]['geometry']['location']['lat']
@@ -675,9 +672,7 @@ def process_request(req):
             'longitude': str(longitude),
             'distance': '10000'
         }
-        #print('_data: {}'.format(_data))
         _res = exapi_pengtai(_data)
-        #print("_res: {}".format(_res))
 
         speech = ''
 
@@ -704,7 +699,6 @@ def process_request(req):
                 speech += '%s. name: %s\nsummary: %s\naddress: %s\ntel: %s\nbusiness hours: %s\n\n' % (
                     i + 1, item['name'], item['summary'], item['address'], item['tel'], item['besinessHours']
                 )
-                #print("speech is {}.".format(speech))
 
             l = 0
             for x in speech.split('\n'):
