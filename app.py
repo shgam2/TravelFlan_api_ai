@@ -604,7 +604,7 @@ def process_request(req):
             elif accommodation == 'bed and breakfast' or accommodation == '民宿':
                 category2 = '2106'
             else:
-                category2 = None
+                return None
             print('category2 = {}'.format(category2))
         elif action == 'shopping':
             category1 = '5000'
