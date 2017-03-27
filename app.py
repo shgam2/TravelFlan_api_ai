@@ -575,7 +575,7 @@ def process_request(req):
             elif cuisine == 'pub':
                 category2 = '3108'
             else:
-                category2 = None
+                return None
         elif action == 'attraction':
             category1 = '4000'
             if req['result']['parameters'].get('attraction'):
@@ -587,7 +587,7 @@ def process_request(req):
             elif attraction == 'shooting site' or attraction == '拍摄场所':
                 category2 = '4102'
             else:
-                category2 = None
+                return None
         elif action == 'accommodation':
             category1 = '2000'
             if req['result']['parameters'].get('accommodation'):
@@ -653,7 +653,7 @@ def process_request(req):
             elif shopping == 'mall':
                 category2 = '5120'
             else:
-                category2 = None
+                return None
         else:
             category1 = None
         if req['result']['parameters'].get('address'):
