@@ -568,7 +568,7 @@ def process_request(req):
             else:
                 return None
         for i, item in enumerate(res_location):
-            #print('area %s' % (item.get('areaname_l').lower()))
+            print('area %s' % (item.get('areaname_l').lower()))
             if location.lower() == item.get('areaname_l').lower():
                 print('found it')
                 print('Location: found code is %s' % (item.get('areacode_l')))
