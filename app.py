@@ -560,14 +560,14 @@ def process_request(req):
         res_location = requests.get(url_location).json()['garea_large']
         #print('res_location = %s' % (res_location))
 
-        for item in enumerate(res_cuisine):
+        for i, item in enumerate(res_cuisine):
             if cuisine == item.get('category_l_name').lower():
                 print('found it')
                 print('Cuisine: found code is %s' % (item.get('category_l_code')))
                 cuisine_code = item.get('category_l_code')
             else:
                 return None
-        for item in enumerate(res_location):
+        for i, item in enumerate(res_location):
             #print('area %s' % (item.get('areaname_l').lower()))
             if location.lower() == item.get('areaname_l').lower():
                 print('found it')
