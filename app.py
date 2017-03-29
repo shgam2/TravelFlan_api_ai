@@ -573,7 +573,7 @@ def process_request(req):
                 print('Cuisine: found code is %s' % (item.get('category_l_code')))
                 cuisine_code = item.get('category_l_code')
             else:
-                return None
+                pass
         print('66')
 
         for i, item in enumerate(res_location):
@@ -583,7 +583,7 @@ def process_request(req):
                 print('Location: found code is %s' % (item.get('areacode_l')))
                 location_code = item.get('areacode_l')
             else:
-                return None
+                pass
         print('77')
 
         # print('res_cuisine: \n%s' % (res_cuisine))
