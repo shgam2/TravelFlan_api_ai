@@ -555,9 +555,13 @@ def process_request(req):
         print('cuisine is %s' % (cuisine))
 
         url_cuisine = GURUNAVI_CATEGORY_URL + urlencode({'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en'})
+        res_cuisine = requests.get(url_cuisine).json()
         url_location = GURUNAVI_AREA_URL + urlencode({'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en'})
-        print('url_cuisine: \n%s' % (url_cuisine))
-        print('url_location: \n%s' % (url_location))
+        res_location = requests.get(url_location).json()
+        print('res_cuisine: \n%s' % (res_cuisine))
+        print('res_location: \n%s' % (res_location))
+
+
 
         #url = GURUNAVI_URL + urlencode({'keyid': GURUNAVI_KEY, 'format':'json','lang':'en','areacode_l':area_code,'category_l':category_code})
 
