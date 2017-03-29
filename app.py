@@ -552,14 +552,20 @@ def process_request(req):
         location = parameters.get('address')
         cuisine = parameters.get('gurunavi_cuisine_temp')
         print('location is %s'%(location))
-        print('cuisine is %s' % (cuisine))
+        print('cuisine is %s' %(cuisine))
 
         url_cuisine = GURUNAVI_CATEGORY_URL + urlencode({'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en'})
-        res_cuisine = requests.get(url_cuisine).json()
         url_location = GURUNAVI_AREA_URL + urlencode({'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en'})
-        res_location = requests.get(url_location).json()
-        print('res_cuisine: \n%s' % (res_cuisine))
-        print('res_location: \n%s' % (res_location))
+        res_cuisine = requests.get(url_cuisine).json()['category_l']
+        res_location = requests.get(url_location).json()['area']
+
+        for i, item in enumerate(res_location):
+            print('%s: \n%s' % (i, item))
+
+        # print('res_cuisine: \n%s' % (res_cuisine))
+        # print('res_location: \n%s' % (res_location))
+
+
 
 
 
