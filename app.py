@@ -25,6 +25,12 @@ PENGTAI_URL = 'http://www.hanguoing.cn/exApi/travelFlan'
 PENGTAI_TEST_URL = 'http://test1.hanguoing.com/exApi/travelFlan'
 PENGTAI_KEY = 'xmvoqpfvmffosqksrkqtmqslek'
 
+GURUNAVI_URL = 'https://api.gnavi.co.jp/ForeignRestSearchAPI/20150630/?'
+GURUNAVI_KEY = '6d98dbe7eca799250d844be0426a3bad'
+GURUNAVI_AREA_URL = 'https://api.gnavi.co.jp/master/GAreaLargeSearchAPI/20150630/?'
+GURUNAVI_CATEGORY_URL = 'https://api.gnavi.co.jp/master/CategoryLargeSearchAPI/20150630/?'
+
+
 DIR_FILE_EN = 'transportation_en.csv'
 DIR_FILE_CN = 'transportation_cn.csv'
 DIR_FILE_TW = 'transportation_tw.csv'
@@ -351,7 +357,7 @@ def exapi_pengtai(data):
 
     try:
         res = requests.get(PENGTAI_TEST_URL, headers=headers, params=data)
-        return json.loads(res.content)
+        return res.json()
     except Exception as e:
         print(e)
         return None
@@ -541,6 +547,20 @@ def process_request(req):
             'displayText': speech,
             'source': 'apiai-translate'
         }
+    elif action == 'gurunavi':
+        parameters = req['result']['parameters']
+        location = parameters.get('address')
+        cuisine = parameters.get('gurunavi_cuisine_temp')
+        print('location is %s'%(location))
+        print('cuisine is %s' % (cuisine))
+
+        url_cuisine = GURUNAVI_CATEGORY_URL + urlencode({'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en'})
+        url_location = GURUNAVI_AREA_URL + urlencode({'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en'})
+        print('url_cuisine: \n%s' % (url_cuisine))
+        print('url_location: \n%s' % (url_location))
+
+        #url = GURUNAVI_URL + urlencode({'keyid': GURUNAVI_KEY, 'format':'json','lang':'en','areacode_l':area_code,'category_l':category_code})
+
     elif action in ('attraction', 'accommodation', 'restaurant', 'shopping'):
         if userlocale == 'zh_cn':
             lang = '01'
