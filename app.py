@@ -561,7 +561,11 @@ def process_request(req):
         #res_location = requests.get(url_location).json()['area']
 
         for i, item in enumerate(res_cuisine):
-            print('%s: \n%s' % (i, item))
+            if cuisine == item.get('category_l_name'):
+                print('found it')
+                print('found code is %s' % (item.get('category_l_code')))
+            else:
+                pass
 
         # print('res_cuisine: \n%s' % (res_cuisine))
         # print('res_location: \n%s' % (res_location))
