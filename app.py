@@ -558,6 +558,7 @@ def process_request(req):
         url_location = GURUNAVI_AREA_URL + urlencode({'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en'})
         res_cuisine = requests.get(url_cuisine).json()['category_l']
         res_location = requests.get(url_location).json()['garea_large']
+        print('res_location = %s' % (res_location))
 
         for i, item in enumerate(res_cuisine):
             if cuisine == item.get('category_l_name').lower():
