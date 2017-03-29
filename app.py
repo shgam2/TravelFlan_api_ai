@@ -558,17 +558,17 @@ def process_request(req):
         url_location = GURUNAVI_AREA_URL + urlencode({'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en'})
         res_cuisine = requests.get(url_cuisine).json()['category_l']
         res_location = requests.get(url_location).json()['garea_large']
-        print('res_location = %s' % (res_location))
+        #print('res_location = %s' % (res_location))
 
-        for i, item in enumerate(res_cuisine):
+        for item in enumerate(res_cuisine):
             if cuisine == item.get('category_l_name').lower():
                 print('found it')
                 print('Cuisine: found code is %s' % (item.get('category_l_code')))
                 cuisine_code = item.get('category_l_code')
             else:
                 return None
-        for i, item in enumerate(res_location):
-            print('area %s' % (item.get('areaname_l').lower()))
+        for item in enumerate(res_location):
+            #print('area %s' % (item.get('areaname_l').lower()))
             if location.lower() == item.get('areaname_l').lower():
                 print('found it')
                 print('Location: found code is %s' % (item.get('areacode_l')))
