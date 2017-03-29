@@ -566,7 +566,9 @@ def process_request(req):
         #print('res_location = %s' % (res_location))
 
         for i, item in enumerate(res_cuisine):
-            if cuisine == item.get('category_l_name').lower():
+            print('1. cuisine = {}'.format(cuisine))
+            print('1. category = {}'.format(item.get('category_l_name').lower()))
+            if cuisine.lower() == item.get('category_l_name').lower():
                 print('found it')
                 print('Cuisine: found code is %s' % (item.get('category_l_code')))
                 cuisine_code = item.get('category_l_code')
