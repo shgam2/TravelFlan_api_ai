@@ -579,9 +579,9 @@ def process_request(req):
             return None
 
         for i, item in enumerate(res_location):
-            print('Area_code:    %s' % (item.get('areacode_l').lower()))
-            print('Area_name:    %s' % (item.get('areaname_l').lower()))
-            print('Compare with: %s' % (location.lower()))
+            #print('Area_code:    %s' % (item.get('areacode_l').lower()))
+            #print('Area_name:    %s' % (item.get('areaname_l').lower()))
+            #print('Compare with: %s' % (location.lower()))
             if location.lower() == item.get('areaname_l').lower():
                 print('found it')
                 print('Location: found code is %s' % (item.get('areacode_l')))
