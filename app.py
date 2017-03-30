@@ -25,8 +25,8 @@ PENGTAI_URL = 'http://www.hanguoing.cn/exApi/travelFlan'
 PENGTAI_TEST_URL = 'http://test1.hanguoing.com/exApi/travelFlan'
 PENGTAI_KEY = 'xmvoqpfvmffosqksrkqtmqslek'
 
-GURUNAVI_URL = 'https://api.gnavi.co.jp/ForeignRestSearchAPI/20150630/?'
 GURUNAVI_KEY = '6d98dbe7eca799250d844be0426a3bad'
+GURUNAVI_SEARCH_URL = 'https://api.gnavi.co.jp/ForeignRestSearchAPI/20150630/?'
 GURUNAVI_AREA_URL = 'https://api.gnavi.co.jp/master/GAreaLargeSearchAPI/20150630/?'
 GURUNAVI_CATEGORY_URL = 'https://api.gnavi.co.jp/master/CategoryLargeSearchAPI/20150630/?'
 
@@ -575,7 +575,8 @@ def process_request(req):
                 break
             else:
                 pass
-        print('66')
+        if not cuisine_code:
+            return None
 
         for i, item in enumerate(res_location):
             print('Area_code:    %s' % (item.get('areacode_l').lower()))
@@ -588,12 +589,12 @@ def process_request(req):
                 break
             else:
                 pass
-        print('77')
+        if not location_code:
+            return None
 
-        # print('res_cuisine: \n%s' % (res_cuisine))
-        # print('res_location: \n%s' % (res_location))
-
-        #url = GURUNAVI_URL + urlencode({'keyid': GURUNAVI_KEY, 'format':'json','lang':'en','areacode_l':area_code,'category_l':category_code})
+        url_lookup = GURUNAVI_SEARCH_URL + urlencode({'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en', 'areacode_l': location_code, 'category_l': cuisine_code})
+        res = requests.get(url_lookup).json()['rest']
+        print('name of the restaurant: %s' % (res['name']['name']))
 
     elif action in ('attraction', 'accommodation', 'restaurant', 'shopping'):
         if userlocale == 'zh_cn':
