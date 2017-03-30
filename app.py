@@ -593,9 +593,16 @@ def process_request(req):
             print('11111')
             for i, item in enumerate(_res['rest']):
                 print('22222')
+                # print('1 {}'.format(item['name']['name']))
+                # print('2 {}'.format(item['summary']))
+                # print('3 {}'.format())
+                # print('4 {}'.format())
+                # print('5 {}'.format())
+                # print('6 {}'.format())
+
                 fb_item = {
                     'title': item['name']['name'],
-                    'subtitle': '%s\n%s' % (item['summary'], item['address']),
+                    'subtitle': '%s\n%s' % (item['name']['name_sub'], item['contacts']['address']),
                     'image_url': item['image_url']['thumbnail'],
                     'buttons': [
                         {
