@@ -572,6 +572,7 @@ def process_request(req):
                 print('found it')
                 print('Cuisine: found code is %s' % (item.get('category_l_code')))
                 cuisine_code = item.get('category_l_code')
+                break
             else:
                 pass
         print('66')
@@ -584,6 +585,7 @@ def process_request(req):
                 print('found it')
                 print('Location: found code is %s' % (item.get('areacode_l')))
                 location_code = item.get('areacode_l')
+                break
             else:
                 pass
         print('77')
