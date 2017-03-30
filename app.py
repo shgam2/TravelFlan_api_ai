@@ -566,8 +566,6 @@ def process_request(req):
         #print('res_location = %s' % (res_location))
 
         for i, item in enumerate(res_cuisine):
-            #print('1. cuisine = {}'.format(cuisine))
-            #print('1. category = {}'.format(item.get('category_l_name').lower()))
             if cuisine.lower() == item.get('category_l_name').lower():
                 print('found it')
                 print('Cuisine: found code is %s' % (item.get('category_l_code')))
@@ -579,9 +577,6 @@ def process_request(req):
             return None
 
         for i, item in enumerate(res_location):
-            #print('Area_code:    %s' % (item.get('areacode_l').lower()))
-            #print('Area_name:    %s' % (item.get('areaname_l').lower()))
-            #print('Compare with: %s' % (location.lower()))
             if location.lower() == item.get('areaname_l').lower():
                 print('found it')
                 print('Location: found code is %s' % (item.get('areacode_l')))
@@ -592,13 +587,57 @@ def process_request(req):
         if not location_code:
             return None
 
-        print('00000')
         url_lookup = GURUNAVI_SEARCH_URL + urlencode({'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en', 'areacode_l': location_code, 'category_l': cuisine_code})
-        print('11111')
-        res = requests.get(url_lookup).json()['rest']
-        print('22222')
-        for item in res:
-            print('name of the restaurant: %s' % (item['name']['name']))
+        res = requests.get(url_lookup).json()
+
+        speech = ''
+
+        elements = list()
+        if not res['rest']:
+            print("Empty list!")
+        else:
+            for i, item in enumerate(res['rest']):
+                fb_item = {
+                    'title': item['name']['name'],
+                    'subtitle': '%s\n%s' % (item['summary'], item['address']),
+                    'image_url': item['image_url']['thumbnail'],
+                    'buttons': [
+                        {
+                            'type': 'web_url',
+                            'url': item['url'],
+                            'title': 'TEMP BUTTON TITLE'
+                        }
+                    ]
+                }
+                elements.append(fb_item)
+
+                speech += '%s. name: %s\nsummary: %s\naddress: %s\ntel: %s\nbusiness hours: %s\n\n' % (
+                    i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'], item['contacts']['tel'], item['besiness_hour']
+                )
+
+            l = 0
+            for x in speech.split('\n'):
+                l += len(x)
+                if l > 500:
+                    speech = speech[:l - len(x)] + '\n\n...'
+                    break
+
+            data = [
+                {
+                    'attachment_type': 'template',
+                    'attachment_template': {
+                        'template_type': 'generic',
+                        'elements': elements
+                    }
+                }
+            ]
+
+            res = {
+                'speech': speech,
+                'displayText': speech,
+                'source': 'apiai-restaurant',
+                'data': data
+            }
 
 
     elif action in ('attraction', 'accommodation', 'restaurant', 'shopping'):
