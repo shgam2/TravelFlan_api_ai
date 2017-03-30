@@ -551,19 +551,11 @@ def process_request(req):
         parameters = req['result']['parameters']
         location = parameters.get('address')
         cuisine = parameters.get('gurunavi_cuisine_temp')
-        print('location is %s'%(location))
-        print('cuisine is %s' %(cuisine))
 
-        print('11')
         url_cuisine = GURUNAVI_CATEGORY_URL + urlencode({'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en'})
-        print('22')
         url_location = GURUNAVI_AREA_URL + urlencode({'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en'})
-        print('33')
         res_cuisine = requests.get(url_cuisine).json()['category_l']
-        print('44')
         res_location = requests.get(url_location).json()['garea_large']
-        print('55')
-        #print('res_location = %s' % (res_location))
 
         for i, item in enumerate(res_cuisine):
             if cuisine.lower() == item.get('category_l_name').lower():
@@ -588,15 +580,15 @@ def process_request(req):
             return None
 
         url_lookup = GURUNAVI_SEARCH_URL + urlencode({'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en', 'areacode_l': location_code, 'category_l': cuisine_code})
-        res = requests.get(url_lookup).json()
+        _res = requests.get(url_lookup).json()
 
         speech = ''
 
         elements = list()
-        if not res['rest']:
+        if not _res['rest']:
             print("Empty list!")
         else:
-            for i, item in enumerate(res['rest']):
+            for i, item in enumerate(_res['rest']):
                 fb_item = {
                     'title': item['name']['name'],
                     'subtitle': '%s\n%s' % (item['summary'], item['address']),
