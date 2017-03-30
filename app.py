@@ -616,7 +616,7 @@ def process_request(req):
                 elements.append(fb_item)
                 print('44444')
                 speech += '%s. name: %s\nsummary: %s\naddress: %s\ntel: %s\nbusiness hours: %s\n\n' % (
-                    i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'], item['contacts']['tel'], item['besiness_hour']
+                    i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'], item['contacts']['tel'], item['business_hour']
                 )
                 print('55555')
             l = 0
