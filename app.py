@@ -597,7 +597,9 @@ def process_request(req):
         print('11111')
         res = requests.get(url_lookup).json()['rest']
         print('22222')
-        print('name of the restaurant: %s' % (res['name']['name']))
+        for item in res:
+            print('name of the restaurant: %s' % (item['name']['name']))
+
 
     elif action in ('attraction', 'accommodation', 'restaurant', 'shopping'):
         if userlocale == 'zh_cn':
