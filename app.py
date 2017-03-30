@@ -592,8 +592,11 @@ def process_request(req):
         if not location_code:
             return None
 
+        print('00000')
         url_lookup = GURUNAVI_SEARCH_URL + urlencode({'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en', 'areacode_l': location_code, 'category_l': cuisine_code})
+        print('11111')
         res = requests.get(url_lookup).json()['rest']
+        print('22222')
         print('name of the restaurant: %s' % (res['name']['name']))
 
     elif action in ('attraction', 'accommodation', 'restaurant', 'shopping'):
