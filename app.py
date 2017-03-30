@@ -585,10 +585,14 @@ def process_request(req):
         speech = ''
 
         elements = list()
+
+        print('00000')
         if not _res['rest']:
             print("Empty list!")
         else:
+            print('11111')
             for i, item in enumerate(_res['rest']):
+                print('22222')
                 fb_item = {
                     'title': item['name']['name'],
                     'subtitle': '%s\n%s' % (item['summary'], item['address']),
@@ -601,19 +605,21 @@ def process_request(req):
                         }
                     ]
                 }
+                print('33333')
                 elements.append(fb_item)
-
+                print('44444')
                 speech += '%s. name: %s\nsummary: %s\naddress: %s\ntel: %s\nbusiness hours: %s\n\n' % (
                     i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'], item['contacts']['tel'], item['besiness_hour']
                 )
-
+                print('55555')
             l = 0
+            print('66666')
             for x in speech.split('\n'):
                 l += len(x)
                 if l > 500:
                     speech = speech[:l - len(x)] + '\n\n...'
                     break
-
+            print('77777')
             data = [
                 {
                     'attachment_type': 'template',
@@ -623,13 +629,14 @@ def process_request(req):
                     }
                 }
             ]
-
+            print('88888')
             res = {
                 'speech': speech,
                 'displayText': speech,
                 'source': 'apiai-restaurant',
                 'data': data
             }
+            print('99999')
 
 
     elif action in ('attraction', 'accommodation', 'restaurant', 'shopping'):
