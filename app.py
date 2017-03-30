@@ -566,8 +566,8 @@ def process_request(req):
         #print('res_location = %s' % (res_location))
 
         for i, item in enumerate(res_cuisine):
-            print('1. cuisine = {}'.format(cuisine))
-            print('1. category = {}'.format(item.get('category_l_name').lower()))
+            #print('1. cuisine = {}'.format(cuisine))
+            #print('1. category = {}'.format(item.get('category_l_name').lower()))
             if cuisine.lower() == item.get('category_l_name').lower():
                 print('found it')
                 print('Cuisine: found code is %s' % (item.get('category_l_code')))
@@ -577,7 +577,8 @@ def process_request(req):
         print('66')
 
         for i, item in enumerate(res_location):
-            print('area %s' % (item.get('areaname_l').lower()))
+            print('Area_code: %s' % (item.get('areacode_l').lower()))
+            print('Area_name: %s' % (item.get('areaname_l').lower()))
             if location.lower() == item.get('areaname_l').lower():
                 print('found it')
                 print('Location: found code is %s' % (item.get('areacode_l')))
@@ -588,10 +589,6 @@ def process_request(req):
 
         # print('res_cuisine: \n%s' % (res_cuisine))
         # print('res_location: \n%s' % (res_location))
-
-
-
-
 
         #url = GURUNAVI_URL + urlencode({'keyid': GURUNAVI_KEY, 'format':'json','lang':'en','areacode_l':area_code,'category_l':category_code})
 
