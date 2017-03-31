@@ -557,6 +557,23 @@ def process_request(req):
         res_cuisine = requests.get(url_cuisine).json()['category_l']
         res_location = requests.get(url_location).json()['garea_large']
 
+        for i, item in enumerate(res_location):
+            loc_list = item.get('areaname_l').lower().split(' / ')
+            for loc_item in loc_list:
+                print('YESS')
+                print('loc_item: %s' % (loc_item))
+                if location.lower() == loc_item.lower():
+                    print('found it')
+                    print('Location: found code is %s' % (item.get('areacode_l')))
+                    location_code = item.get('areacode_l')
+                    break
+                else:
+                    pass
+
+
+        if not location_code:
+            return None
+
         for i, item in enumerate(res_cuisine):
             if cuisine.lower() == item.get('category_l_name').lower():
                 print('found it')
@@ -568,16 +585,7 @@ def process_request(req):
         if not cuisine_code:
             return None
 
-        for i, item in enumerate(res_location):
-            if location.lower() == item.get('areaname_l').lower():
-                print('found it')
-                print('Location: found code is %s' % (item.get('areacode_l')))
-                location_code = item.get('areacode_l')
-                break
-            else:
-                pass
-        if not location_code:
-            return None
+
 
         url_lookup = GURUNAVI_SEARCH_URL + urlencode({'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en', 'areacode_l': location_code, 'category_l': cuisine_code})
         _res = requests.get(url_lookup).json()
