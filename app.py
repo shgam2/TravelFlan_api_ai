@@ -573,7 +573,7 @@ def process_request(req):
             return None
 
         for i, item in enumerate(res_cuisine):
-            if cuisine.lower() == item.get('category_l_name').lower():
+            if cuisine.lower() in item.get('category_l_name').lower():
                 print('found it')
                 print('Cuisine: found code is %s' % (item.get('category_l_code')))
                 cuisine_code = item.get('category_l_code')
