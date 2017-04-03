@@ -518,6 +518,7 @@ def process_request(req):
     elif action == 'direction':
         print("yes here")
         speech, data = parse_json(req)
+        print('SPEECH IS \n%s' % (speech))
         res = {
             'speech': speech,
             'displayText': speech,
