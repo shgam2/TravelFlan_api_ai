@@ -213,9 +213,8 @@ def grab_answer(from_loc, to_loc, dir_file, lang):
                     }
                 ]
             else:
-                return None
-                #speech = None
-                #data = None
+                speech = None
+                data = None
             return speech, data
     except IOError as e:
         print('IOError', e)
