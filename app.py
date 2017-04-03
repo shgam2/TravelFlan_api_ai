@@ -194,7 +194,7 @@ def grab_answer(from_loc, to_loc, dir_file, lang):
                 data = [
                     {
                         'attachment_type': 'template',
-                        'attachment_template': {
+                        'attachment_payload': {
                             'template_type': 'generic',
                             'elements': [
                                 {
@@ -293,7 +293,7 @@ def get_gmap_directions(from_loc, to_loc, lang):
     data = [
         {
             'attachment_type': 'template',
-            'attachment_template': {
+            'attachment_payload': {
                 'template_type': 'generic',
                 'elements': [
                     {
@@ -633,7 +633,7 @@ def process_request(req):
             data = [
                 {
                     'attachment_type': 'template',
-                    'attachment_template': {
+                    'attachment_payload': {
                         'template_type': 'generic',
                         'elements': elements
                     }
@@ -818,7 +818,7 @@ def process_request(req):
         data = [
             {
                 'attachment_type': 'template',
-                'attachment_template': {
+                'attachment_payload': {
                     'template_type': 'generic',
                     'elements': elements
                 }
