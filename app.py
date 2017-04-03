@@ -213,8 +213,9 @@ def grab_answer(from_loc, to_loc, dir_file, lang):
                     }
                 ]
             else:
-                speech = None
-                data = None
+                return None
+                #speech = None
+                #data = None
             return speech, data
     except IOError as e:
         print('IOError', e)
@@ -558,10 +559,6 @@ def process_request(req):
         res_location = requests.get(url_location).json()['garea_large']
 
         for i, item in enumerate(res_location):
-            # loc_list = item.get('areaname_l').lower().split(' / ')
-            # for loc_item in loc_list:
-            #     print('YESS')
-            #     print('loc_item: %s' % (loc_item))
             if location.lower() in item.get('areaname_l').lower():
                 print('found it')
                 print('Location: found code is %s' % (item.get('areacode_l')))
