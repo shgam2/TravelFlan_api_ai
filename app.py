@@ -602,7 +602,7 @@ def process_request(req):
                 # print('4 {}'.format())
                 # print('5 {}'.format())
                 # print('6 {}'.format())
-
+                print('THUMBNAIL IMAGE: %s' % (item['image_url']['thumbnail']))
                 fb_item = {
                     'title': item['name']['name'],
                     'subtitle': '%s\n%s' % (item['name']['name_sub'], item['contacts']['address']),
