@@ -276,7 +276,7 @@ def get_gmap_directions(from_loc, to_loc, lang):
                 speech = speech[:l - len(x)] + '\n\n...'
                 break
     else:
-        speech = 'None'
+        speech = None
 
     map_image_url = 'https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/googlemap_image.jpg'
 
