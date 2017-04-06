@@ -316,7 +316,10 @@ def get_gmap_directions(from_loc, to_loc, lang):
 
 def parse_json(req):
     print('123')
-    lang = req['originalRequest']['data'].get('locale')
+    if req['originalRequest']['data'].get('locale'):
+        lang = req['originalRequest']['data'].get('locale')
+    else:
+        lang = 'zh_CN'
     if lang == 'zh_CN':
         dir_file = DIR_FILE_CN
     elif lang in ('zh_TW', 'zh_HK'):
