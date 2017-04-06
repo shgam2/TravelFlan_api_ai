@@ -518,6 +518,9 @@ def process_request(req):
             'displayText': speech,
             'source': 'apiai-weather'
         }
+    elif action == 'itinerary':
+        print('Hello!')
+
     elif action == 'direction':
         print("yes here")
         speech, data = parse_json(req)
