@@ -224,7 +224,8 @@ def grab_answer(from_loc, to_loc, dir_file, lang):
 
 def get_gmap_directions(from_loc, to_loc, lang):
     now = datetime.now()
-
+    print('from_loc = %s' % (from_loc))
+    print('to_loc = %s' % (to_loc))
     # from_loc = gmaps.places(from_loc)['results'][0]['formatted_address']
     # to_loc = gmaps.places(to_loc)['results'][0]['formatted_address']
 
@@ -315,7 +316,6 @@ def get_gmap_directions(from_loc, to_loc, lang):
 
 
 def parse_json(req):
-    print('123')
     if req['originalRequest']['data'].get('locale'):
         lang = req['originalRequest']['data'].get('locale')
     else:
@@ -329,11 +329,6 @@ def parse_json(req):
 
     result = req.get('result')
     parameters = result.get('parameters')
-
-    print('1. {}'.format(parameters.get('address-from')))
-    print('2. {}'.format(parameters.get('prev-address-from')))
-    print('3. {}'.format(parameters.get('address-to')))
-    print('4. {}'.format(parameters.get('prev-address-to')))
 
     if parameters.get('address-from'):
         from_loc = parameters.get('address-from')
