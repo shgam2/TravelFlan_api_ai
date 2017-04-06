@@ -351,6 +351,11 @@ def parse_json(req):
     return speech, data
 
 
+def exapi_travelflan(data):
+    print('num_days: %s' % (data['num_days']))
+    print('city: %s' % (data['city']))
+
+
 def exapi_pengtai(data):
     timestamp = str(int(time.time()))
     plain = '%s|%s' % (PENGTAI_KEY, timestamp)
@@ -374,27 +379,17 @@ def process_request(req):
         userlocale = 'zh_cn'
     print('req is {}'.format(req))
     action = req['result']['action']
-    print('action1 is {}'.format(action))
     if action == 'prev_context':
-        print('in context area')
-        print('parameters: {}'.format(req['result'].get('parameters')))
-        print('action2 is {}'.format(req['result']['parameters'].get('prev-action')))
         action = req['result']['parameters'].get('prev-action')
-        print('123123')
         if req['result']['parameters'].get('city'):
-            print('aaaaaa')
             city = req['result']['parameters']['city']
-            print('cccccc')
         elif not req['result']['parameters'].get('city') and req['result']['parameters'].get('prev-city'):
-            print('dddddd')
             city = req['result']['parameters'].get('prev-city')
-            print('eeeeee')
         else:
             None
     else:
         if req['result']['parameters'].get('city'):
             city = req['result']['parameters'].get('city')
-    print('action3 is {}'.format(action))
 
     if action == 'weather':
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req, city)}) + '&format=json'
@@ -519,8 +514,22 @@ def process_request(req):
             'source': 'apiai-weather'
         }
     elif action == 'itinerary':
-        print('Hello!')
+        print('in the itinerary action')
+        if userlocale == 'zh_cn':
+            button_title = '点击查看'
+        elif userlocale in ('zh_tw', 'zh_hk'):
+            button_title = '點擊查看'
+        else:
+            button_title = 'Click to view'
 
+        num_days = req['result']['parameters'].get('num_days')
+        city = req['result']['parameters'].get('city')
+        _data = {
+            'num_days': num_days,
+            'city': city
+        }
+
+        exapi_travelflan(_data)
     elif action == 'direction':
         print("yes here")
         speech, data = parse_json(req)
@@ -586,8 +595,6 @@ def process_request(req):
         if not cuisine_code:
             return None
 
-
-
         url_lookup = GURUNAVI_SEARCH_URL + urlencode({'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en', 'areacode_l': location_code, 'category_l': cuisine_code})
         _res = requests.get(url_lookup).json()
 
@@ -595,19 +602,12 @@ def process_request(req):
 
         elements = list()
 
-        print('00000')
         if not _res['rest']:
             print("Empty list!")
         else:
             print('11111')
             for i, item in enumerate(_res['rest']):
                 print('22222')
-                # print('1 {}'.format(item['name']['name']))
-                # print('2 {}'.format(item['summary']))
-                # print('3 {}'.format())
-                # print('4 {}'.format())
-                # print('5 {}'.format())
-                # print('6 {}'.format())
                 print('THUMBNAIL IMAGE: %s' % (item['image_url']['thumbnail']))
                 fb_item = {
                     'title': item['name']['name'],
@@ -653,8 +653,6 @@ def process_request(req):
                 'data': data
             }
             print('99999')
-
-
     elif action in ('attraction', 'accommodation', 'restaurant', 'shopping'):
         if userlocale == 'zh_cn':
             lang = '01'
