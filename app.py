@@ -553,7 +553,7 @@ def process_request(req):
                     'buttons': [
                         {
                             'type': 'web_url',
-                            'url': None,
+                            'url': 'www.google.com',
                             'title': 'TEMP BUTTON TITLE'
                         }
                     ]
