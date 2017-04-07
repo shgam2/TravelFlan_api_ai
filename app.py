@@ -542,39 +542,51 @@ def process_request(req):
                     loc1.replace(' ', '+'), loc2.replace(' ', '+'), loc3.replace(' ', '+'))
             print('url is %s' % url)
 
-            elements = list()
+            data = list()
+            # elements = list()
+            for i in range(1, num_days):
+                elements = list()
 
-            speech = 'Day 1:\n'
-            for i in range(1, 4):
-                fb_item = {
-                    'title': 'Temp_title_%s' % i,
-                    'subtitle': 'Temp_subtitle_%s\nTemp_address_%s' % (i, i),
+                speech = 'Day %s:\n' % i
+                for j in range(1, 4):
+                    fb_item = {
+                        'title': 'Temp_title_%s' % j,
+                        'subtitle': 'Temp_subtitle_%s\nTemp_address_%s' % (j, j),
+                        'image_url': MAP_IMAGE_URL,
+                        'buttons': [
+                            {
+                                'type': 'web_url',
+                                'url': 'www.google.com',
+                                'title': 'TEMP BUTTON TITLE'
+                            }
+                        ]
+                    }
+                    elements.append(fb_item)
+                    print('elements now: %s' % elements)
+                    speech += '(%s) Temp_title_%s\n' % (j, j)
+
+                map_item = {
+                    'title': 'temp_map_title',
+                    'subtitle': ' \n ',
                     'image_url': MAP_IMAGE_URL,
                     'buttons': [
                         {
                             'type': 'web_url',
-                            'url': 'www.google.com',
-                            'title': 'TEMP BUTTON TITLE'
+                            'url': url,
+                            'title': button_title
                         }
                     ]
                 }
-                elements.append(fb_item)
-                print('elements now: %s' % elements)
-                speech += '(%s) Temp_title_%s\n' % (i, i)
+                elements.append(map_item)
 
-            map_item = {
-                'title': 'temp_map_title',
-                'subtitle': ' \n ',
-                'image_url': MAP_IMAGE_URL,
-                'buttons': [
-                    {
-                        'type': 'web_url',
-                        'url': url,
-                        'title': button_title
+                data_item = {
+                    'attachment_type': 'template',
+                    'attachment_payload': {
+                        'template_type': 'generic',
+                        'elements': elements
                     }
-                ]
-            }
-            elements.append(map_item)
+                }
+                data.append(data_item)
 
             l = 0
             for x in speech.split('\n'):
@@ -583,15 +595,15 @@ def process_request(req):
                     speech = speech[:l - len(x)] + '\n\n...'
                     break
 
-            data = [
-                {
-                    'attachment_type': 'template',
-                    'attachment_payload': {
-                        'template_type': 'generic',
-                        'elements': elements
-                    }
-                }
-            ]
+            # data = [
+            #     {
+            #         'attachment_type': 'template',
+            #         'attachment_payload': {
+            #             'template_type': 'generic',
+            #             'elements': elements
+            #         }
+            #     }
+            # ]
 
             res = {
                 'speech': speech,
