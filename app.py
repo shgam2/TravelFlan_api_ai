@@ -867,7 +867,7 @@ def process_request(req):
                     ]
                 }
                 elements.append(fb_item)
-
+                print('elements:::::::\n%s' % elements)
                 speech += '%s. name: %s\nsummary: %s\naddress: %s\ntel: %s\nbusiness hours: %s\n\n' % (
                     i + 1, item['name'], item['summary'], item['address'], item['tel'], item['besinessHours']
                 )
