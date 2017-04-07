@@ -546,7 +546,6 @@ def process_request(req):
 
             speech = 'Day 1:\n'
             for i in range(1, 4):
-                print('11111')
                 fb_item = {
                     'title': 'Temp_title_%s' % i,
                     'subtitle': 'Temp_subtitle_%s\nTemp_address_%s' % (i, i),
@@ -560,6 +559,7 @@ def process_request(req):
                     ]
                 }
                 elements.append(fb_item)
+                print('elements now: %s' % elements)
                 speech += '(%s) Temp_title_%s\n' % (i, i)
 
             # map_item = {
