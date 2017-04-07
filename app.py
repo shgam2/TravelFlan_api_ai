@@ -564,6 +564,7 @@ def process_request(req):
 
             map_item = {
                 'title': 'temp_map_title',
+                'subtitle': ' \n ',
                 'image_url': MAP_IMAGE_URL,
                 'buttons': [
                     {
