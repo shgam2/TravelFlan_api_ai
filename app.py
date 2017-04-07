@@ -544,12 +544,13 @@ def process_request(req):
 
             elements = list()
 
-            speech = 'Day 1:'
-            for i in range (1,3):
+            speech = 'Day 1:\n'
+            for i in range(1, 4):
+                print('11111')
                 fb_item = {
-                    'title': 'Temp_title_%s' % (i),
+                    'title': 'Temp_title_%s' % i,
                     'subtitle': 'Temp_subtitle_%s\nTemp_address_%s' % (i, i),
-                    'image_url': None,
+                    'image_url': MAP_IMAGE_URL,
                     'buttons': [
                         {
                             'type': 'web_url',
@@ -596,7 +597,6 @@ def process_request(req):
                 'source': 'apiai-itinerary',
                 'data': data
             }
-
         else:
             return None
     elif action == 'direction':
