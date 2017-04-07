@@ -349,7 +349,19 @@ def parse_json(req):
 def exapi_travelflan(data):
     print('num_days: %s' % (data['num_days']))
     print('city: %s' % (data['city']))
+    lang = data['lang']
+    print('lang: %s' % lang)
+    loc1 = 'Osaka'
+    loc2 = 'Nara'
+    loc3 = 'Kyoto'
 
+    if lang in ('zh_CN', 'zh_TW', 'zh_HK'):
+        url = 'https://maps.google.cn/maps/dir/%s/%s/%s' % (
+            loc1.replace(' ', '+'), loc2.replace(' ', '+'), loc3.replace(' ', '+'))
+    else:
+        url = 'https://www.google.com/maps/dir/%s/%s/%s' % (
+            loc1.replace(' ', '+'), loc2.replace(' ', '+'), loc3.replace(' ', '+'))
+    print('url is %s' % url)
 
 def exapi_pengtai(data):
     timestamp = str(int(time.time()))
@@ -521,7 +533,8 @@ def process_request(req):
         city = req['result']['parameters'].get('city')
         _data = {
             'num_days': num_days,
-            'city': city
+            'city': city,
+            'lang': userlocale
         }
 
         exapi_travelflan(_data)
