@@ -30,6 +30,7 @@ GURUNAVI_SEARCH_URL = 'https://api.gnavi.co.jp/ForeignRestSearchAPI/20150630/?'
 GURUNAVI_AREA_URL = 'https://api.gnavi.co.jp/master/GAreaLargeSearchAPI/20150630/?'
 GURUNAVI_CATEGORY_URL = 'https://api.gnavi.co.jp/master/CategoryLargeSearchAPI/20150630/?'
 
+MAP_IMAGE_URL = 'https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/googlemap_image.jpg'
 
 DIR_FILE_EN = 'transportation_en.csv'
 DIR_FILE_CN = 'transportation_cn.csv'
@@ -278,7 +279,7 @@ def get_gmap_directions(from_loc, to_loc, lang):
     else:
         speech = 'None' #Need to change this to None without quotes? ###########
 
-    map_image_url = 'https://s3.ap-northeast-2.amazonaws.com/flanb-data/ai-img/googlemap_image.jpg'
+
 
     if lang == 'zh_TW' or lang == 'zh_HK':
         title = '地圖 - %s -> %s' % (from_loc, to_loc)
@@ -298,7 +299,7 @@ def get_gmap_directions(from_loc, to_loc, lang):
                 'elements': [
                     {
                         'title': title,
-                        'image_url': map_image_url,
+                        'image_url': MAP_IMAGE_URL,
                         'buttons': [
                             {
                                 'type': 'web_url',
@@ -351,17 +352,8 @@ def exapi_travelflan(data):
     print('city: %s' % (data['city']))
     lang = data['lang']
     print('lang: %s' % lang)
-    loc1 = 'Osaka'
-    loc2 = 'Nara'
-    loc3 = 'Kyoto'
 
-    if lang in ('zh_CN', 'zh_TW', 'zh_HK'):
-        url = 'https://maps.google.cn/maps/dir/%s/%s/%s' % (
-            loc1.replace(' ', '+'), loc2.replace(' ', '+'), loc3.replace(' ', '+'))
-    else:
-        url = 'https://www.google.com/maps/dir/%s/%s/%s' % (
-            loc1.replace(' ', '+'), loc2.replace(' ', '+'), loc3.replace(' ', '+'))
-    print('url is %s' % url)
+    return True
 
 def exapi_pengtai(data):
     timestamp = str(int(time.time()))
@@ -537,7 +529,76 @@ def process_request(req):
             'lang': userlocale
         }
 
-        exapi_travelflan(_data)
+        if exapi_travelflan(_data) == True:
+            loc1 = 'Osaka'
+            loc2 = 'Nara'
+            loc3 = 'Kyoto'
+
+            if userlocale in ('zh_CN', 'zh_TW', 'zh_HK'):
+                url = 'http://www.google.cn/maps/dir/%s/%s/%s' % (
+                    loc1.replace(' ', '+'), loc2.replace(' ', '+'), loc3.replace(' ', '+'))
+            else:
+                url = 'https://www.google.com/maps/dir/%s/%s/%s' % (
+                    loc1.replace(' ', '+'), loc2.replace(' ', '+'), loc3.replace(' ', '+'))
+            print('url is %s' % url)
+
+            elements = list()
+
+            speech = 'Day 1:'
+            for i in range (1,3):
+                fb_item = {
+                    'title': 'Temp_title_%s' % (i),
+                    'subtitle': 'Temp_subtitle_%s\nTemp_address_%s' % (i, i),
+                    'image_url': None,
+                    'buttons': [
+                        {
+                            'type': 'web_url',
+                            'url': None,
+                            'title': 'TEMP BUTTON TITLE'
+                        }
+                    ]
+                }
+                elements.append(fb_item)
+                speech += '(%s) Temp_title_%s\n' % (
+                    i, i)
+
+            map_item = {
+                'title': 'temp_map_title',
+                'image_url': MAP_IMAGE_URL,
+                'buttons': [
+                    {
+                        'type': 'web_url',
+                        'url': url,
+                        'title': button_title
+                    }
+                ]
+            }
+            elements.append(map_item)
+
+            l = 0
+            for x in speech.split('\n'):
+                l += len(x)
+                if l > 500:
+                    speech = speech[:l - len(x)] + '\n\n...'
+                    break
+            data = [
+                {
+                    'attachment_type': 'template',
+                    'attachment_payload': {
+                        'template_type': 'generic',
+                        'elements': elements
+                    }
+                }
+            ]
+            res = {
+                'speech': speech,
+                'displayText': speech,
+                'source': 'apiai-itinerary',
+                'data': data
+            }
+
+        else:
+            return None
     elif action == 'direction':
         print("yes here")
         speech, data = parse_json(req)
@@ -613,10 +674,7 @@ def process_request(req):
         if not _res['rest']:
             print("Empty list!")
         else:
-            print('11111')
             for i, item in enumerate(_res['rest']):
-                print('22222')
-                print('THUMBNAIL IMAGE: %s' % (item['image_url']['thumbnail']))
                 fb_item = {
                     'title': item['name']['name'],
                     'subtitle': '%s\n%s' % (item['name']['name_sub'], item['contacts']['address']),
@@ -629,21 +687,16 @@ def process_request(req):
                         }
                     ]
                 }
-                print('33333')
                 elements.append(fb_item)
-                print('44444')
                 speech += '%s. name: %s\nsummary: %s\naddress: %s\ntel: %s\nbusiness hours: %s\n\n' % (
                     i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'], item['contacts']['tel'], item['business_hour']
                 )
-                print('55555')
             l = 0
-            print('66666')
             for x in speech.split('\n'):
                 l += len(x)
                 if l > 500:
                     speech = speech[:l - len(x)] + '\n\n...'
                     break
-            print('77777')
             data = [
                 {
                     'attachment_type': 'template',
@@ -653,14 +706,12 @@ def process_request(req):
                     }
                 }
             ]
-            print('88888')
             res = {
                 'speech': speech,
                 'displayText': speech,
                 'source': 'apiai-restaurant',
                 'data': data
             }
-            print('99999')
     elif action in ('attraction', 'accommodation', 'restaurant', 'shopping'):
         if userlocale == 'zh_cn':
             lang = '01'
