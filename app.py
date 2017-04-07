@@ -562,18 +562,18 @@ def process_request(req):
                 print('elements now: %s' % elements)
                 speech += '(%s) Temp_title_%s\n' % (i, i)
 
-            # map_item = {
-            #     'title': 'temp_map_title',
-            #     'image_url': MAP_IMAGE_URL,
-            #     'buttons': [
-            #         {
-            #             'type': 'web_url',
-            #             'url': url,
-            #             'title': button_title
-            #         }
-            #     ]
-            # }
-            # elements.append(map_item)
+            map_item = {
+                'title': 'temp_map_title',
+                'image_url': MAP_IMAGE_URL,
+                'buttons': [
+                    {
+                        'type': 'web_url',
+                        'url': url,
+                        'title': button_title
+                    }
+                ]
+            }
+            elements.append(map_item)
 
             l = 0
             for x in speech.split('\n'):
