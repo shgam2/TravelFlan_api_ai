@@ -560,21 +560,20 @@ def process_request(req):
                     ]
                 }
                 elements.append(fb_item)
-                speech += '(%s) Temp_title_%s\n' % (
-                    i, i)
+                speech += '(%s) Temp_title_%s\n' % (i, i)
 
-            map_item = {
-                'title': 'temp_map_title',
-                'image_url': MAP_IMAGE_URL,
-                'buttons': [
-                    {
-                        'type': 'web_url',
-                        'url': url,
-                        'title': button_title
-                    }
-                ]
-            }
-            elements.append(map_item)
+            # map_item = {
+            #     'title': 'temp_map_title',
+            #     'image_url': MAP_IMAGE_URL,
+            #     'buttons': [
+            #         {
+            #             'type': 'web_url',
+            #             'url': url,
+            #             'title': button_title
+            #         }
+            #     ]
+            # }
+            # elements.append(map_item)
 
             l = 0
             for x in speech.split('\n'):
@@ -582,6 +581,7 @@ def process_request(req):
                 if l > 500:
                     speech = speech[:l - len(x)] + '\n\n...'
                     break
+
             data = [
                 {
                     'attachment_type': 'template',
@@ -591,6 +591,7 @@ def process_request(req):
                     }
                 }
             ]
+
             res = {
                 'speech': speech,
                 'displayText': speech,
