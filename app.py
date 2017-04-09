@@ -542,14 +542,23 @@ def process_request(req):
         city = req['result']['parameters'].get('city')
 
         if userlocale == 'zh_cn':
+            map_title = '地图'
+            map_subtitle = ''
             button_title = '点击查看'
             speech = '以下是%s天的行程：' % num_days
+            map_url = 'http://www.google.cn/maps/dir'
         elif userlocale in ('zh_tw', 'zh_hk'):
+            map_title = '地圖'
+            map_subtitle = ''
             button_title = '點擊查看'
             speech = '以下是%s天的行程：' % num_days
+            map_url = 'http://www.google.cn/maps/dir'
         else:
+            map_title = 'Map'
+            map_subtitle = ''
             button_title = 'Click to view'
             speech = 'Here is the %s-day itinerary.\n' % num_days
+            map_url = 'https://www.google.com/maps/dir'
         _data = {
             'num_days': num_days,
             'city': city,
@@ -569,10 +578,10 @@ def process_request(req):
         #for i, item in enumerate():
 
 
-        if userlocale in ('zh_CN', 'zh_TW', 'zh_HK'):
-            map_url = 'http://www.google.cn/maps/dir'
-        else:
-            map_url = 'https://www.google.com/maps/dir'
+        # if userlocale in ('zh_CN', 'zh_TW', 'zh_HK'):
+        #     map_url = 'http://www.google.cn/maps/dir'
+        # else:
+        #     map_url = 'https://www.google.com/maps/dir'
         print('url is %s' % map_url)
 
 
@@ -581,24 +590,23 @@ def process_request(req):
 
         for day in range(1, num_data + 1):
             d = tf_res['day%d' % (day,)]
-            print('----------- day {} -----------'.format(day))
-            print(d)
+            # print('----------- day {} -----------'.format(day))
+            # print(d)
             elements = list()
 
             speech += 'Day {}:\n'.format(day)
 
             for j, day_item in enumerate(d):
-                print('day_item #{}: \n{}'.format(j+1, day_item))
+                # print('day_item #{}: \n{}'.format(j+1, day_item))
                 place_num = 1
+                print('1. place_num = {}'.format(place_num))
                 for k, item in enumerate(day_item):
-                    print('item["locale""] = {}'.format(item['locale']))
+                    # print('item["locale""] = {}'.format(item['locale']))
 
                     if item['locale'].lower() == userlocale:
-                        print('item #{} ({}) '.format(j + 1, userlocale))
+                        # print('item #{} ({}) '.format(j + 1, userlocale))
                         title = item['name']
                         subtitle = item['highlight']
-
-                        print('1111111111')
 
                         l = 0
                         for x in subtitle.split('\n'):
@@ -606,8 +614,6 @@ def process_request(req):
                             if l > 70:
                                 subtitle = subtitle[:l - len(x)] + '\n\n...'
                                 break
-
-                        print('2222222222')
 
                         image_url = item['photo']
                         link = item['link']
@@ -624,17 +630,29 @@ def process_request(req):
                                 }
                             ]
                         }
+                        if place_num == 1:
+                            map_subtitle += '{}'.format(title)
+                        else:
+                            map_subtitle += ' - {}'.format(title)
+
+                        map_url += '/{}'.format(title)
+
+                        print('2. place_num = {}'.format(place_num))
                         place_num = place_num + 1
+                        print('3. place_num = {}'.format(place_num))
+
+
                         elements.append(fb_item)
-                        print('elements now: %s' % elements)
+                        # print('elements now: %s' % elements)
                         speech += '(%s) %s\n' % (j+1, title)
                     else:
                         print('passing item %s' % (j + 1))
 
 
+
             map_item = {
-                'title': 'temp_map_title',
-                'subtitle': ' \n ',
+                'title': 'Day {}:'.format(map_title),
+                'subtitle': map_subtitle,
                 'image_url': MAP_IMAGE_URL,
                 'buttons': [
                     {
