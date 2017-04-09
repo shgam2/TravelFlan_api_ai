@@ -665,8 +665,8 @@ def process_request(req):
                 map_url = 'https://www.google.com/maps?saddr=%s&daddr=%s&dirflg=r'
 
             speech += 'Day {}:\n'.format(day)
+            prev_map = None
             for j, day_item in enumerate(d):
-                prev_map = None
                 for k, item in enumerate(day_item):
                     if item['locale'].lower() == userlocale:
                         title = item['name']
@@ -705,8 +705,7 @@ def process_request(req):
                         prev_map = title.replace(' ', '+')
                         elements.append(fb_item)
                         speech += '(%s) %s\n' % (j + 1, title)
-                    else:
-                        pass
+                        break
 
             data_item = {
                 'attachment_type': 'template',
