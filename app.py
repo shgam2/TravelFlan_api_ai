@@ -580,28 +580,48 @@ def process_request(req):
 
         data = list()
         # elements = list()
-        for i in range(1, num_days+1):
+        for i, itin_item in tf_res:
+            print('----------- day %s -----------' % i)
             elements = list()
-
 
             speech += 'Day %s:\n' % i
 
-            for j in range(1, 4): #insert number of data for each day
-                fb_item = {
-                    'title': 'Temp_title_%s' % j,
-                    'subtitle': 'Temp_subtitle_%s\nTemp_address_%s' % (j, j),
-                    'image_url': MAP_IMAGE_URL,
-                    'buttons': [
-                        {
-                            'type': 'web_url',
-                            'url': 'www.google.com',
-                            'title': button_title
-                        }
-                    ]
-                }
-                elements.append(fb_item)
-                print('elements now: %s' % elements)
-                speech += '(%s) Temp_title_%s\n' % (j, j)
+            for j, day_item in itin_item:
+                print('item #%s' % j)
+                if day_item['locale'].lower() == userlocale:
+                    print('item (%s)' % userlocale)
+                    title = day_item['name']
+                    subtitle = day_item['highlight']
+
+                    print('1111111111')
+
+                    l = 0
+                    for x in subtitle.split('\n'):
+                        l += len(x)
+                        if l > 70:
+                            subtitle = subtitle[:l - len(x)] + '\n\n...'
+                            break
+
+                    print('2222222222')
+
+                    image_url = day_item['photo']
+                    link = day_item['link']
+
+                    fb_item = {
+                        'title': title,
+                        'subtitle': subtitle,
+                        'image_url': image_url,
+                        'buttons': [
+                            {
+                                'type': 'web_url',
+                                'url': link,
+                                'title': button_title
+                            }
+                        ]
+                    }
+                    elements.append(fb_item)
+                    print('elements now: %s' % elements)
+                    speech += '(%s) %s\n' % (j, title)
 
             map_item = {
                 'title': 'temp_map_title',
