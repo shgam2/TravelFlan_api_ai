@@ -21,8 +21,8 @@ gmaps = googlemaps.Client(key='AIzaSyB8ri2uUrjtGX2tgOoK_vMSo8ByuP31Njs')
 YAHOO_YQL_BASE_URL = 'https://query.yahooapis.com/v1/public/yql?'
 TRANSLATE_BASE_URL = 'http://awseb-e-f-AWSEBLoa-VIW6OYVV6CSY-1979702995.us-east-1.elb.amazonaws.com/translate?'
 
-TF_ITINERARY_URL = 'https://flanb-test.travelflan.com/data/itinerary?'
-TF_TOUR_URL = 'https://flanb-test.travelflan.com/data/tour?'
+TF_ITINERARY_URL = 'https://flanb-test.travelflan.com/data/itinerary?type=0&area=seoul&days=5'
+TF_TOUR_URL = 'https://flanb-test.travelflan.com/data/itinerary?type=1&area=seoul&days=1'
 
 PENGTAI_URL = 'http://www.hanguoing.cn/exApi/travelFlan'
 PENGTAI_TEST_URL = 'http://test1.hanguoing.com/exApi/travelFlan'
@@ -355,7 +355,7 @@ def exapi_travelflan_itin(data):
     print('city: %s' % data['city'])
     print('lang: %s' % data['lang'])
 
-    itinerary_url = TF_ITINERARY_URL + urlencode({'locale': data['lang'], 'days': data['num_days'], 'area': data['city']})
+    itinerary_url = TF_ITINERARY_URL #+ urlencode({'locale': data['lang'], 'days': data['num_days'], 'area': data['city']})
 
     try:
         res = requests.get(itinerary_url)
@@ -370,7 +370,7 @@ def exapi_travelflan_tour(data):
     print('city: %s' % data['city'])
     print('lang: %s' % data['lang'])
 
-    tour_url = TF_TOUR_URL + urlencode({'locale': data['lang'], 'days': data['num_days'], 'area': data['city']})
+    tour_url = TF_TOUR_URL #+ urlencode({'locale': data['lang'], 'days': data['num_days'], 'area': data['city']})
 
     try:
         res = requests.get(tour_url)
