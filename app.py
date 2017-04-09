@@ -581,15 +581,15 @@ def process_request(req):
         data = list()
         # elements = list()
         for i, itin_item in enumerate(tf_res):
-            print('----------- day %s -----------' % i)
+            print('----------- day %s -----------' % i+1)
             elements = list()
 
             speech += 'Day %s:\n' % i
 
             for j, day_item in enumerate(itin_item):
-                print('item #%s' % j)
+                print('day_item #%s: \n%s'(j+1, day_item))
                 if day_item['locale'].lower() == userlocale:
-                    print('item (%s)' % userlocale)
+                    print('item #%s (%s) ' % (j+1, userlocale))
                     title = day_item['name']
                     subtitle = day_item['highlight']
 
@@ -622,6 +622,8 @@ def process_request(req):
                     elements.append(fb_item)
                     print('elements now: %s' % elements)
                     speech += '(%s) %s\n' % (j, title)
+                else:
+                    print('passing item %s' % (j+1))
 
             map_item = {
                 'title': 'temp_map_title',
