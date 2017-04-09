@@ -587,9 +587,9 @@ def process_request(req):
             speech += 'Day %i:\n' % i+1
 
             for j, day_item in enumerate(itin_item):
-                print('day_item #%s: \n%s'(j+1, day_item))
+                print('day_item #%i: \n%s'(j+1, day_item))
                 if day_item['locale'].lower() == userlocale:
-                    print('item #%s (%s) ' % (j+1, userlocale))
+                    print('item #%i (%s) ' % (j+1, userlocale))
                     title = day_item['name']
                     subtitle = day_item['highlight']
 
