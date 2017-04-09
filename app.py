@@ -591,43 +591,46 @@ def process_request(req):
 
             for j, day_item in enumerate(d):
                 print('day_item #{}: \n{}'.format(j+1, day_item))
-                print('day_item["locale""] = {}'.format(day_item['locale']))
-                if day_item['locale'].lower() == userlocale:
-                    print('item #{} ({}) '.format(j+1, userlocale))
-                    title = day_item['name']
-                    subtitle = day_item['highlight']
+                for k, item in enumerate(day_item):
+                    print('day_item["locale""] = {}'.format(day_item['locale']))
 
-                    print('1111111111')
+                    if day_item['locale'].lower() == userlocale:
+                        print('item #{} ({}) '.format(j + 1, userlocale))
+                        title = day_item['name']
+                        subtitle = day_item['highlight']
 
-                    l = 0
-                    for x in subtitle.split('\n'):
-                        l += len(x)
-                        if l > 70:
-                            subtitle = subtitle[:l - len(x)] + '\n\n...'
-                            break
+                        print('1111111111')
 
-                    print('2222222222')
+                        l = 0
+                        for x in subtitle.split('\n'):
+                            l += len(x)
+                            if l > 70:
+                                subtitle = subtitle[:l - len(x)] + '\n\n...'
+                                break
 
-                    image_url = day_item['photo']
-                    link = day_item['link']
+                        print('2222222222')
 
-                    fb_item = {
-                        'title': title,
-                        'subtitle': subtitle,
-                        'image_url': image_url,
-                        'buttons': [
-                            {
-                                'type': 'web_url',
-                                'url': link,
-                                'title': button_title
-                            }
-                        ]
-                    }
-                    elements.append(fb_item)
-                    print('elements now: %s' % elements)
-                    speech += '(%s) %s\n' % (j, title)
-                else:
-                    print('passing item %s' % (j+1))
+                        image_url = day_item['photo']
+                        link = day_item['link']
+
+                        fb_item = {
+                            'title': title,
+                            'subtitle': subtitle,
+                            'image_url': image_url,
+                            'buttons': [
+                                {
+                                    'type': 'web_url',
+                                    'url': link,
+                                    'title': button_title
+                                }
+                            ]
+                        }
+                        elements.append(fb_item)
+                        print('elements now: %s' % elements)
+                        speech += '(%s) %s\n' % (j, title)
+                    else:
+                        print('passing item %s' % (j + 1))
+
 
             map_item = {
                 'title': 'temp_map_title',
