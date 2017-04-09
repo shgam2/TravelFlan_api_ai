@@ -630,14 +630,12 @@ def process_request(req):
             'source': 'apiai-tour',
             'data': data
         }
-
-
     elif action == 'itinerary':
         num_days = req['result']['parameters'].get('num_days')
         city = req['result']['parameters'].get('city')
 
         if userlocale == 'zh_cn':
-            map_title = 'How to get around' #needs translation
+            map_title = 'How to get around'  # needs translation
             button_title = '点击查看'
             speech = '以下是%s天的行程：' % num_days
         elif userlocale in ('zh_tw', 'zh_hk'):
@@ -653,25 +651,22 @@ def process_request(req):
             'city': city,
             'lang': userlocale
         }
+
         tf_res = exapi_travelflan_itin(_data)
-
-        num_data = len(tf_res)
-
         data = list()
 
-        for day in range(1, num_data + 1):
+        for day in range(1, len(tf_res) + 1):
             d = tf_res['day%d' % (day,)]
             elements = list()
 
             if userlocale in ('zh_cn', 'zh_tw', 'zh_hk'):
-                map_url = 'http://www.google.cn/maps/dir'
+                map_url = 'http://maps.google.cn/maps?saddr=%s&daddr=%s&dirflg=r'
             else:
-                map_url = 'https://www.google.com/maps/dir'
-            map_subtitle = ''
+                map_url = 'https://www.google.com/maps?saddr=%s&daddr=%s&dirflg=r'
 
             speech += 'Day {}:\n'.format(day)
-            place_num = 1
             for j, day_item in enumerate(d):
+                prev_map = None
                 for k, item in enumerate(day_item):
                     if item['locale'].lower() == userlocale:
                         title = item['name']
@@ -680,7 +675,7 @@ def process_request(req):
                         link = item['link']
 
                         fb_item = {
-                            'title': 'Day {}-{}: {}'.format(day, j+1, title),
+                            'title': 'Day {}-{}: {}'.format(day, j + 1, title),
                             'subtitle': subtitle,
                             'image_url': image_url,
                             'buttons': [
@@ -691,31 +686,27 @@ def process_request(req):
                                 }
                             ]
                         }
-                        if place_num == 1:
-                            map_subtitle += '{}'.format(title)
-                        else:
-                            map_subtitle += ' - {}'.format(title)
 
-                        map_url += '/{}'.format(title)
-                        place_num = place_num + 1
+                        if prev_map:
+                            map_item = {
+                                'title': 'Day {}: {}'.format(day, map_title),
+                                'subtitle': prev_map + '-' + title,
+                                'image_url': MAP_IMAGE_URL,
+                                'buttons': [
+                                    {
+                                        'type': 'web_url',
+                                        'url': map_url % (prev_map, title),
+                                        'title': button_title
+                                    }
+                                ]
+                            }
+                            elements.append(map_item)
+
+                        prev_map = title.replace(' ', '+')
                         elements.append(fb_item)
-                        speech += '(%s) %s\n' % (j+1, title)
+                        speech += '(%s) %s\n' % (j + 1, title)
                     else:
                         print('passing item %s' % (j + 1))
-
-            map_item = {
-                'title': 'Day {}: {}'.format(day, map_title),
-                'subtitle': map_subtitle,
-                'image_url': MAP_IMAGE_URL,
-                'buttons': [
-                    {
-                        'type': 'web_url',
-                        'url': map_url,
-                        'title': button_title
-                    }
-                ]
-            }
-            elements.append(map_item)
 
             data_item = {
                 'attachment_type': 'template',
@@ -732,16 +723,6 @@ def process_request(req):
             if l > 500:
                 speech = speech[:l - len(x)] + '\n\n...'
                 break
-
-        # data = [
-        #     {
-        #         'attachment_type': 'template',
-        #         'attachment_payload': {
-        #             'template_type': 'generic',
-        #             'elements': elements
-        #         }
-        #     }
-        # ]
 
         res = {
             'speech': speech,
