@@ -598,6 +598,7 @@ def process_request(req):
                 map_url = 'http://www.google.cn/maps/dir'
             else:
                 map_url = 'https://www.google.com/maps/dir'
+            map_subtitle = ''
 
             speech += 'Day {}:\n'.format(day)
             place_num = 1
