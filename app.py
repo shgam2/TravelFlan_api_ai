@@ -541,15 +541,15 @@ def process_request(req):
         if userlocale == 'zh_cn':
             map_title = 'How to get around' #needs translation
             button_title = '点击查看'
-            speech = 'Here is the recommended tours in %s.\n' % city
+            speech = 'Here are the top recommended tours in %s.\n' % city
         elif userlocale in ('zh_tw', 'zh_hk'):
             map_title = 'How to get around'  # needs translation
             button_title = '點擊查看'
-            speech = 'Here is the recommended tours in %s.\n' % city
+            speech = 'Here are the top recommended tours in %s.\n' % city
         else:
             map_title = 'How to get around'
             button_title = 'Click to view'
-            speech = 'Here is the recommended tours in %s.\n' % city
+            speech = 'Here are the top recommended tours in %s.\n' % city
 
         _data = {
             'city': city,
@@ -575,7 +575,7 @@ def process_request(req):
                         link = item['link']
 
                         fb_item = {
-                            'title': 'Day {}-{}: {}'.format(day, j + 1, title),
+                            'title': 'Tour {}: {}'.format(j + 1, title),
                             'subtitle': subtitle,
                             'image_url': image_url,
                             'buttons': [
