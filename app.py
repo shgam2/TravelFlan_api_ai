@@ -613,7 +613,7 @@ def process_request(req):
                         link = item['link']
 
                         fb_item = {
-                            'title': '(Day {}) Place #{}: {}'.format(j, place_num, title),
+                            'title': 'Day {}-{}: {}'.format(day, k, title),
                             'subtitle': subtitle,
                             'image_url': image_url,
                             'buttons': [
