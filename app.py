@@ -581,10 +581,10 @@ def process_request(req):
         data = list()
         # elements = list()
         for i, itin_item in enumerate(tf_res):
-            print('----------- day %s -----------' % i+1)
+            print('----------- day {} -----------'.format(i+1))
             elements = list()
 
-            speech += 'Day %s:\n' % i
+            speech += 'Day %i:\n' % i+1
 
             for j, day_item in enumerate(itin_item):
                 print('day_item #%s: \n%s'(j+1, day_item))
