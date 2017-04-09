@@ -556,8 +556,9 @@ def process_request(req):
             'lang': userlocale
         }
         tf_res = exapi_travelflan_itin(_data)
-        num_data = len(tf_res)
-        print('num_data: %s' % num_data)
+        # num_data = len(tf_res)
+        print('tf_res ***********************\n%s' % tf_res)
+        #print('num_data: %s' % num_data)
 
 
         # temp locations set
