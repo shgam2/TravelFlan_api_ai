@@ -635,15 +635,15 @@ def process_request(req):
         city = req['result']['parameters'].get('city')
 
         if userlocale == 'zh_cn':
-            map_title = 'How to get around'  # needs translation
+            map_title = '地图 - %s -> %s'
             button_title = '点击查看'
             speech = '以下是%s天的行程：' % num_days
         elif userlocale in ('zh_tw', 'zh_hk'):
-            map_title = 'How to get around'  # needs translation
+            map_title = '地圖 - %s -> %s'
             button_title = '點擊查看'
             speech = '以下是%s天的行程：' % num_days
         else:
-            map_title = 'How to get around'
+            map_title = 'Map - %s -> %s'
             button_title = 'Click to view'
             speech = 'Here is the %s-day itinerary.\n' % num_days
         _data = {
@@ -654,6 +654,7 @@ def process_request(req):
 
         tf_res = exapi_travelflan_itin(_data)
         data = list()
+        map_data = list()
 
         for day in range(1, len(tf_res) + 1):
             d = tf_res['day%d' % (day,)]
@@ -689,8 +690,7 @@ def process_request(req):
 
                         if prev_map:
                             map_item = {
-                                'title': 'Day {}: {}'.format(day, map_title),
-                                'subtitle': prev_map + '-' + title,
+                                'title': 'Day {}: {}'.format(day, map_title % (prev_map, title)),
                                 'image_url': MAP_IMAGE_URL,
                                 'buttons': [
                                     {
@@ -700,13 +700,14 @@ def process_request(req):
                                     }
                                 ]
                             }
-                            elements.append(map_item)
+                            map_data.append(map_item)
 
                         prev_map = title
                         elements.append(fb_item)
                         speech += '(%s) %s\n' % (j + 1, title)
                         break
 
+            elements += map_data
             data_item = {
                 'attachment_type': 'template',
                 'attachment_payload': {
