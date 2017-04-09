@@ -21,6 +21,9 @@ gmaps = googlemaps.Client(key='AIzaSyB8ri2uUrjtGX2tgOoK_vMSo8ByuP31Njs')
 YAHOO_YQL_BASE_URL = 'https://query.yahooapis.com/v1/public/yql?'
 TRANSLATE_BASE_URL = 'http://awseb-e-f-AWSEBLoa-VIW6OYVV6CSY-1979702995.us-east-1.elb.amazonaws.com/translate?'
 
+TF_ITINERARY_URL = 'https://flanb-test.travelflan.com/data/itinerary?'
+TF_TOUR_URL = 'https://flanb-test.travelflan.com/data/tour?'
+
 PENGTAI_URL = 'http://www.hanguoing.cn/exApi/travelFlan'
 PENGTAI_TEST_URL = 'http://test1.hanguoing.com/exApi/travelFlan'
 PENGTAI_KEY = 'xmvoqpfvmffosqksrkqtmqslek'
@@ -347,13 +350,35 @@ def parse_json(req):
     return speech, data
 
 
-def exapi_travelflan(data):
-    print('num_days: %s' % (data['num_days']))
-    print('city: %s' % (data['city']))
-    lang = data['lang']
-    print('lang: %s' % lang)
+def exapi_travelflan_itin(data):
+    print('num_days: %s' % data['num_days'])
+    print('city: %s' % data['city'])
+    print('lang: %s' % data['lang'])
 
-    return True
+    itinerary_url = TF_ITINERARY_URL + urlencode({'locale': data['lang'], 'days': data['num_days'], 'area': data['city']})
+
+    try:
+        res = requests.get(itinerary_url)
+        return res.json()
+    except Exception as e:
+        print(e)
+        return None
+
+
+def exapi_travelflan_tour(data):
+    print('num_days: %s' % data['num_days'])
+    print('city: %s' % data['city'])
+    print('lang: %s' % data['lang'])
+
+    tour_url = TF_TOUR_URL + urlencode({'locale': data['lang'], 'days': data['num_days'], 'area': data['city']})
+
+    try:
+        res = requests.get(tour_url)
+        return res.json()
+    except Exception as e:
+        print(e)
+        return None
+
 
 def exapi_pengtai(data):
     timestamp = str(int(time.time()))
@@ -513,108 +538,114 @@ def process_request(req):
             'source': 'apiai-weather'
         }
     elif action == 'itinerary':
-        print('in the itinerary action')
-        if userlocale == 'zh_cn':
-            button_title = '点击查看'
-        elif userlocale in ('zh_tw', 'zh_hk'):
-            button_title = '點擊查看'
-        else:
-            button_title = 'Click to view'
-
         num_days = req['result']['parameters'].get('num_days')
         city = req['result']['parameters'].get('city')
+
+        if userlocale == 'zh_cn':
+            button_title = '点击查看'
+            speech = '以下是%s天的行程：' % num_days
+        elif userlocale in ('zh_tw', 'zh_hk'):
+            button_title = '點擊查看'
+            speech = '以下是%s天的行程：' % num_days
+        else:
+            button_title = 'Click to view'
+            speech = 'Here is the %s-day itinerary.' % num_days
         _data = {
             'num_days': num_days,
             'city': city,
             'lang': userlocale
         }
+        tf_res = exapi_travelflan_itin(_data)
+        num_data = len(tf_res)
 
-        if exapi_travelflan(_data) == True:
-            loc1 = 'Osaka'
-            loc2 = 'Nara'
-            loc3 = 'Kyoto'
+        # temp locations set
+        # loc1 = 'Osaka'
+        # loc2 = 'Nara'
+        # loc3 = 'Kyoto'
 
-            if userlocale in ('zh_CN', 'zh_TW', 'zh_HK'):
-                url = 'http://www.google.cn/maps/dir/%s/%s/%s' % (
-                    loc1.replace(' ', '+'), loc2.replace(' ', '+'), loc3.replace(' ', '+'))
-            else:
-                url = 'https://www.google.com/maps/dir/%s/%s/%s' % (
-                    loc1.replace(' ', '+'), loc2.replace(' ', '+'), loc3.replace(' ', '+'))
-            print('url is %s' % url)
 
-            data = list()
-            # elements = list()
-            for i in range(1, num_days):
-                elements = list()
 
-                speech = 'Day %s:\n' % i
-                for j in range(1, 4):
-                    fb_item = {
-                        'title': 'Temp_title_%s' % j,
-                        'subtitle': 'Temp_subtitle_%s\nTemp_address_%s' % (j, j),
-                        'image_url': MAP_IMAGE_URL,
-                        'buttons': [
-                            {
-                                'type': 'web_url',
-                                'url': 'www.google.com',
-                                'title': 'TEMP BUTTON TITLE'
-                            }
-                        ]
-                    }
-                    elements.append(fb_item)
-                    print('elements now: %s' % elements)
-                    speech += '(%s) Temp_title_%s\n' % (j, j)
+        if userlocale in ('zh_CN', 'zh_TW', 'zh_HK'):
+            url = 'http://www.google.cn/maps/dir/%s/%s/%s' % (
+                loc1.replace(' ', '+'), loc2.replace(' ', '+'), loc3.replace(' ', '+'))
+        else:
+            url = 'https://www.google.com/maps/dir/%s/%s/%s' % (
+                loc1.replace(' ', '+'), loc2.replace(' ', '+'), loc3.replace(' ', '+'))
+        print('url is %s' % url)
 
-                map_item = {
-                    'title': 'temp_map_title',
-                    'subtitle': ' \n ',
+
+        data = list()
+        # elements = list()
+        for i in range(1, num_days+1):
+            elements = list()
+
+
+            speech += 'Day %s:\n' % i
+
+            for j in range(1, 4): #insert number of data for each day
+                fb_item = {
+                    'title': 'Temp_title_%s' % j,
+                    'subtitle': 'Temp_subtitle_%s\nTemp_address_%s' % (j, j),
                     'image_url': MAP_IMAGE_URL,
                     'buttons': [
                         {
                             'type': 'web_url',
-                            'url': url,
+                            'url': 'www.google.com',
                             'title': button_title
                         }
                     ]
                 }
-                elements.append(map_item)
+                elements.append(fb_item)
+                print('elements now: %s' % elements)
+                speech += '(%s) Temp_title_%s\n' % (j, j)
 
-                data_item = {
-                    'attachment_type': 'template',
-                    'attachment_payload': {
-                        'template_type': 'generic',
-                        'elements': elements
+            map_item = {
+                'title': 'temp_map_title',
+                'subtitle': ' \n ',
+                'image_url': MAP_IMAGE_URL,
+                'buttons': [
+                    {
+                        'type': 'web_url',
+                        'url': url,
+                        'title': button_title
                     }
-                }
-                data.append(data_item)
-
-            l = 0
-            for x in speech.split('\n'):
-                l += len(x)
-                if l > 500:
-                    speech = speech[:l - len(x)] + '\n\n...'
-                    break
-
-            # data = [
-            #     {
-            #         'attachment_type': 'template',
-            #         'attachment_payload': {
-            #             'template_type': 'generic',
-            #             'elements': elements
-            #         }
-            #     }
-            # ]
-
-            res = {
-                'speech': speech,
-                'displayText': speech,
-                'source': 'apiai-itinerary',
-                'data': data
+                ]
             }
-        else:
-            return None
+            elements.append(map_item)
+
+            data_item = {
+                'attachment_type': 'template',
+                'attachment_payload': {
+                    'template_type': 'generic',
+                    'elements': elements
+                }
+            }
+            data.append(data_item)
+
+        l = 0
+        for x in speech.split('\n'):
+            l += len(x)
+            if l > 500:
+                speech = speech[:l - len(x)] + '\n\n...'
+                break
+
+        # data = [
+        #     {
+        #         'attachment_type': 'template',
+        #         'attachment_payload': {
+        #             'template_type': 'generic',
+        #             'elements': elements
+        #         }
+        #     }
+        # ]
+
+        res = {
+            'speech': speech,
+            'displayText': speech,
+            'source': 'apiai-itinerary',
+            'data': data
+        }
     elif action == 'direction':
-        print("yes here")
         speech, data = parse_json(req)
         print('SPEECH IS \n%s' % (speech))
         res = {
