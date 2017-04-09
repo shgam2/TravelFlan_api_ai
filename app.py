@@ -754,6 +754,7 @@ def process_request(req):
         url = TRANSLATE_BASE_URL + urlencode({'text': phrase, 'to': code, 'authtoken': 'dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
         print('33333')
         _res = urlopen(url).read()
+        print('12345')
         tmpl = get_response_template(userlocale)
         print('44444')
         language = convert_langauge_to_user_locale(language.lower(), userlocale)
