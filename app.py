@@ -595,10 +595,10 @@ def process_request(req):
             elements = list()
 
             speech += 'Day {}:\n'.format(day)
-
+            place_num = 1
             for j, day_item in enumerate(d):
                 # print('day_item #{}: \n{}'.format(j+1, day_item))
-                place_num = 1
+
                 print('1. place_num = {}'.format(place_num))
                 for k, item in enumerate(day_item):
                     # print('item["locale""] = {}'.format(item['locale']))
