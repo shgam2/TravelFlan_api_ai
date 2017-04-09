@@ -610,8 +610,8 @@ def process_request(req):
 
                         print('2222222222')
 
-                        image_url = day_item['photo']
-                        link = day_item['link']
+                        image_url = item['photo']
+                        link = item['link']
 
                         fb_item = {
                             'title': title,
