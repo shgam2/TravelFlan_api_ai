@@ -586,7 +586,7 @@ def process_request(req):
 
             speech += 'Day %s:\n' % i
 
-            for j, day_item in itin_item:
+            for j, day_item in enumerate(itin_item):
                 print('item #%s' % j)
                 if day_item['locale'].lower() == userlocale:
                     print('item (%s)' % userlocale)
