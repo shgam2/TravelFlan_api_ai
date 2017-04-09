@@ -549,7 +549,7 @@ def process_request(req):
             speech = '以下是%s天的行程：' % num_days
         else:
             button_title = 'Click to view'
-            speech = 'Here is the %s-day itinerary.' % num_days
+            speech = 'Here is the %s-day itinerary.\n' % num_days
         _data = {
             'num_days': num_days,
             'city': city,
@@ -570,12 +570,10 @@ def process_request(req):
 
 
         if userlocale in ('zh_CN', 'zh_TW', 'zh_HK'):
-            url = 'http://www.google.cn/maps/dir/%s/%s/%s' % (
-                loc1.replace(' ', '+'), loc2.replace(' ', '+'), loc3.replace(' ', '+'))
+            map_url = 'http://www.google.cn/maps/dir'
         else:
-            url = 'https://www.google.com/maps/dir/%s/%s/%s' % (
-                loc1.replace(' ', '+'), loc2.replace(' ', '+'), loc3.replace(' ', '+'))
-        print('url is %s' % url)
+            map_url = 'https://www.google.com/maps/dir'
+        print('url is %s' % map_url)
 
 
         data = list()
@@ -591,12 +589,14 @@ def process_request(req):
 
             for j, day_item in enumerate(d):
                 print('day_item #{}: \n{}'.format(j+1, day_item))
+                place_num = 1
                 for k, item in enumerate(day_item):
                     print('item["locale""] = {}'.format(item['locale']))
 
                     if item['locale'].lower() == userlocale:
                         print('item #{} ({}) '.format(j + 1, userlocale))
-                        title = item['name']
+                        title = 'Day 1 - Place #{}: {}'.format(place_num, item['name'])
+                        place_num += 1
                         subtitle = item['highlight']
 
                         print('1111111111')
@@ -627,7 +627,7 @@ def process_request(req):
                         }
                         elements.append(fb_item)
                         print('elements now: %s' % elements)
-                        speech += '(%s) %s\n' % (j, title)
+                        speech += '(%s) %s\n' % (j+1, title)
                     else:
                         print('passing item %s' % (j + 1))
 
@@ -639,7 +639,7 @@ def process_request(req):
                 'buttons': [
                     {
                         'type': 'web_url',
-                        'url': url,
+                        'url': map_url,
                         'title': button_title
                     }
                 ]
