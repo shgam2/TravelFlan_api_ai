@@ -654,11 +654,11 @@ def process_request(req):
 
         tf_res = exapi_travelflan_itin(_data)
         data = list()
-        map_data = list()
 
         for day in range(1, len(tf_res) + 1):
             d = tf_res['day%d' % (day,)]
             elements = list()
+            map_data = list()
 
             if userlocale in ('zh_cn', 'zh_tw', 'zh_hk'):
                 map_url = 'http://maps.google.cn/maps?saddr=%s&daddr=%s&dirflg=r'
