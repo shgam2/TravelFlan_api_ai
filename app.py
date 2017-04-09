@@ -695,14 +695,14 @@ def process_request(req):
                                 'buttons': [
                                     {
                                         'type': 'web_url',
-                                        'url': map_url % (prev_map, title),
+                                        'url': map_url % (prev_map.replace(' ', '+'), title.replace(' ', '+')),
                                         'title': button_title
                                     }
                                 ]
                             }
                             elements.append(map_item)
 
-                        prev_map = title.replace(' ', '+')
+                        prev_map = title
                         elements.append(fb_item)
                         speech += '(%s) %s\n' % (j + 1, title)
                         break
