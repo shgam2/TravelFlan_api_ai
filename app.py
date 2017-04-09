@@ -594,6 +594,11 @@ def process_request(req):
             # print(d)
             elements = list()
 
+            if userlocale in ('zh_cn', 'zh_tw', 'zh_hk'):
+                map_url = 'http://www.google.cn/maps/dir'
+            else:
+                map_url = 'https://www.google.com/maps/dir'
+
             speech += 'Day {}:\n'.format(day)
             place_num = 1
             for j, day_item in enumerate(d):
@@ -619,7 +624,7 @@ def process_request(req):
                         link = item['link']
 
                         fb_item = {
-                            'title': 'Day {}-{}: {}'.format(day, k, title),
+                            'title': 'Day {}-{}: {}'.format(day, j, title),
                             'subtitle': subtitle,
                             'image_url': image_url,
                             'buttons': [
