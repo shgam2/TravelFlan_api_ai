@@ -595,8 +595,7 @@ def process_request(req):
 
                     if item['locale'].lower() == userlocale:
                         print('item #{} ({}) '.format(j + 1, userlocale))
-                        title = 'Day 1 - Place #{}: {}'.format(place_num, item['name'])
-                        place_num += 1
+                        title = item['name']
                         subtitle = item['highlight']
 
                         print('1111111111')
@@ -614,7 +613,7 @@ def process_request(req):
                         link = item['link']
 
                         fb_item = {
-                            'title': title,
+                            'title': '(Day {}) Place #{}: {}'.format(j, place_num, title),
                             'subtitle': subtitle,
                             'image_url': image_url,
                             'buttons': [
@@ -625,6 +624,7 @@ def process_request(req):
                                 }
                             ]
                         }
+                        place_num = place_num + 1
                         elements.append(fb_item)
                         print('elements now: %s' % elements)
                         speech += '(%s) %s\n' % (j+1, title)
