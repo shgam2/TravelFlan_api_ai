@@ -588,6 +588,7 @@ def process_request(req):
 
             for j, day_item in enumerate(itin_item):
                 print('day_item #{}: \n{}'.format(j+1, day_item))
+                print('day_item["locale""] = {}'.format(day_item['locale']))
                 if day_item['locale'].lower() == userlocale:
                     print('item #{} ({}) '.format(j+1, userlocale))
                     title = day_item['name']
