@@ -625,7 +625,7 @@ def process_request(req):
                         link = item['link']
 
                         fb_item = {
-                            'title': 'Day {}-{}: {}'.format(day, j, title),
+                            'title': 'Day {}-{}: {}'.format(day, j+1, title),
                             'subtitle': subtitle,
                             'image_url': image_url,
                             'buttons': [
@@ -642,11 +642,7 @@ def process_request(req):
                             map_subtitle += ' - {}'.format(title)
 
                         map_url += '/{}'.format(title)
-
-                        print('2. place_num = {}'.format(place_num))
                         place_num = place_num + 1
-                        print('3. place_num = {}'.format(place_num))
-
 
                         elements.append(fb_item)
                         # print('elements now: %s' % elements)
