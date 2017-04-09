@@ -396,12 +396,16 @@ def exapi_pengtai(data):
 
 def process_request(req):
     res = None
+    print('1111111')
     try:
         userlocale = req['originalRequest']['data']['locale'].lower()
     except Exception as e:
         userlocale = 'zh_cn'
     print('req is {}'.format(req))
+    print('222222222')
     action = req['result']['action']
+
+    print('111 action is {}'.format(action))
     if action == 'prev_context':
         action = req['result']['parameters'].get('prev-action')
         if req['result']['parameters'].get('city'):
@@ -848,6 +852,7 @@ def process_request(req):
                 'data': data
             }
     elif action in ('attraction', 'accommodation', 'restaurant', 'shopping'):
+        print('333333333')
         if userlocale == 'zh_cn':
             lang = '01'
             button_title = '点击查看'
@@ -858,7 +863,10 @@ def process_request(req):
             lang = '04'
             button_title = 'Click to view'
 
+        print('444444444')
+
         if action == 'restaurant':
+            print('555555555')
             category1 = '3000'
             if req['result']['parameters'].get('cuisine'):
                 cuisine = req['result']['parameters']['cuisine'].lower()
@@ -960,10 +968,13 @@ def process_request(req):
                 return None
         else:
             category1 = None
+        print('66666666')
         if req['result']['parameters'].get('address'):
             address = req['result']['parameters']['address']
         else:
             address = req['result']['parameters']['prev-address']
+
+        print('7777777777')
 
         geocode_result = gmaps.geocode(address)
         latitude = geocode_result[0]['geometry']['location']['lat']
