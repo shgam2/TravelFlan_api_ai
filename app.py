@@ -366,7 +366,6 @@ def exapi_travelflan_itin(data):
 
 
 def exapi_travelflan_tour(data):
-    print('num_days: %s' % data['num_days'])
     print('city: %s' % data['city'])
     print('lang: %s' % data['lang'])
 
@@ -537,20 +536,116 @@ def process_request(req):
             'displayText': speech,
             'source': 'apiai-weather'
         }
+    elif action == 'tour':
+        city = req['result']['parameters'].get('city')
+        if userlocale == 'zh_cn':
+            map_title = 'How to get around' #needs translation
+            button_title = '点击查看'
+            speech = 'Here is the recommended tours in %s.\n' % city
+        elif userlocale in ('zh_tw', 'zh_hk'):
+            map_title = 'How to get around'  # needs translation
+            button_title = '點擊查看'
+            speech = 'Here is the recommended tours in %s.\n' % city
+        else:
+            map_title = 'How to get around'
+            button_title = 'Click to view'
+            speech = 'Here is the recommended tours in %s.\n' % city
+
+        _data = {
+            'city': city,
+            'lang': userlocale
+        }
+        tf_res = exapi_travelflan_tour(_data)
+
+        num_data = len(tf_res)
+
+        data = list()
+
+        for day in range(1, num_data + 1):
+            d = tf_res['day%d' % (day,)]
+            elements = list()
+
+            place_num = 1
+            for j, day_item in enumerate(d):
+                for k, item in enumerate(day_item):
+                    if item['locale'].lower() == userlocale:
+                        title = item['name']
+                        subtitle = item['highlight']
+                        image_url = item['photo']
+                        link = item['link']
+
+                        fb_item = {
+                            'title': 'Day {}-{}: {}'.format(day, j + 1, title),
+                            'subtitle': subtitle,
+                            'image_url': image_url,
+                            'buttons': [
+                                {
+                                    'type': 'web_url',
+                                    'url': link,
+                                    'title': button_title
+                                }
+                            ]
+                        }
+
+                        # map_url += '/{}'.format(title)
+                        place_num = place_num + 1
+                        elements.append(fb_item)
+                        speech += '(%s) %s\n' % (j + 1, title)
+                    else:
+                        print('passing item %s' % (j + 1))
+
+            # map_item = {
+            #     'title': 'Day {}: {}'.format(day, map_title),
+            #     'subtitle': map_subtitle,
+            #     'image_url': MAP_IMAGE_URL,
+            #     'buttons': [
+            #         {
+            #             'type': 'web_url',
+            #             'url': map_url,
+            #             'title': button_title
+            #         }
+            #     ]
+            # }
+            # elements.append(map_item)
+
+            data_item = {
+                'attachment_type': 'template',
+                'attachment_payload': {
+                    'template_type': 'generic',
+                    'elements': elements
+                }
+            }
+            data.append(data_item)
+
+        l = 0
+        for x in speech.split('\n'):
+            l += len(x)
+            if l > 500:
+                speech = speech[:l - len(x)] + '\n\n...'
+                break
+
+        res = {
+            'speech': speech,
+            'displayText': speech,
+            'source': 'apiai-tour',
+            'data': data
+        }
+
+
     elif action == 'itinerary':
         num_days = req['result']['parameters'].get('num_days')
         city = req['result']['parameters'].get('city')
 
         if userlocale == 'zh_cn':
-            map_title = '地图'
+            map_title = 'How to get around' #needs translation
             button_title = '点击查看'
             speech = '以下是%s天的行程：' % num_days
         elif userlocale in ('zh_tw', 'zh_hk'):
-            map_title = '地圖'
+            map_title = 'How to get around'  # needs translation
             button_title = '點擊查看'
             speech = '以下是%s天的行程：' % num_days
         else:
-            map_title = 'Map'
+            map_title = 'How to get around'
             button_title = 'Click to view'
             speech = 'Here is the %s-day itinerary.\n' % num_days
         _data = {
@@ -609,7 +704,7 @@ def process_request(req):
                         print('passing item %s' % (j + 1))
 
             map_item = {
-                'title': 'Day {}:'.format(map_title),
+                'title': 'Day {}: {}'.format(day, map_title),
                 'subtitle': map_subtitle,
                 'image_url': MAP_IMAGE_URL,
                 'buttons': [
