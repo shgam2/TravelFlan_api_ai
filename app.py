@@ -580,7 +580,7 @@ def process_request(req):
 
         data = list()
         # elements = list()
-        for i, itin_item in tf_res:
+        for i, itin_item in enumerate(tf_res):
             print('----------- day %s -----------' % i)
             elements = list()
 
