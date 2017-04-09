@@ -582,6 +582,7 @@ def process_request(req):
         # elements = list()
         for i, itin_item in enumerate(tf_res):
             print('----------- day {} -----------'.format(i+1))
+            print(itin_item)
             elements = list()
 
             speech += 'Day {}:\n'.format(i+1)
