@@ -557,12 +557,14 @@ def process_request(req):
         }
         tf_res = exapi_travelflan_itin(_data)
         num_data = len(tf_res)
+        print('num_data: %s' % num_data)
+
 
         # temp locations set
-        # loc1 = 'Osaka'
-        # loc2 = 'Nara'
-        # loc3 = 'Kyoto'
-
+        loc1 = 'Osaka'
+        loc2 = 'Nara'
+        loc3 = 'Kyoto'
+        #for i, item in enumerate():
 
 
         if userlocale in ('zh_CN', 'zh_TW', 'zh_HK'):
