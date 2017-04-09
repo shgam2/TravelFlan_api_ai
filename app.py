@@ -580,14 +580,16 @@ def process_request(req):
 
         data = list()
         # elements = list()
-        for i, itin_item in enumerate(tf_res):
-            print('----------- day {} -----------'.format(i+1))
-            print(itin_item)
+
+        for day in range(1, num_data + 1):
+            d = tf_res['day%d' % (day,)]
+            print('----------- day {} -----------'.format(day))
+            print(d)
             elements = list()
 
-            speech += 'Day {}:\n'.format(i+1)
+            speech += 'Day {}:\n'.format(day)
 
-            for j, day_item in enumerate(itin_item):
+            for j, day_item in enumerate(d):
                 print('day_item #{}: \n{}'.format(j+1, day_item))
                 print('day_item["locale""] = {}'.format(day_item['locale']))
                 if day_item['locale'].lower() == userlocale:
