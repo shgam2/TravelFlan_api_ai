@@ -706,7 +706,7 @@ def process_request(req):
                         elements.append(fb_item)
                         speech += '(%s) %s\n' % (j + 1, title)
                     else:
-                        print('passing item %s' % (j + 1))
+                        pass
 
             data_item = {
                 'attachment_type': 'template',
@@ -730,6 +730,7 @@ def process_request(req):
             'source': 'apiai-itinerary',
             'data': data
         }
+        print(res)
     elif action == 'direction':
         speech, data = parse_json(req)
         print('SPEECH IS \n%s' % (speech))
