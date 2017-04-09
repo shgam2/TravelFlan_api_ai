@@ -594,10 +594,10 @@ def process_request(req):
                 for k, item in enumerate(day_item):
                     print('item["locale""] = {}'.format(item['locale']))
 
-                    if day_item['locale'].lower() == userlocale:
+                    if item['locale'].lower() == userlocale:
                         print('item #{} ({}) '.format(j + 1, userlocale))
-                        title = day_item['name']
-                        subtitle = day_item['highlight']
+                        title = item['name']
+                        subtitle = item['highlight']
 
                         print('1111111111')
 
