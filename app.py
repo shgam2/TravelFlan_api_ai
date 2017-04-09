@@ -615,11 +615,11 @@ def process_request(req):
                         subtitle = item['highlight']
 
                         l = 0
-                        for x in subtitle.split('\n'):
-                            l += len(x)
-                            if l > 70:
-                                subtitle = subtitle[:l - len(x)] + '\n\n...'
-                                break
+                        # for x in subtitle.split('\n'):
+                        #     l += len(x)
+                        #     if l > 70:
+                        #         subtitle = subtitle[:l - len(x)] + '\n\n...'
+                        #         break
 
                         image_url = item['photo']
                         link = item['link']
