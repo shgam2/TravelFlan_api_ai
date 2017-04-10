@@ -456,10 +456,10 @@ def process_request(req):
             if not date_period:
                 if userlocale == 'zh_cn':
                     temp = conv_weather_cond(condition['code'], 's_cn')
-                    speech = '%s的天气: %s, 温度是华氏%s°%s' % (city, temp, condition['temp'], units['temperature'])
+                    speech = '%s的天气: %s, 温度是%s°%s' % (city, temp, condition['temp'], units['temperature'])
                 elif userlocale in ('zh_tw', 'zh_hk'):
                     temp = conv_weather_cond(condition['code'], 't_cn')
-                    speech = '%s的天氣: %s, 溫度是華氏%s°%s' % (city, temp, condition['temp'], units['temperature'])
+                    speech = '%s的天氣: %s, 溫度是%s°%s' % (city, temp, condition['temp'], units['temperature'])
                 else:
                     speech = 'Current weather in %s: %s, the temperature is %s°%s' % (
                         location['city'], condition['text'],
