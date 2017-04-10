@@ -638,11 +638,11 @@ def process_request(req):
         if userlocale == 'zh_cn':
             map_title = '地图 - %s -> %s'
             button_title = '点击查看'
-            speech = '以下是%s天的行程：' % num_days
+            speech = '以下是%s天的行程：\n' % num_days
         elif userlocale in ('zh_tw', 'zh_hk'):
             map_title = '地圖 - %s -> %s'
             button_title = '點擊查看'
-            speech = '以下是%s天的行程：' % num_days
+            speech = '以下是%s天的行程：\n' % num_days
         else:
             map_title = 'Map - %s -> %s'
             button_title = 'Click to view'
@@ -692,7 +692,7 @@ def process_request(req):
                         if prev_map:
                             map_item = {
                                 'title': 'Day {}: {}'.format(day, map_title % (prev_map, title)),
-                                'subtitle': '',
+                                'subtitle': '\n',
                                 'image_url': MAP_IMAGE_URL,
                                 'buttons': [
                                     {
