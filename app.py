@@ -636,7 +636,7 @@ def process_request(req):
         city = req['result']['parameters'].get('city')
 
         if userlocale == 'zh_cn':
-            map_title = '地图 - %s -> %s'
+            map_title = '地图: %s -> %s'
             button_title = '点击查看'
             speech = '以下是%s天的行程：\n' % num_days
         elif userlocale in ('zh_tw', 'zh_hk'):
@@ -644,7 +644,7 @@ def process_request(req):
             button_title = '點擊查看'
             speech = '以下是%s天的行程：\n' % num_days
         else:
-            map_title = 'Map - %s -> %s'
+            map_title = 'Map: %s -> %s'
             button_title = 'Click to view'
             speech = 'Here is the %s-day itinerary.\n' % num_days
         _data = {
