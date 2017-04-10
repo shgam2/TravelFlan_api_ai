@@ -280,7 +280,7 @@ def get_gmap_directions(from_loc, to_loc, lang):
                 speech = speech[:l - len(x)] + '\n\n...'
                 break
     else:
-        speech = 'None' #Need to change this to None without quotes? ###########
+        speech = '' #Need to change this to None without quotes? ###########
 
 
 
