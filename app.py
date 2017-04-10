@@ -692,6 +692,7 @@ def process_request(req):
                         if prev_map:
                             map_item = {
                                 'title': 'Day {}: {}'.format(day, map_title % (prev_map, title)),
+                                'subtitle': '',
                                 'image_url': MAP_IMAGE_URL,
                                 'buttons': [
                                     {
