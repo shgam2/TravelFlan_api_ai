@@ -388,6 +388,7 @@ def exapi_pengtai(data):
 
     try:
         res = requests.get(PENGTAI_TEST_URL, headers=headers, params=data)
+        print(res)
         return res.json()
     except Exception as e:
         print(e)
@@ -743,7 +744,7 @@ def process_request(req):
             'data': data
         }
     elif action == 'translation':
-        print('11111')
+        print('11111')-8
         if req['result']['parameters'].get('translation'):
             language = req['result']['parameters']['translation']['language']
         elif req['result']['parameters'].get('language'):
