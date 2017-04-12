@@ -388,7 +388,8 @@ def exapi_pengtai(data):
 
     try:
         res = requests.get(PENGTAI_TEST_URL, headers=headers, params=data)
-        print(res)
+        print('thomas1')
+        print(res.json())
         return res.json()
     except Exception as e:
         print(e)
