@@ -1019,7 +1019,7 @@ def process_request(req):
                 speech += '%s. Name: %s\nSummary: %s\nAddress: %s\ntel: %s\n' % (
                     i + 1, item['name'], item['summary'], item['address'], item['tel']
                 )
-                if (item['besinessHours'] is None) or item['besinessHours'] == "":
+                if (item['besinessHours'] is not None) and item['besinessHours'] != "":
                     speech += 'Business hours: %s\n\n' % (item['besinessHours'])
 
             l = 0
