@@ -375,7 +375,6 @@ def exapi_travelflan_itin(data):
     print('city: %s' % data['city'])
     print('num_days: %s' % data['num_days'])
     print('theme: %s' % data['theme'])
-    print('lang: %s' % data['lang'])
 
     if data['theme'] in ('Food', '美食'):
         theme = 1
@@ -388,9 +387,8 @@ def exapi_travelflan_itin(data):
     else:
         theme = 0
 
-    itinerary_url = TF_ITINERARY_URL + urlencode({'locale': data['lang'],
+    itinerary_url = TF_ITINERARY_URL + urlencode({'area': data['city'].lower(),
                                                   'days': data['num_days'],
-                                                  'area': data['city'],
                                                   'theme': theme})
 
     try:
