@@ -267,7 +267,6 @@ def get_gmap_directions(from_loc, to_loc, lang):
                                               step['transit_details']['arrival_stop']['name'])
             route += '\n'
 
-
         speech = 'Fare: %s\n' \
                  'Departure Time: %s\n' \
                  'Arrival Time: %s\n' \
@@ -304,9 +303,7 @@ def get_gmap_directions(from_loc, to_loc, lang):
                 speech = speech[:l - len(x)] + '\n\n...'
                 break
     else:
-        speech = '' #Need to change this to None without quotes? ###########
-
-
+        speech = ''  # Need to change this to None without quotes? ###########
 
     if lang == 'zh_TW' or lang == 'zh_HK':
         title = '地圖 - %s -> %s' % (from_loc, to_loc)
@@ -379,7 +376,7 @@ def exapi_travelflan_itin(data):
     print('city: %s' % data['city'])
     print('lang: %s' % data['lang'])
 
-    itinerary_url = TF_ITINERARY_URL #+ urlencode({'locale': data['lang'], 'days': data['num_days'], 'area': data['city']})
+    itinerary_url = TF_ITINERARY_URL  # + urlencode({'locale': data['lang'], 'days': data['num_days'], 'area': data['city']})
 
     try:
         res = requests.get(itinerary_url)
@@ -393,7 +390,7 @@ def exapi_travelflan_tour(data):
     print('city: %s' % data['city'])
     print('lang: %s' % data['lang'])
 
-    tour_url = TF_TOUR_URL #+ urlencode({'locale': data['lang'], 'days': data['num_days'], 'area': data['city']})
+    tour_url = TF_TOUR_URL  # + urlencode({'locale': data['lang'], 'days': data['num_days'], 'area': data['city']})
 
     try:
         res = requests.get(tour_url)
@@ -498,7 +495,7 @@ def process_request(req):
                 check_date2 = datetime.strptime(check_date2, '%Y-%m-%d')
                 if check_date1 > datetime.strptime(forecast_items[9]['date'],
                                                    '%d %b %Y') or check_date2 < datetime.strptime(
-                        forecast_items[0]['date'], '%d %b %Y'):
+                    forecast_items[0]['date'], '%d %b %Y'):
                     return None
 
                 if userlocale == 'zh_cn':
@@ -533,10 +530,10 @@ def process_request(req):
             if date.lower() in ('now', "现在"):
                 if userlocale == 'zh_cn':
                     speech = '%s的天气: %s, 温度是华氏%s°%s' % (
-                    city, conv_weather_cond(condition['code'], 's_cn'), condition['temp'], units['temperature'])
+                        city, conv_weather_cond(condition['code'], 's_cn'), condition['temp'], units['temperature'])
                 elif userlocale in ('zh_tw', 'zh_hk'):
                     speech = '%s的天氣: %s, 溫度是華氏%s°%s' % (
-                    city, conv_weather_cond(condition['code'], 's_cn'), condition['temp'], units['temperature'])
+                        city, conv_weather_cond(condition['code'], 's_cn'), condition['temp'], units['temperature'])
                 else:
                     speech = 'Current weather in %s: %s, the temperature is %s°%s' % (
                         location['city'], condition['text'],
@@ -570,7 +567,7 @@ def process_request(req):
         city = req['result']['parameters'].get('city')
         if userlocale == 'zh_cn':
             button_title = '点击查看'
-            speech = '可唔可以介紹%s既必去當地團俾我呀.\n' % city # this is in traditional chinese atm. need to fix this later
+            speech = '可唔可以介紹%s既必去當地團俾我呀.\n' % city  # this is in traditional chinese atm. need to fix this later
         elif userlocale in ('zh_tw', 'zh_hk'):
             button_title = '點擊查看'
             speech = '可唔可以介紹%s既必去當地團俾我呀.\n' % city
@@ -658,50 +655,51 @@ def process_request(req):
             'data': data
         }
     elif action == 'Itinerary':
-        if req['result']['resolvedQuery'] == 'ITINERARY- Itinerary':
-            data = []
-            if userlocale == 'zh_cn':
-                speech = 'Where are you going?'
-                title = ['Seoul', 'Busan', 'Tokyo', 'Osaka']
-            elif userlocale in ('zh_tw', 'zh_hk'):
-                speech = 'Where are you going?'
-                title = ['Seoul', 'Busan', 'Tokyo', 'Osaka']
-            else:
-                speech = 'Where are you going?'
-                title = ['Seoul', 'Busan', 'Tokyo', 'Osaka']
-            datum = {
-                'text': speech,
-                'quick_replies': [
-                    {
-                        'content_type': 'text',
-                        'title': title[0],
-                        'payload': 'SEOUL'
-                    },
-                    {
-                        'content_type': 'text',
-                        'title': title[1],
-                        'payload': 'BUSAN'
-                    },
-                    {
-                        'content_type': 'text',
-                        'title': title[2],
-                        'payload': 'TOKYO'
-                    },
-                    {
-                        'content_type': 'text',
-                        'title': title[3],
-                        'payload': 'OSAKA'
-                    }
-                ]
-            }
-            data.append(datum)
-            res = {
-                'speech': '',
-                'displayText': '',
-                'source': 'apiai-itinerary',
-                'data': data
-            }
-            return res
+        data = []
+        payload = ['SEOUL', 'BUSAN', 'TOKYO', 'OSAKA']
+        if userlocale == 'zh_cn':
+            speech = 'Where are you going?'
+            title = ['Seoul', 'Busan', 'Tokyo', 'Osaka']
+        elif userlocale in ('zh_tw', 'zh_hk'):
+            speech = 'Where are you going?'
+            title = ['Seoul', 'Busan', 'Tokyo', 'Osaka']
+        else:
+            speech = 'Where are you going?'
+            title = ['Seoul', 'Busan', 'Tokyo', 'Osaka']
+        datum = {
+            'text': speech,
+            'quick_replies': [
+                {
+                    'content_type': 'text',
+                    'title': title[0],
+                    'payload': payload[0]
+                },
+                {
+                    'content_type': 'text',
+                    'title': title[1],
+                    'payload': payload[1]
+                },
+                {
+                    'content_type': 'text',
+                    'title': title[2],
+                    'payload': payload[2]
+                },
+                {
+                    'content_type': 'text',
+                    'title': title[3],
+                    'payload': payload[3]
+                }
+            ]
+        }
+        data.append(datum)
+        res = {
+            'speech': '',
+            'displayText': '',
+            'source': 'apiai-itinerary',
+            'data': data
+        }
+        return res
+    elif action == 'Itinerary - location':
         num_days = req['result']['parameters'].get('num_days')
         city = req['result']['parameters'].get('city')
 
@@ -813,7 +811,7 @@ def process_request(req):
             'data': data
         }
     elif action == 'translation':
-        print('11111')-8
+        print('11111') - 8
         if req['result']['parameters'].get('translation'):
             language = req['result']['parameters']['translation']['language']
         elif req['result']['parameters'].get('language'):
@@ -874,7 +872,9 @@ def process_request(req):
         if not cuisine_code:
             return None
 
-        url_lookup = GURUNAVI_SEARCH_URL + urlencode({'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en', 'areacode_l': location_code, 'category_l': cuisine_code})
+        url_lookup = GURUNAVI_SEARCH_URL + urlencode(
+            {'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en', 'areacode_l': location_code,
+             'category_l': cuisine_code})
         _res = requests.get(url_lookup).json()
 
         speech = ''
@@ -914,9 +914,9 @@ def process_request(req):
                         item['contacts']['tel'], item['business_hour']
                     )
 
-
                 speech += '%s. name: %s\nsummary: %s\naddress: %s\ntel: %s\nbusiness hours: %s\n\n' % (
-                    i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'], item['contacts']['tel'], item['business_hour']
+                    i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                    item['contacts']['tel'], item['business_hour']
                 )
             l = 0
             for x in speech.split('\n'):
@@ -1134,7 +1134,7 @@ def webhook():
     print('Request:\n%s' % (json.dumps(req, indent=4),))
     res = process_request(req)
     res = json.dumps(res, indent=4)
-    #print('Response:\n%s' % (res,))
+    # print('Response:\n%s' % (res,))
 
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
