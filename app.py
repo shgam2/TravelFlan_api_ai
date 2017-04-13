@@ -21,7 +21,7 @@ gmaps = googlemaps.Client(key='AIzaSyB8ri2uUrjtGX2tgOoK_vMSo8ByuP31Njs')
 YAHOO_YQL_BASE_URL = 'https://query.yahooapis.com/v1/public/yql?'
 TRANSLATE_BASE_URL = 'http://awseb-e-f-AWSEBLoa-VIW6OYVV6CSY-1979702995.us-east-1.elb.amazonaws.com/translate?'
 
-TF_ITINERARY_URL = 'https://flanb-test.travelflan.com/data/itinerary?type=0&area=seoul&days=5'
+TF_ITINERARY_URL = 'https://flanb-demo.travelflan.com/data/itinerary?type=0&'
 TF_TOUR_URL = 'https://flanb-test.travelflan.com/data/itinerary?type=1&area=seoul&days=1'
 
 PENGTAI_URL = 'http://www.hanguoing.cn/exApi/travelFlan'
@@ -372,11 +372,15 @@ def parse_json(req):
 
 
 def exapi_travelflan_itin(data):
+    print('address: %s' % data['address'])
     print('num_days: %s' % data['num_days'])
-    print('city: %s' % data['city'])
+    print('theme: %s' % data['theme'])
     print('lang: %s' % data['lang'])
 
-    itinerary_url = TF_ITINERARY_URL  # + urlencode({'locale': data['lang'], 'days': data['num_days'], 'area': data['city']})
+    itinerary_url = TF_ITINERARY_URL + urlencode({'locale': data['lang'],
+                                                  'days': data['num_days'],
+                                                  'area': data['address'],
+                                                  'theme': data['theme']})
 
     try:
         res = requests.get(itinerary_url)
@@ -700,8 +704,99 @@ def process_request(req):
         }
         return res
     elif action == 'Itinerary - location':
+        data = []
+        payload = ['5']
+        if userlocale == 'zh_cn':
+            speech = 'How many days do you want to go?'
+            title = ['5']
+        elif userlocale in ('zh_tw', 'zh_hk'):
+            speech = 'How many days do you want to go?'
+            title = ['5']
+        else:
+            speech = 'How many days do you want to go?'
+            title = ['5']
+        datum = {
+            'text': speech,
+            'quick_replies': [
+                {
+                    'content_type': 'text',
+                    'title': title[0],
+                    'payload': payload[0]
+                },
+                {
+                    'content_type': 'text',
+                    'title': title[1],
+                    'payload': payload[1]
+                },
+                {
+                    'content_type': 'text',
+                    'title': title[2],
+                    'payload': payload[2]
+                },
+                {
+                    'content_type': 'text',
+                    'title': title[3],
+                    'payload': payload[3]
+                }
+            ]
+        }
+        data.append(datum)
+        res = {
+            'speech': '',
+            'displayText': '',
+            'source': 'apiai-itinerary',
+            'data': data
+        }
+        return res
+    elif action == 'Itinerary - num_days':
+        data = []
+        payload = ['GENERAL', 'FOOD', 'SHOPPING', 'KIDS', 'SUBURBS']
+        if userlocale == 'zh_cn':
+            speech = 'What is the purpose of your travel?'
+            title = ['一般', '美食', '购物', '亲子', '近郊']
+        elif userlocale in ('zh_tw', 'zh_hk'):
+            speech = 'What is the purpose of your travel?'
+            title = ['一般', '美食', '購物', '親子', '近郊']
+        else:
+            speech = 'What is the purpose of your travel?'
+            title = ['General', 'Food', 'Shopping', 'Kids', 'Suburbs']
+        datum = {
+            'text': speech,
+            'quick_replies': [
+                {
+                    'content_type': 'text',
+                    'title': title[0],
+                    'payload': payload[0]
+                },
+                {
+                    'content_type': 'text',
+                    'title': title[1],
+                    'payload': payload[1]
+                },
+                {
+                    'content_type': 'text',
+                    'title': title[2],
+                    'payload': payload[2]
+                },
+                {
+                    'content_type': 'text',
+                    'title': title[3],
+                    'payload': payload[3]
+                }
+            ]
+        }
+        data.append(datum)
+        res = {
+            'speech': '',
+            'displayText': '',
+            'source': 'apiai-itinerary',
+            'data': data
+        }
+        return res
+    elif action == 'Itinerary - theme':
+        address = req['result']['parameters'].get('address')
         num_days = req['result']['parameters'].get('num_days')
-        city = req['result']['parameters'].get('city')
+        theme = req['result']['parameters'].get('theme')
 
         if userlocale == 'zh_cn':
             map_title = '地图: %s -> %s'
@@ -716,8 +811,9 @@ def process_request(req):
             button_title = 'Click to view'
             speech = 'Here is the %s-day itinerary.\n' % num_days
         _data = {
+            'address': address,
             'num_days': num_days,
-            'city': city,
+            'theme': theme,
             'lang': userlocale
         }
 
