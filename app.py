@@ -817,6 +817,7 @@ def process_request(req):
         }
 
         tf_res = exapi_travelflan_itin(_data)
+        print('!!!!!!!!!!!', tf_res)
         if not tf_res:
             return None
         data = list()
