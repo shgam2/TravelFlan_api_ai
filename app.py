@@ -377,10 +377,21 @@ def exapi_travelflan_itin(data):
     print('theme: %s' % data['theme'])
     print('lang: %s' % data['lang'])
 
+    if data['theme'] in ('Food', '美食'):
+        theme = 1
+    elif data['theme'] in ('Shopping', '购物', '購物'):
+        theme = 2
+    elif data['theme'] in ('Kids', '亲子', '親子'):
+        theme = 3
+    elif data['theme'] in ('Suburbs', '近郊'):
+        theme = 4
+    else:
+        theme = 0
+
     itinerary_url = TF_ITINERARY_URL + urlencode({'locale': data['lang'],
                                                   'days': data['num_days'],
                                                   'area': data['address'],
-                                                  'theme': data['theme']})
+                                                  'theme': theme})
 
     try:
         res = requests.get(itinerary_url)
