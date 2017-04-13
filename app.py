@@ -733,21 +733,6 @@ def process_request(req):
                     'content_type': 'text',
                     'title': title[0],
                     'payload': payload[0]
-                },
-                {
-                    'content_type': 'text',
-                    'title': title[1],
-                    'payload': payload[1]
-                },
-                {
-                    'content_type': 'text',
-                    'title': title[2],
-                    'payload': payload[2]
-                },
-                {
-                    'content_type': 'text',
-                    'title': title[3],
-                    'payload': payload[3]
                 }
             ]
         }
@@ -793,6 +778,11 @@ def process_request(req):
                     'content_type': 'text',
                     'title': title[3],
                     'payload': payload[3]
+                },
+                {
+                    'content_type': 'text',
+                    'title': title[4],
+                    'payload': payload[4]
                 }
             ]
         }
