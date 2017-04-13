@@ -266,12 +266,36 @@ def get_gmap_directions(from_loc, to_loc, lang):
                                               step['transit_details']['departure_stop']['name'],
                                               step['transit_details']['arrival_stop']['name'])
             route += '\n'
+
+
         speech = 'Fare: %s\n' \
                  'Departure Time: %s\n' \
                  'Arrival Time: %s\n' \
                  'Distance: %s\n' \
                  'Duration: %s\n\n' \
                  'Route:\n%s' % (fare, departure_time, arrival_time, distance, duration, route)
+
+        if lang == 'zh_TW' or lang == 'zh_HK':
+            speech = '費用: %s\n' \
+                     '出發時間: %s\n' \
+                     '抵達時間: %s\n' \
+                     '距離: %s\n' \
+                     '所需時間: %s\n\n' \
+                     '路線:\n%s' % (fare, departure_time, arrival_time, distance, duration, route)
+        elif lang == 'zh_CN':
+            speech = '费用: %s\n' \
+                     '出发时间: %s\n' \
+                     '抵达时间: %s\n' \
+                     '距离: %s\n' \
+                     '所需时间: %s\n\n' \
+                     '路线:\n%s' % (fare, departure_time, arrival_time, distance, duration, route)
+        else:
+            speech = 'Fare: %s\n' \
+                     'Departure Time: %s\n' \
+                     'Arrival Time: %s\n' \
+                     'Distance: %s\n' \
+                     'Duration: %s\n\n' \
+                     'Route:\n%s' % (fare, departure_time, arrival_time, distance, duration, route)
 
         l = 0
         for x in speech.split('\n'):
@@ -830,6 +854,23 @@ def process_request(req):
                     ]
                 }
                 elements.append(fb_item)
+                if userlocale == 'zh_cn':
+                    speech += '%s. 名称: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
+                        i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                        item['contacts']['tel'], item['business_hour']
+                    )
+                elif userlocale in ('zh_tw', 'zh_hk'):
+                    speech += '%s. 名稱: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
+                        i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                        item['contacts']['tel'], item['business_hour']
+                    )
+                else:
+                    speech += '%s. Name: %s\nSummary: %s\nAddress: %s\nTel: %s\nBusiness hours: %s\n\n' % (
+                        i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                        item['contacts']['tel'], item['business_hour']
+                    )
+
+
                 speech += '%s. name: %s\nsummary: %s\naddress: %s\ntel: %s\nbusiness hours: %s\n\n' % (
                     i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'], item['contacts']['tel'], item['business_hour']
                 )
@@ -1016,12 +1057,7 @@ def process_request(req):
                 }
                 elements.append(fb_item)
                 print('elements:::::::\n%s' % elements)
-                speech += '%s. Name: %s\nSummary: %s\nAddress: %s\ntel: %s\n' % (
-                    i + 1, item['name'], item['summary'], item['address'], item['tel']
-                )
-                if (item['besinessHours'] is not None) and item['besinessHours'] != "":
-                    speech += 'Business hours: %s\n\n' % (item['besinessHours'])
-
+                11111111111
             l = 0
             for x in speech.split('\n'):
                 l += len(x)
