@@ -658,6 +658,50 @@ def process_request(req):
             'data': data
         }
     elif action == 'itinerary':
+        if req['result']['resolvedQuery'] == 'Itinerary- Itinerary':
+            data = []
+            if userlocale == 'zh_cn':
+                speech = 'Where are you going?'
+                title = ['Seoul', 'Busan', 'Tokyo', 'Osaka']
+            elif userlocale in ('zh_tw', 'zh_hk'):
+                speech = 'Where are you going?'
+                title = ['Seoul', 'Busan', 'Tokyo', 'Osaka']
+            else:
+                speech = 'Where are you going?'
+                title = ['Seoul', 'Busan', 'Tokyo', 'Osaka']
+            datum = {
+                'text': speech,
+                'quick_replies': [
+                    {
+                        'content_type': 'text',
+                        'title': title[0],
+                        'payload': 'SEOUL'
+                    },
+                    {
+                        'content_type': 'text',
+                        'title': title[1],
+                        'payload': 'BUSAN'
+                    },
+                    {
+                        'content_type': 'text',
+                        'title': title[2],
+                        'payload': 'TOKYO'
+                    },
+                    {
+                        'content_type': 'text',
+                        'title': title[3],
+                        'payload': 'OSAKA'
+                    }
+                ]
+            }
+            data.append(datum)
+            res = {
+                'speech': '',
+                'displayText': '',
+                'source': 'apiai-itinerary',
+                'data': data
+            }
+            return res
         num_days = req['result']['parameters'].get('num_days')
         city = req['result']['parameters'].get('city')
 
