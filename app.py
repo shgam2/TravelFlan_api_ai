@@ -658,7 +658,7 @@ def process_request(req):
             'data': data
         }
     elif action == 'Itinerary':
-        if req['result']['resolvedQuery'] == 'Itinerary- Itinerary':
+        if req['result']['resolvedQuery'] == 'ITINERARY- Itinerary':
             data = []
             if userlocale == 'zh_cn':
                 speech = 'Where are you going?'
