@@ -390,7 +390,7 @@ def exapi_travelflan_itin(data):
     itinerary_url = TF_ITINERARY_URL + urlencode({'area': data['city'].lower(),
                                                   'days': data['num_days'],
                                                   'theme': theme})
-
+    print('itinerary_url:', itinerary_url)
     try:
         res = requests.get(itinerary_url)
         return res.json()
