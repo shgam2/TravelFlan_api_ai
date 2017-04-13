@@ -657,7 +657,7 @@ def process_request(req):
             'source': 'apiai-tour',
             'data': data
         }
-    elif action == 'itinerary':
+    elif action == 'Itinerary':
         if req['result']['resolvedQuery'] == 'Itinerary- Itinerary':
             data = []
             if userlocale == 'zh_cn':
