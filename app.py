@@ -669,7 +669,7 @@ def process_request(req):
             'source': 'apiai-tour',
             'data': data
         }
-    elif action == 'Itinerary':
+    elif action in ('Itinerary', 'Itinerary.Itinerary-fallback'):
         data = []
         payload = ['SEOUL', 'BUSAN', 'TOKYO', 'OSAKA']
         if userlocale == 'zh_cn':
@@ -714,7 +714,7 @@ def process_request(req):
             'data': data
         }
         return res
-    elif action == 'Itinerary.location':
+    elif action in ('Itinerary.location', 'Itinerary.location.Itinerary-location-fallback'):
         data = []
         payload = ['5']
         if userlocale == 'zh_cn':
@@ -744,7 +744,7 @@ def process_request(req):
             'data': data
         }
         return res
-    elif action == 'Itinerary.num_days':
+    elif action in ('Itinerary.num_days', 'Itinerary.num_days.Itinerary-num_days-fallback'):
         data = []
         payload = ['GENERAL', 'FOOD', 'SHOPPING', 'KIDS', 'SUBURBS']
         if userlocale == 'zh_cn':
@@ -794,7 +794,7 @@ def process_request(req):
             'data': data
         }
         return res
-    elif action == 'Itinerary.theme':
+    elif action in ('Itinerary.theme', 'Itinerary.theme.Itinerary-theme-fallback'):
         city = req['result']['parameters'].get('city')
         num_days = req['result']['parameters'].get('num_days')
         theme = req['result']['parameters'].get('theme')
