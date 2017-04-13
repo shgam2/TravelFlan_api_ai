@@ -372,7 +372,7 @@ def parse_json(req):
 
 
 def exapi_travelflan_itin(data):
-    print('address: %s' % data['address'])
+    print('city: %s' % data['city'])
     print('num_days: %s' % data['num_days'])
     print('theme: %s' % data['theme'])
     print('lang: %s' % data['lang'])
@@ -390,7 +390,7 @@ def exapi_travelflan_itin(data):
 
     itinerary_url = TF_ITINERARY_URL + urlencode({'locale': data['lang'],
                                                   'days': data['num_days'],
-                                                  'area': data['address'],
+                                                  'area': data['city'],
                                                   'theme': theme})
 
     try:
@@ -795,7 +795,7 @@ def process_request(req):
         }
         return res
     elif action == 'Itinerary.theme':
-        address = req['result']['parameters'].get('address')
+        city = req['result']['parameters'].get('city')
         num_days = req['result']['parameters'].get('num_days')
         theme = req['result']['parameters'].get('theme')
 
@@ -812,7 +812,7 @@ def process_request(req):
             button_title = 'Click to view'
             speech = 'Here is the %s-day itinerary.\n' % num_days
         _data = {
-            'address': address,
+            'city': city,
             'num_days': num_days,
             'theme': theme,
             'lang': userlocale
