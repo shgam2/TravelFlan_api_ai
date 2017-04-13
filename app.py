@@ -714,7 +714,7 @@ def process_request(req):
             'data': data
         }
         return res
-    elif action == 'Itinerary - location':
+    elif action == 'Itinerary.location':
         data = []
         payload = ['5']
         if userlocale == 'zh_cn':
@@ -759,7 +759,7 @@ def process_request(req):
             'data': data
         }
         return res
-    elif action == 'Itinerary - num_days':
+    elif action == 'Itinerary.num_days':
         data = []
         payload = ['GENERAL', 'FOOD', 'SHOPPING', 'KIDS', 'SUBURBS']
         if userlocale == 'zh_cn':
@@ -804,7 +804,7 @@ def process_request(req):
             'data': data
         }
         return res
-    elif action == 'Itinerary - theme':
+    elif action == 'Itinerary.theme':
         address = req['result']['parameters'].get('address')
         num_days = req['result']['parameters'].get('num_days')
         theme = req['result']['parameters'].get('theme')
