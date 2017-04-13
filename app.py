@@ -819,8 +819,9 @@ def process_request(req):
         }
 
         tf_res = exapi_travelflan_itin(_data)
+        if not tf_res:
+            return None
         data = list()
-
         for day in range(1, len(tf_res) + 1):
             d = tf_res['day%d' % (day,)]
             elements = list()
