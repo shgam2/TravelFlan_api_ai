@@ -372,10 +372,6 @@ def parse_json(req):
 
 
 def exapi_travelflan_itin(data):
-    print('city: %s' % data['city'])
-    print('num_days: %s' % data['num_days'])
-    print('theme: %s' % data['theme'])
-
     if data['theme'] in ('Food', '美食'):
         theme = 1
     elif data['theme'] in ('Shopping', '购物', '購物'):
@@ -391,6 +387,7 @@ def exapi_travelflan_itin(data):
                                                   'days': data['num_days'],
                                                   'theme': theme})
     print('itinerary_url:', itinerary_url)
+
     try:
         res = requests.get(itinerary_url)
         return res.json()
@@ -817,8 +814,7 @@ def process_request(req):
         }
 
         tf_res = exapi_travelflan_itin(_data)
-        print(tf_res, type(tf_res))
-        if isinstance(tf_res, dict):
+        if tf_res.get('day1'):
             return None
         data = list()
         for day in range(1, len(tf_res) + 1):
