@@ -1171,7 +1171,7 @@ def process_request(req):
             'displayText': speech,
             'source': 'apiai-transportation'
         }
-    elif action in ('Transportation.destination', 'Transportation.destination.Transportation-destination-fallback'):
+    elif action in ('Transportation.to', 'Transportation.toTransportation-to-fallback'):
         if userlocale == 'zh_cn':
             speech = '从哪里出发呢? (如: 首尔/银座/江南站等)'
         elif userlocale in ('zh_tw', 'zh_hk'):
@@ -1183,7 +1183,7 @@ def process_request(req):
             'displayText': speech,
             'source': 'apiai-transportation'
         }
-    elif action in ('Transportation.source', 'Transportation.source.Transportation-source-fallback'):
+    elif action in ('Transportation.from', 'Transportation.from.Transportation-from-fallback'):
         speech, data = parse_json(req)
         print('Speech:\n%s' % (speech,))
         res = {
