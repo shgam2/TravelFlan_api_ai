@@ -1183,8 +1183,7 @@ def process_request(req):
             'displayText': speech,
             'source': 'apiai-transportation'
         }
-    elif action in ('Transportation.source', 'Transportation.source.Transportation-source-fallback',
-                    'Transportation.address-from', 'Transportation.address-from.Transportation-address-from-fallback'):
+    elif action in ('Transportation.source', 'Transportation.source.Transportation-source-fallback'):
         speech, data = parse_json(req)
         print('Speech:\n%s' % (speech,))
         res = {
