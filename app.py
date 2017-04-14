@@ -975,7 +975,6 @@ def process_request(req):
             'data': data
         }
     elif action == 'translation':
-        print('11111') - 8
         if req['result']['parameters'].get('translation'):
             language = req['result']['parameters']['translation']['language']
         elif req['result']['parameters'].get('language'):
@@ -986,18 +985,13 @@ def process_request(req):
             phrase = req['result']['parameters']['phrase']
         else:
             phrase = req['result']['parameters'].get('prev-phrase')
-        print('22222')
         code = find_language_code(language.lower())
         url = TRANSLATE_BASE_URL + urlencode({'text': phrase, 'to': code, 'authtoken': 'dHJhdmVsZmxhbjp0b3VyMTIzNA=='})
-        print('33333')
         print('url = {}'.format(url))
         _res = urlopen(url).read()
-        print('12345')
         tmpl = get_response_template(userlocale)
-        print('44444')
         language = convert_langauge_to_user_locale(language.lower(), userlocale)
         speech = tmpl % (phrase, language, _res.decode())
-        print('55555')
         print('Speech: \n%s' % (speech))
         res = {
             'speech': speech,
