@@ -1496,6 +1496,8 @@ def process_request(req):
                 print(hasattr(_res, 'error'))
                 print(hasattr(_res['error'], 'code'))
                 print(_res['error']['code'] == '600')
+                print(hasattr(_res, 'rest'))
+                print(_res['rest'] is None)
                 if(hasattr(_res, 'error') and hasattr(_res['error'], 'code') and _res['error']['code'] == '600'):
                     speech = 'Sorry, we do not have sufficient data at the moment. Please try with different parameters'
                 elif hasattr(_res, 'rest') and not _res['rest']:
