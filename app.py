@@ -1428,7 +1428,7 @@ def process_request(req):
             if country == 'japan':
                 print('4444444')
                 _data = {
-                    'key_id': GURUNAVI_KEY,
+                    'keyid': GURUNAVI_KEY,
                     'lang': lang,
                     'category_l': category_l,
                     'latitude': str(latitude),
@@ -1530,11 +1530,11 @@ def process_request(req):
         }
     elif action == 'restaurant.init':
         if userlocale == 'zh_cn':
-            speech = 'How can I help you?'  # translation needed
+            speech = 'I can assist you with your restaurant inquiry. How can I help?'  # translation needed
         elif userlocale in ('zh_tw', 'zh_hk'):
-            speech = 'How can I help you?'  # translation needed
+            speech = 'I can assist you with your restaurant inquiry. How can I help?'  # translation needed
         else:
-            speech = 'How can I help you?'
+            speech = 'I can assist you with your restaurant inquiry. How can I help?'
         res = {
             'speech': speech,
             'displayText': '',
