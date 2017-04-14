@@ -1548,7 +1548,7 @@ def process_request(req):
             'data': ''
         }
 
-    elif action in ('restaurant.location', 'restaurant.country', 'Restaurant.location.Restaurant-location-fallback'):
+    elif action in ('restaurant.location', 'restaurant.country', 'Restaurant.location.Restaurant-location-fallback', 'restaurant.country.Restaurant-country-fallback'):
         if userlocale == 'zh_cn':
             speech = 'Any particular food that you are looking for? (Ex. Korean, Japanese, Sushi, Ramen)'  # translation needed
         elif userlocale in ('zh_tw', 'zh_hk'):
