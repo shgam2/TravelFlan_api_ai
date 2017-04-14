@@ -1489,6 +1489,9 @@ def process_request(req):
             }
         ]
 
+        datum = make_quick_replies(userlocale)
+        data.append(datum)
+
         res = {
             'speech': speech,
             'displayText': speech,
