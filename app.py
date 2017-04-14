@@ -431,9 +431,11 @@ def exapi_gurunavi(data):
         return None
 
 def exapi_gurunavi_category_l(cuisine):
+    print('CUISINE WE ARE LOOKING IS {}'.format(cuisine))
     url_cuisine = GURUNAVI_CATEGORY_URL + urlencode({'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en'})
     res_cuisine = requests.get(url_cuisine).json()['category_l']
     for i, item in enumerate(res_cuisine):
+        print('MATCHING: {}'.format(item.get('category_l_name').lower()))
         if cuisine.lower() in item.get('category_l_name').lower():
             print('found it')
             print('Cuisine: found code is %s' % (item.get('category_l_code')))
