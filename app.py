@@ -1241,15 +1241,23 @@ def process_request(req):
             'source': 'apiai-restaurant',
             'data': data
         }
+    elif action == 'restaurant.init':
+        speech = "How can I help you?"
+        res = {
+            'speech': speech,
+            'displayText': '',
+            'source': 'apiai-restaurant',
+            'data': ''
+        }
     elif action in ('Restaurant.Restaurant-fallback'):
         print('IN Restaurant.Restaurant-fallback ACTION')
         data = []
         payload = ['SOUTH KOREA', 'JAPAN', 'OTHER']
         if userlocale == 'zh_cn':
-            speech = 'What country are you travelling to?' #needs translation
+            speech = '您要去哪个国家？'
             title = ['韩国', '日本', '其他']
         elif userlocale in ('zh_tw', 'zh_hk'):
-            speech = 'What country are you travelling to?' #needs translation
+            speech = '您要去哪個國家？'
             title = ['韓國', '日本', '其他']
         else:
             speech = 'What country are you travelling to?'
