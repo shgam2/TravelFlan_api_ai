@@ -615,20 +615,138 @@ def process_request(req):
         res = {
             'speech': speech,
             'displayText': speech,
-            'source': 'apiai-itinerary'
+            'source': 'apiai-weather'
         }
         return res
     elif action in ('Weather.location', 'Weather.location.Weather-location-fallback'):
+        city = req['result']['parameters'].get('city')
+        url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(city)}) + '&format=json'
+        print('YQL-Request:\n%s' % (url,))
+        _res = urlopen(url).read()
+        print('YQL-Response:\n%s' % (_res,))
+
+        data = json.loads(_res)
+
+        if 'query' not in data:
+            return None
+        if 'results' not in data['query']:
+            return None
+        if 'channel' not in data['query']['results']:
+            return None
+        for x in ('location', 'item', 'units'):
+            if x not in data['query']['results']['channel']:
+                return None
+        if 'condition' not in data['query']['results']['channel']['item']:
+            return None
+
+        location = data['query']['results']['channel']['location']
+        condition = data['query']['results']['channel']['item']['condition']
+        units = data['query']['results']['channel']['units']
+
+        payload = ['YES', 'NO']
         if userlocale == 'zh_cn':
-            speech = '您想查询哪里的天气呢？ (如：首尔/东京/上海等)'
+            title = ['是', '否']
+            temp = conv_weather_cond(condition['code'], 's_cn')
+            speech = '%s的天气: %s, 温度是%s°%s\n请问您需要天气预报吗?' % (city, temp, condition['temp'], units['temperature'])
         elif userlocale in ('zh_tw', 'zh_hk'):
-            speech = '您想查詢哪裡的天氣呢？ (如：首爾/東京/上海等)'
+            title = ['是', '否']
+            temp = conv_weather_cond(condition['code'], 't_cn')
+            speech = '%s的天氣: %s, 溫度是%s°%s\n請問您需要天氣預報嗎?' % (city, temp, condition['temp'], units['temperature'])
         else:
-            speech = 'Where do you want to know about the weather? (Ex. Seoul, Tokyo, Shanghai)'
+            title = ['Yes', 'No']
+            speech = 'Current weather in %s: %s, the temperature is %s°%s\nDo you want to know about the forecast?' % (
+                location['city'], condition['text'],
+                condition['temp'], units['temperature'])
+
+        data = []
+        datum = {
+            'text': speech,
+            'quick_replies': [
+                {
+                    'content_type': 'text',
+                    'title': title[0],
+                    'payload': payload[0]
+                },
+                {
+                    'content_type': 'text',
+                    'title': title[1],
+                    'payload': payload[1]
+                }
+            ]
+        }
+        data.append(datum)
+        res = {
+            'speech': '',
+            'displayText': '',
+            'source': 'apiai-weather',
+            'data': data
+        }
+        return res
+    elif action in ('Weather.forecast', 'Weather.forecast.Weather-forecast-fallback'):
+        city = req['result']['parameters'].get('city')
+        yesno = req['result']['parameters'].get('yesno')
+        if yesno == 'No':
+            return None
+        url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(city)}) + '&format=json'
+        print('YQL-Request:\n%s' % (url,))
+        _res = urlopen(url).read()
+        print('YQL-Response:\n%s' % (_res,))
+
+        data = json.loads(_res)
+
+        if 'query' not in data:
+            return None
+        if 'results' not in data['query']:
+            return None
+        if 'channel' not in data['query']['results']:
+            return None
+        for x in ('location', 'item', 'units'):
+            if x not in data['query']['results']['channel']:
+                return None
+        if 'forecast' not in data['query']['results']['channel']['item']:
+            return None
+
+        location = data['query']['results']['channel']['location']
+        units = data['query']['results']['channel']['units']
+        forecast_items = data['query']['results']['channel']['item']['forecast']
+
+        if userlocale == 'zh_cn':
+            speech = '%s天氣預報(10天):' % city
+        elif userlocale in ('zh_tw', 'zh_hk'):
+            speech = '%s天气预报(10天):' % city
+        else:
+            speech = 'Here is the 10-day forecast for %s:' % (location['city'])
+
+        for i in range(0, 10):
+            item_num = i
+            fc_weather = forecast(datetime.now().strftime('%Y-%m-%d'), item_num, forecast_items)
+            if not fc_weather:
+                speech = None
+                break
+            if userlocale in ('zh_cn', 'zh_tw', 'zh_hk'):
+                if userlocale == 'zh_cn':
+                    lang = 's_cn'
+                else:
+                    lang = 't_cn'
+                w_cond = conv_weather_cond(fc_weather['code'], lang)
+                speech += '\n(%s) %s, 高溫: %s°%s, 低溫: %s°%s' % (
+                    datetime.strptime(fc_weather['date'], '%d %b %Y').strftime('%m/%d'), w_cond,
+                    fc_weather['high'], units['temperature'],
+                    fc_weather['low'], units['temperature'])
+            else:
+                speech += '\n(%s) %s, high: %s°%s, low: %s°%s' % (
+                    datetime.strptime(fc_weather['date'], '%d %b %Y').strftime('%a %b %d'),
+                    fc_weather['text'], fc_weather['high'],
+                    units['temperature'], fc_weather['low'], units['temperature'])
+
+        data = []
+        datum = make_quick_replies(userlocale)
+        data.append(datum)
         res = {
             'speech': speech,
             'displayText': speech,
-            'source': 'apiai-itinerary'
+            'source': 'apiai-weather',
+            'data': data
         }
         return res
     elif action in ('Tour', 'Tour.Tour-fallback'):
