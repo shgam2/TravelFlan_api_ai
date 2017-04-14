@@ -425,6 +425,48 @@ def exapi_pengtai(data):
         return None
 
 
+def make_quick_replies(locale):
+    if locale == 'zh_cn':
+        text = '请选择以下其中一项服务:'
+        title = ['行程', '一天团', '餐厅', '方向', '天气']
+    elif locale in ('zh_tw', 'zh_hk'):
+        text = '請選擇以下其中一項服務:'
+        title = ['行程', '一天團', '餐廳', '方向', '天氣']
+    else:
+        text = 'Choose one of the following services:'
+        title = ['Itinerary', 'Tour', 'Restaurant', 'Direction', 'Weather']
+    return {
+        'text': text,
+        'quick_replies': [
+            {
+                'content_type': 'text',
+                'title': title[0],
+                'payload': 'ITINERARY'
+            },
+            {
+                'content_type': 'text',
+                'title': title[1],
+                'payload': 'TOUR'
+            },
+            {
+                'content_type': 'text',
+                'title': title[2],
+                'payload': 'RESTAURANT'
+            },
+            {
+                'content_type': 'text',
+                'title': title[3],
+                'payload': 'DIRECTION'
+            },
+            {
+                'content_type': 'text',
+                'title': title[4],
+                'payload': 'WEATHER'
+            }
+        ]
+    }
+
+
 def process_request(req):
     res = None
     print('1111111')
@@ -680,6 +722,9 @@ def process_request(req):
             }
             data.append(data_item)
 
+        datum = make_quick_replies(userlocale)
+        data.append(datum)
+
         l = 0
         for x in speech.split('\n'):
             l += len(x)
@@ -908,6 +953,9 @@ def process_request(req):
                 }
             }
             data.append(data_item)
+
+        datum = make_quick_replies(userlocale)
+        data.append(datum)
 
         l = 0
         for x in speech.split('\n'):
