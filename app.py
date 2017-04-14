@@ -432,7 +432,7 @@ def exapi_gurunavi(data):
         'latitude': data['latitude'],
         'longitude': data['longitude'],
         'input_coordinates_mode': data['input_coordinates_mode'],
-        'lang': data['lang']
+        'lang': 'zh_cn' ##data['lang']
     })
 
     print('URL: {}'.format(url_lookup))
