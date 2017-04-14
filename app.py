@@ -469,144 +469,168 @@ def process_request(req):
         userlocale = req['originalRequest']['data']['locale'].lower()
     except Exception as e:
         userlocale = 'zh_cn'
-    print('req is {}'.format(req))
     action = req['result']['action']
-
     print('action is {}'.format(action))
-    if action == 'prev_context':
-        action = req['result']['parameters'].get('prev-action')
-        if req['result']['parameters'].get('city'):
-            city = req['result']['parameters']['city']
-        elif not req['result']['parameters'].get('city') and req['result']['parameters'].get('prev-city'):
-            city = req['result']['parameters'].get('prev-city')
+    # if action == 'prev_context':
+    #     action = req['result']['parameters'].get('prev-action')
+    #     if req['result']['parameters'].get('city'):
+    #         city = req['result']['parameters']['city']
+    #     elif not req['result']['parameters'].get('city') and req['result']['parameters'].get('prev-city'):
+    #         city = req['result']['parameters'].get('prev-city')
+    #     else:
+    #         pass
+    # else:
+    #     if req['result']['parameters'].get('city'):
+    #         city = req['result']['parameters'].get('city')
+    #
+    # if action == 'weather':
+    #     url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(city)}) + '&format=json'
+    #     print('YQL-Request:\n%s' % (url,))
+    #     _res = urlopen(url).read()
+    #     print('YQL-Response:\n%s' % (_res,))
+    #
+    #     data = json.loads(_res)
+    #
+    #     if 'query' not in data:
+    #         return res
+    #     if 'results' not in data['query']:
+    #         return res
+    #     if 'channel' not in data['query']['results']:
+    #         return res
+    #
+    #     for x in ('location', 'item', 'units'):
+    #         if x not in data['query']['results']['channel']:
+    #             return res
+    #
+    #     if 'condition' not in data['query']['results']['channel']['item']:
+    #         return res
+    #     location = data['query']['results']['channel']['location']
+    #     condition = data['query']['results']['channel']['item']['condition']
+    #     units = data['query']['results']['channel']['units']
+    #     forecast_items = data['query']['results']['channel']['item']['forecast']
+    #     date = req['result']['parameters'].get('date')
+    #     prev_date = req['result']['parameters'].get('prev-date')
+    #     date_period = req['result']['parameters'].get('date-period')
+    #     prev_dp = req['result']['parameters'].get('prev-dp')
+    #     if prev_dp and not date:
+    #         date_period = prev_dp
+    #     if prev_date and not date_period:
+    #         date = prev_date
+    #     if not date or (date and date_period):
+    #         # current weather
+    #         if not date_period:
+    #             if userlocale == 'zh_cn':
+    #                 temp = conv_weather_cond(condition['code'], 's_cn')
+    #                 speech = '%s的天气: %s, 温度是%s°%s' % (city, temp, condition['temp'], units['temperature'])
+    #             elif userlocale in ('zh_tw', 'zh_hk'):
+    #                 temp = conv_weather_cond(condition['code'], 't_cn')
+    #                 speech = '%s的天氣: %s, 溫度是%s°%s' % (city, temp, condition['temp'], units['temperature'])
+    #             else:
+    #                 speech = 'Current weather in %s: %s, the temperature is %s°%s' % (
+    #                     location['city'], condition['text'],
+    #                     condition['temp'], units['temperature'])
+    #         # 10-day weather forecast
+    #         else:
+    #             check_date1 = date_period.partition('/')[0]
+    #             check_date2 = date_period.partition('/')[2]
+    #             check_date1 = datetime.strptime(check_date1, '%Y-%m-%d')
+    #             check_date2 = datetime.strptime(check_date2, '%Y-%m-%d')
+    #             if check_date1 > datetime.strptime(forecast_items[9]['date'],
+    #                                                '%d %b %Y') or check_date2 < datetime.strptime(
+    #                 forecast_items[0]['date'], '%d %b %Y'):
+    #                 return None
+    #
+    #             if userlocale == 'zh_cn':
+    #                 speech = ('%s天氣預報(10天):' % city)
+    #             elif userlocale in ('zh_tw', 'zh_hk'):
+    #                 speech = ('%s天气预报(10天):' % city)
+    #             else:
+    #                 speech = ('Here is the 10-day forecast for %s:' % (location['city']))
+    #
+    #             for i in range(0, 10):
+    #                 item_num = i
+    #                 fc_weather = forecast(date, item_num, forecast_items)
+    #                 if fc_weather == None:
+    #                     speech = None
+    #                     break
+    #                 if userlocale in ('zh_cn', 'zh_tw', 'zh_hk'):
+    #                     if userlocale == 'zh_cn':
+    #                         lang = 's_cn'
+    #                     else:
+    #                         lang = 't_cn'
+    #                     w_cond = conv_weather_cond(fc_weather['code'], lang)
+    #                     speech += '\n(%s) %s, 高溫: %s°%s, 低溫: %s°%s' % (
+    #                         datetime.strptime(fc_weather['date'], '%d %b %Y').strftime('%m/%d'), w_cond,
+    #                         fc_weather['high'], units['temperature'],
+    #                         fc_weather['low'], units['temperature'])
+    #                 else:
+    #                     speech += '\n(%s) %s, high: %s°%s, low: %s°%s' % (
+    #                         datetime.strptime(fc_weather['date'], '%d %b %Y').strftime('%a %b %d'),
+    #                         fc_weather['text'], fc_weather['high'],
+    #                         units['temperature'], fc_weather['low'], units['temperature'])
+    #     else:  # tomorrow portion
+    #         if date.lower() in ('now', "现在"):
+    #             if userlocale == 'zh_cn':
+    #                 speech = '%s的天气: %s, 温度是华氏%s°%s' % (
+    #                     city, conv_weather_cond(condition['code'], 's_cn'), condition['temp'], units['temperature'])
+    #             elif userlocale in ('zh_tw', 'zh_hk'):
+    #                 speech = '%s的天氣: %s, 溫度是華氏%s°%s' % (
+    #                     city, conv_weather_cond(condition['code'], 's_cn'), condition['temp'], units['temperature'])
+    #             else:
+    #                 speech = 'Current weather in %s: %s, the temperature is %s°%s' % (
+    #                     location['city'], condition['text'],
+    #                     condition['temp'], units['temperature'])
+    #         else:
+    #             if datetime.strptime(date, '%Y-%m-%d') < datetime.strptime(forecast_items[0]['date'], '%d %b %Y'):
+    #                 temp_date = datetime.strptime(date, '%Y-%m-%d') + timedelta(days=7)
+    #                 date = temp_date.strftime("%Y-%m-%d")
+    #             item_num = -1
+    #             fc_weather = forecast(date, item_num, forecast_items)
+    #             if userlocale == 'zh_cn':
+    #                 speech = '%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
+    #                     city, fc_weather['date'], conv_weather_cond(fc_weather['code'], 's_cn'),
+    #                     fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature']
+    #                 )
+    #             elif userlocale in ('zh_tw', 'zh_hk'):
+    #                 speech = '%s的天氣(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
+    #                     city, fc_weather['date'], conv_weather_cond(fc_weather['code'], 't_cn'),
+    #                     fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature']
+    #                 )
+    #             else:
+    #                 speech = 'Weather in %s (%s): %s, high: %s°%s, low: %s°%s' % (
+    #                     location['city'], fc_weather['date'], fc_weather['text'],
+    #                     fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
+    #     res = {
+    #         'speech': speech,
+    #         'displayText': speech,
+    #         'source': 'apiai-weather'
+    #     }
+    if action in ('Weather', 'Weather.Weather-fallback'):
+        if userlocale == 'zh_cn':
+            speech = '您想查询哪里的天气呢？ (如：首尔/东京/上海等)'
+        elif userlocale in ('zh_tw', 'zh_hk'):
+            speech = '您想查詢哪裡的天氣呢？ (如：首爾/東京/上海等)'
         else:
-            None
-    else:
-        if req['result']['parameters'].get('city'):
-            city = req['result']['parameters'].get('city')
-
-    if action == 'weather':
-        url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(city)}) + '&format=json'
-        print('YQL-Request:\n%s' % (url,))
-        _res = urlopen(url).read()
-        print('YQL-Response:\n%s' % (_res,))
-
-        data = json.loads(_res)
-
-        if 'query' not in data:
-            return res
-        if 'results' not in data['query']:
-            return res
-        if 'channel' not in data['query']['results']:
-            return res
-
-        for x in ('location', 'item', 'units'):
-            if x not in data['query']['results']['channel']:
-                return res
-
-        if 'condition' not in data['query']['results']['channel']['item']:
-            return res
-        location = data['query']['results']['channel']['location']
-        condition = data['query']['results']['channel']['item']['condition']
-        units = data['query']['results']['channel']['units']
-        forecast_items = data['query']['results']['channel']['item']['forecast']
-        date = req['result']['parameters'].get('date')
-        prev_date = req['result']['parameters'].get('prev-date')
-        date_period = req['result']['parameters'].get('date-period')
-        prev_dp = req['result']['parameters'].get('prev-dp')
-        if prev_dp and not date:
-            date_period = prev_dp
-        if prev_date and not date_period:
-            date = prev_date
-        if not date or (date and date_period):
-            # current weather
-            if not date_period:
-                if userlocale == 'zh_cn':
-                    temp = conv_weather_cond(condition['code'], 's_cn')
-                    speech = '%s的天气: %s, 温度是%s°%s' % (city, temp, condition['temp'], units['temperature'])
-                elif userlocale in ('zh_tw', 'zh_hk'):
-                    temp = conv_weather_cond(condition['code'], 't_cn')
-                    speech = '%s的天氣: %s, 溫度是%s°%s' % (city, temp, condition['temp'], units['temperature'])
-                else:
-                    speech = 'Current weather in %s: %s, the temperature is %s°%s' % (
-                        location['city'], condition['text'],
-                        condition['temp'], units['temperature'])
-            # 10-day weather forecast
-            else:
-                check_date1 = date_period.partition('/')[0]
-                check_date2 = date_period.partition('/')[2]
-                check_date1 = datetime.strptime(check_date1, '%Y-%m-%d')
-                check_date2 = datetime.strptime(check_date2, '%Y-%m-%d')
-                if check_date1 > datetime.strptime(forecast_items[9]['date'],
-                                                   '%d %b %Y') or check_date2 < datetime.strptime(
-                    forecast_items[0]['date'], '%d %b %Y'):
-                    return None
-
-                if userlocale == 'zh_cn':
-                    speech = ('%s天氣預報(10天):' % city)
-                elif userlocale in ('zh_tw', 'zh_hk'):
-                    speech = ('%s天气预报(10天):' % city)
-                else:
-                    speech = ('Here is the 10-day forecast for %s:' % (location['city']))
-
-                for i in range(0, 10):
-                    item_num = i
-                    fc_weather = forecast(date, item_num, forecast_items)
-                    if fc_weather == None:
-                        speech = None
-                        break
-                    if userlocale in ('zh_cn', 'zh_tw', 'zh_hk'):
-                        if userlocale == 'zh_cn':
-                            lang = 's_cn'
-                        else:
-                            lang = 't_cn'
-                        w_cond = conv_weather_cond(fc_weather['code'], lang)
-                        speech += '\n(%s) %s, 高溫: %s°%s, 低溫: %s°%s' % (
-                            datetime.strptime(fc_weather['date'], '%d %b %Y').strftime('%m/%d'), w_cond,
-                            fc_weather['high'], units['temperature'],
-                            fc_weather['low'], units['temperature'])
-                    else:
-                        speech += '\n(%s) %s, high: %s°%s, low: %s°%s' % (
-                            datetime.strptime(fc_weather['date'], '%d %b %Y').strftime('%a %b %d'),
-                            fc_weather['text'], fc_weather['high'],
-                            units['temperature'], fc_weather['low'], units['temperature'])
-        else:  # tomorrow portion
-            if date.lower() in ('now', "现在"):
-                if userlocale == 'zh_cn':
-                    speech = '%s的天气: %s, 温度是华氏%s°%s' % (
-                        city, conv_weather_cond(condition['code'], 's_cn'), condition['temp'], units['temperature'])
-                elif userlocale in ('zh_tw', 'zh_hk'):
-                    speech = '%s的天氣: %s, 溫度是華氏%s°%s' % (
-                        city, conv_weather_cond(condition['code'], 's_cn'), condition['temp'], units['temperature'])
-                else:
-                    speech = 'Current weather in %s: %s, the temperature is %s°%s' % (
-                        location['city'], condition['text'],
-                        condition['temp'], units['temperature'])
-            else:
-                if datetime.strptime(date, '%Y-%m-%d') < datetime.strptime(forecast_items[0]['date'], '%d %b %Y'):
-                    temp_date = datetime.strptime(date, '%Y-%m-%d') + timedelta(days=7)
-                    date = temp_date.strftime("%Y-%m-%d")
-                item_num = -1
-                fc_weather = forecast(date, item_num, forecast_items)
-                if userlocale == 'zh_cn':
-                    speech = '%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
-                        city, fc_weather['date'], conv_weather_cond(fc_weather['code'], 's_cn'),
-                        fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature']
-                    )
-                elif userlocale in ('zh_tw', 'zh_hk'):
-                    speech = '%s的天氣(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
-                        city, fc_weather['date'], conv_weather_cond(fc_weather['code'], 't_cn'),
-                        fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature']
-                    )
-                else:
-                    speech = 'Weather in %s (%s): %s, high: %s°%s, low: %s°%s' % (
-                        location['city'], fc_weather['date'], fc_weather['text'],
-                        fc_weather['high'], units['temperature'], fc_weather['low'], units['temperature'])
+            speech = 'Where do you want to know about the weather? (Ex. Seoul, Tokyo, Shanghai)'
         res = {
             'speech': speech,
             'displayText': speech,
-            'source': 'apiai-weather'
+            'source': 'apiai-itinerary'
         }
+        return res
+    elif action in ('Weather.location', 'Weather.location.Weather-location-fallback'):
+        if userlocale == 'zh_cn':
+            speech = '您想查询哪里的天气呢？ (如：首尔/东京/上海等)'
+        elif userlocale in ('zh_tw', 'zh_hk'):
+            speech = '您想查詢哪裡的天氣呢？ (如：首爾/東京/上海等)'
+        else:
+            speech = 'Where do you want to know about the weather? (Ex. Seoul, Tokyo, Shanghai)'
+        res = {
+            'speech': speech,
+            'displayText': speech,
+            'source': 'apiai-itinerary'
+        }
+        return res
     elif action in ('Tour', 'Tour.Tour-fallback'):
         data = []
         payload = ['SEOUL', 'BUSAN', 'TOKYO', 'OSAKA', 'NAGOYA']
