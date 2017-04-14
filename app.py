@@ -1314,7 +1314,7 @@ def process_request(req):
 
             if country == 'japan': ##
                 category_l = exapi_gurunavi_category_l(cuisine)
-
+                print('category_l is {}'.format(category_l))
             if cuisine == 'korean':
                 category2 = '3101'
             elif cuisine == 'japanese':
@@ -1332,7 +1332,8 @@ def process_request(req):
             elif cuisine == 'pub':
                 category2 = '3108'
             else:
-                return None
+                #return None
+                category2 = ''
         elif action == 'attraction':
             category1 = '4000'
             if req['result']['parameters'].get('attraction'):
