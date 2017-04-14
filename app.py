@@ -903,16 +903,16 @@ def process_request(req):
         }
     elif action in ('Itinerary', 'Itinerary.Itinerary-fallback'):
         data = []
-        payload = ['SEOUL', 'BUSAN', 'TOKYO', 'OSAKA']
+        payload = ['SEOUL', 'TOKYO', 'OSAKA']
         if userlocale == 'zh_cn':
             speech = 'Where are you going?'
-            title = ['尔的', '釜山', '东京', '大阪']
+            title = ['尔的', '东京', '大阪']
         elif userlocale in ('zh_tw', 'zh_hk'):
             speech = 'Where are you going?'
-            title = ['爾的', '釜山', '東京', '大阪']
+            title = ['爾的', '東京', '大阪']
         else:
             speech = 'Where are you going?'
-            title = ['Seoul', 'Busan', 'Tokyo', 'Osaka']
+            title = ['Seoul', 'Tokyo', 'Osaka']
         datum = {
             'text': speech,
             'quick_replies': [
@@ -930,11 +930,6 @@ def process_request(req):
                     'content_type': 'text',
                     'title': title[2],
                     'payload': payload[2]
-                },
-                {
-                    'content_type': 'text',
-                    'title': title[3],
-                    'payload': payload[3]
                 }
             ]
         }
