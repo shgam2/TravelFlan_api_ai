@@ -426,8 +426,9 @@ def exapi_gurunavi(data):
     print("In exapi_gurunavi(data) **********")
 
     url_lookup = GURUNAVI_SEARCH_URL + urlencode(
-        {'keyid': GURUNAVI_KEY, 'format': data['format'], 'category_l': data['category_l'], 'latitude':data['latitude'], 'longitude':data['longitude'], 'input_coordinates_mode':
-        data['input_coordinates_mode']})
+        {'keyid': GURUNAVI_KEY, 'format': data['format'], 'category_l': data['category_l'],
+         'latitude': data['latitude'], 'longitude': data['longitude'], 'input_coordinates_mode':
+             data['input_coordinates_mode']})
 
     print('URL: {}'.format(url_lookup))
     _res = requests.get(url_lookup).json()
@@ -462,7 +463,7 @@ def make_quick_replies(locale):
         title = ['行程', '一天團', '餐廳', '方向', '天氣']
     else:
         text = 'Anything I can help?'
-        title = ['Itinerary', 'Tour', 'Restaurant', 'Direction', 'Weather']
+        title = ['Itinerary', 'Tour', 'Restaurant', 'Transportation', 'Weather']
     return {
         'text': text,
         'quick_replies': [
@@ -484,7 +485,7 @@ def make_quick_replies(locale):
             {
                 'content_type': 'text',
                 'title': title[3],
-                'payload': 'DIRECTION'
+                'payload': 'TRANSPORTATION'
             },
             {
                 'content_type': 'text',
@@ -649,7 +650,6 @@ def process_request(req):
             'displayText': speech,
             'source': 'apiai-weather'
         }
-        return res
     elif action in ('Weather.location', 'Weather.location.Weather-location-fallback'):
         city = req['result']['parameters'].get('city')
         url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(city)}) + '&format=json'
@@ -713,7 +713,6 @@ def process_request(req):
             'source': 'apiai-weather',
             'data': data
         }
-        return res
     elif action in ('Weather.forecast', 'Weather.forecast.Weather-forecast-fallback'):
         city = req['result']['parameters'].get('city')
         yesno = req['result']['parameters'].get('yesno')
@@ -780,7 +779,6 @@ def process_request(req):
             'source': 'apiai-weather',
             'data': data
         }
-        return res
     elif action in ('Tour', 'Tour.Tour-fallback'):
         data = []
         payload = ['SEOUL', 'BUSAN', 'TOKYO', 'OSAKA', 'NAGOYA']
@@ -830,7 +828,6 @@ def process_request(req):
             'source': 'apiai-tour',
             'data': data
         }
-        return res
     elif action in ('Tour.location', 'Tour.location.Tour-location-fallback'):
         city = req['result']['parameters'].get('city')
 
@@ -945,7 +942,6 @@ def process_request(req):
             'source': 'apiai-itinerary',
             'data': data
         }
-        return res
     elif action in ('Itinerary.location', 'Itinerary.location.Itinerary-location-fallback'):
         data = []
         payload = ['1', '2', '3', '4', '5']
@@ -995,7 +991,6 @@ def process_request(req):
             'source': 'apiai-itinerary',
             'data': data
         }
-        return res
     elif action in ('Itinerary.num_days', 'Itinerary.num_days.Itinerary-num_days-fallback'):
         data = []
         payload = ['GENERAL', 'FOOD', 'SHOPPING', 'KIDS', 'SUBURBS']
@@ -1045,7 +1040,6 @@ def process_request(req):
             'source': 'apiai-itinerary',
             'data': data
         }
-        return res
     elif action in ('Itinerary.theme', 'Itinerary.theme.Itinerary-theme-fallback'):
         city = req['result']['parameters'].get('city')
         num_days = req['result']['parameters'].get('num_days')
@@ -1153,10 +1147,45 @@ def process_request(req):
             'source': 'apiai-itinerary',
             'data': data
         }
-        print(res)
-    elif action == 'direction':
+    elif action == 'Transportation':
+        if userlocale == 'zh_cn':
+            speech = '请问需要什么帮忙? (如: 怎么从大阪去东京?)'
+        elif userlocale in ('zh_tw', 'zh_hk'):
+            speech = '請問需要什麼幫忙? (如: 怎麼從大阪去東京?)'
+        else:
+            speech = 'How can I help you? (Ex: How to go to Tokyo from Osaka?)'
+        res = {
+            'speech': speech,
+            'displayText': speech,
+            'source': 'apiai-transportation'
+        }
+    elif action == 'Transportation.Transportation-fallback':
+        if userlocale == 'zh_cn':
+            speech = '您的目的地是哪里呢? (如: 首尔/银座/江南站等)'
+        elif userlocale in ('zh_tw', 'zh_hk'):
+            speech = '您的目的地是哪裡呢? (如: 首爾/銀座/江南站等)'
+        else:
+            speech = 'What is your destination? (Ex: Seoul, Ginza, Gangnam station)'
+        res = {
+            'speech': speech,
+            'displayText': speech,
+            'source': 'apiai-transportation'
+        }
+    elif action in ('Transportation.to', 'Transportation.toTransportation-to-fallback'):
+        if userlocale == 'zh_cn':
+            speech = '从哪里出发呢? (如: 首尔/银座/江南站等)'
+        elif userlocale in ('zh_tw', 'zh_hk'):
+            speech = '從哪裡出發呢? (如: 首爾/銀座/江南站等)'
+        else:
+            speech = 'From where? (Ex: Seoul, Ginga, Gangnam station)'
+        res = {
+            'speech': speech,
+            'displayText': speech,
+            'source': 'apiai-transportation'
+        }
+    elif action in ('Transportation.from', 'Transportation.from.Transportation-from-fallback'):
         speech, data = parse_json(req)
-        print('SPEECH IS \n%s' % (speech))
+        print('Speech:\n%s' % (speech,))
         res = {
             'speech': speech,
             'displayText': speech,
@@ -1181,7 +1210,7 @@ def process_request(req):
         tmpl = get_response_template(userlocale)
         language = convert_langauge_to_user_locale(language.lower(), userlocale)
         speech = tmpl % (phrase, language, _res.decode())
-        print('Speech: \n%s' % (speech))
+        print('Speech:\n%s' % (speech,))
         res = {
             'speech': speech,
             'displayText': speech,
@@ -1313,7 +1342,7 @@ def process_request(req):
             else:
                 cuisine = req['result']['parameters'].get('prev-cuisine').lower()
 
-            if country == 'japan': ##
+            if country == 'japan':  ##
                 category_l = exapi_gurunavi_category_l(cuisine)
                 print('category_l is {}'.format(category_l))
             if cuisine == 'korean':
@@ -1333,7 +1362,7 @@ def process_request(req):
             elif cuisine == 'pub':
                 category2 = '3108'
             else:
-                #return None
+                # return None
                 category2 = ''
         elif action == 'attraction':
             category1 = '4000'
@@ -1522,7 +1551,7 @@ def process_request(req):
                         elements.append(fb_item)
                         print('elements:::::::\n%s' % elements)
 
-            else: # country is unknown
+            else:  # country is unknown
                 _data = {
                     'lang': lang,
                     'category1': category1,
@@ -1649,11 +1678,7 @@ def process_request(req):
                             item['contacts']['tel'], item['business_hour']
                         )
 
-
-
         print('res ========================= \n{}'.format(_res))
-
-
 
         l = 0
         for x in speech.split('\n'):
@@ -1708,7 +1733,8 @@ def process_request(req):
             'data': ''
         }
 
-    elif action in ('restaurant.location', 'restaurant.country', 'Restaurant.location.Restaurant-location-fallback', 'restaurant.country.Restaurant-country-fallback'):
+    elif action in ('restaurant.location', 'restaurant.country', 'Restaurant.location.Restaurant-location-fallback',
+                    'restaurant.country.Restaurant-country-fallback'):
         if userlocale == 'zh_cn':
             speech = 'Any particular food that you are looking for? (Ex. Korean, Japanese, Sushi, Ramen)'  # translation needed
         elif userlocale in ('zh_tw', 'zh_hk'):
