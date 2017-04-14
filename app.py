@@ -1647,29 +1647,29 @@ def process_request(req):
                                 ]
                             }
                             elements.append(fb_item)
-                elements = list()
-                if not _res['rest']:
-                    print("Empty list!")
-                else:
-                    elements = list()
-                    if not _res['list']:
-                        speech = ''
-                        print("speech is empty")
-                    else:
-                        for i, item in enumerate(_res['list']):
-                            fb_item = {
-                                'title': item['name'],
-                                'subtitle': '%s\n%s' % (item['summary'], item['address']),
-                                'image_url': item['imagePath'],
-                                'buttons': [
-                                    {
-                                        'type': 'web_url',
-                                        'url': item['url'],
-                                        'title': button_title
-                                    }
-                                ]
-                            }
-                            elements.append(fb_item)
+                # elements = list()
+                # if not _res['rest']:
+                #     print("Empty list!")
+                # else:
+                #     elements = list()
+                #     if not _res['list']:
+                #         speech = ''
+                #         print("speech is empty")
+                #     else:
+                #         for i, item in enumerate(_res['list']):
+                #             fb_item = {
+                #                 'title': item['name'],
+                #                 'subtitle': '%s\n%s' % (item['summary'], item['address']),
+                #                 'image_url': item['imagePath'],
+                #                 'buttons': [
+                #                     {
+                #                         'type': 'web_url',
+                #                         'url': item['url'],
+                #                         'title': button_title
+                #                     }
+                #                 ]
+                #             }
+                #             elements.append(fb_item)
 
         print('res ========================= \n{}'.format(_res))
 
