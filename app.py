@@ -1488,7 +1488,8 @@ def process_request(req):
                 print('1. GURUNAVI')
                 _res = exapi_gurunavi(_data)
                 print('RESSSS \n{}'.format(_res))
-
+                print('thomas2')
+                print(_res)
                 elements = list()
                 print('thomas1')
                 print(_res['error']['code'])
