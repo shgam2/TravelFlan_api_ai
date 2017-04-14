@@ -1482,6 +1482,13 @@ def process_request(req):
                 else:
                     print("HERERERERE")
                     for i, item in enumerate(_res['rest']):
+
+                        print ("1. {}\n"
+                               "2. {}\n"
+                               "3. {}\n"
+                               "4. {}\n"
+                               "5. {}\n".format(item['name']['name'], item['name']['name_sub'], item['contacts']['address'], item['image_url']['thumbnail'], item['url']))
+
                         fb_item = {
                             'title': item['name']['name'],
                             'subtitle': '%s\n%s' % (item['name']['name_sub'], item['contacts']['address']), ##this line has a proble??
