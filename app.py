@@ -1490,10 +1490,12 @@ def process_request(req):
                 print('RESSSS \n{}'.format(_res))
 
                 elements = list()
-                if not _res['rest']:
-                    print("Empty list!")
-                elif _res['error']['code'] == 600:
+                print('thomas1')
+                print(_res['error']['code'])
+                if(hasattr(_res, 'error') and hasattr(_res['error'], 'code') and _res['error']['code'] == 600):
                     speech = 'Sorry, we do not have sufficient data at the moment. Please try with different parameters'
+                elif not _res['rest']:
+                    print("Empty list!")
                 else:
                     print("HERERERERE")
                     for i, item in enumerate(_res['rest']):
