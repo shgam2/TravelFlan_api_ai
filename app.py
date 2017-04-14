@@ -1615,12 +1615,12 @@ def process_request(req):
 
 
 
-            l = 0
-            for x in speech.split('\n'):
-                l += len(x)
-                if l > 500:
-                    speech = speech[:l - len(x)] + '\n\n...'
-                    break
+        l = 0
+        for x in speech.split('\n'):
+            l += len(x)
+            if l > 500:
+                speech = speech[:l - len(x)] + '\n\n...'
+                break
 
         data = [
             {
