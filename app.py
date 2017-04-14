@@ -1570,9 +1570,9 @@ def process_request(req):
                     'longitude': str(longitude),
                     'distance': '10000'
                 }
-                _res = exapi_pengtai(_data)
+                _res = exapi_pengtai(_data) # try Pengtai first (Korean content)
                 print('PENGTAI')
-                if not _res:
+                if not _res: # if not found in Pengtai database, look into Gurunavi
                     print('NOT FOUND IN PENGTAI, NOW GO TO GURUNAVI')
                     _data = {
                         'key_id': GURUNAVI_KEY,
@@ -1594,13 +1594,13 @@ def process_request(req):
                         for i, item in enumerate(_res['rest']):
                             fb_item = {
                                 'title': item['name']['name'],
-                                'subtitle': '%s\n%s' % (item['name']['name_sub'], item['contacts']['address']),
+                                'subtitle': '%s\n%s' % (item['access'], item['contacts']['address']),
                                 'image_url': item['image_url']['thumbnail'],
                                 'buttons': [
                                     {
                                         'type': 'web_url',
                                         'url': item['url'],
-                                        'title': 'TEMP BUTTON TITLE'
+                                        'title': button_title
                                     }
                                 ]
                             }
@@ -1625,7 +1625,7 @@ def process_request(req):
                                 i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
                                 item['contacts']['tel'], item['business_hour']
                             )
-                else:
+                else: # Korean - continue
                     speech = ''
 
                     elements = list()
@@ -1647,8 +1647,6 @@ def process_request(req):
                                 ]
                             }
                             elements.append(fb_item)
-                            print('elements:::::::\n%s' % elements)
-                ######
                 elements = list()
                 if not _res['rest']:
                     print("Empty list!")
