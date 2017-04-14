@@ -1651,40 +1651,25 @@ def process_request(req):
                 if not _res['rest']:
                     print("Empty list!")
                 else:
-                    for i, item in enumerate(_res['rest']):
-                        fb_item = {
-                            'title': item['name']['name'],
-                            'subtitle': '%s\n%s' % (item['name']['name_sub'], item['contacts']['address']),
-                            'image_url': item['image_url']['thumbnail'],
-                            'buttons': [
-                                {
-                                    'type': 'web_url',
-                                    'url': item['url'],
-                                    'title': 'TEMP BUTTON TITLE'
-                                }
-                            ]
-                        }
-                        elements.append(fb_item)
-                        if userlocale == 'zh_cn':
-                            speech += '%s. 名称: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
-                                i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
-                                item['contacts']['tel'], item['business_hour']
-                            )
-                        elif userlocale in ('zh_tw', 'zh_hk'):
-                            speech += '%s. 名稱: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
-                                i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
-                                item['contacts']['tel'], item['business_hour']
-                            )
-                        else:
-                            speech += '%s. Name: %s\nSummary: %s\nAddress: %s\nTel: %s\nBusiness hours: %s\n\n' % (
-                                i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
-                                item['contacts']['tel'], item['business_hour']
-                            )
-
-                        speech += '%s. name: %s\nsummary: %s\naddress: %s\ntel: %s\nbusiness hours: %s\n\n' % (
-                            i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
-                            item['contacts']['tel'], item['business_hour']
-                        )
+                    elements = list()
+                    if not _res['list']:
+                        speech = ''
+                        print("speech is empty")
+                    else:
+                        for i, item in enumerate(_res['list']):
+                            fb_item = {
+                                'title': item['name'],
+                                'subtitle': '%s\n%s' % (item['summary'], item['address']),
+                                'image_url': item['imagePath'],
+                                'buttons': [
+                                    {
+                                        'type': 'web_url',
+                                        'url': item['url'],
+                                        'title': button_title
+                                    }
+                                ]
+                            }
+                            elements.append(fb_item)
 
         print('res ========================= \n{}'.format(_res))
 
