@@ -1597,11 +1597,11 @@ def process_request(req):
         }
     elif action in ('restaurant.country-cuisine'):
         if userlocale == 'zh_cn':
-            speech = 'Any particular food that you are looking for? (Ex. Korean, Japanese, Sushi, Ramen)' #translation needed
+            speech = 'Which area do you want to search for? (ex. Gangnam, Ginza)' #translation needed
         elif userlocale in ('zh_tw', 'zh_hk'):
-            speech = 'Any particular food that you are looking for? (Ex. Korean, Japanese, Sushi, Ramen)' #translation needed
+            speech = 'Which area do you want to search for? (ex. Gangnam, Ginza)' #translation needed
         else:
-            speech = 'Any particular food that you are looking for? (Ex. Korean, Japanese, Sushi, Ramen)'
+            speech = 'Which area do you want to search for? (ex. Gangnam, Ginza)'
         res = {
             'speech': speech,
             'displayText': '',
