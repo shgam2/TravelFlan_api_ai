@@ -1530,11 +1530,11 @@ def process_request(req):
         }
     elif action == 'restaurant.init':
         if userlocale == 'zh_cn':
-            speech = 'I can assist you with your restaurant inquiry. How can I help?'  # translation needed
+            speech = 'How can I help?'  # translation needed
         elif userlocale in ('zh_tw', 'zh_hk'):
-            speech = 'I can assist you with your restaurant inquiry. How can I help?'  # translation needed
+            speech = 'How can I help?'  # translation needed
         else:
-            speech = 'I can assist you with your restaurant inquiry. How can I help?'
+            speech = 'How can I help?'
         res = {
             'speech': speech,
             'displayText': '',
@@ -1581,7 +1581,7 @@ def process_request(req):
             speech = '您要去哪個國家？'
             title = ['韓國', '日本', '其他']
         else:
-            speech = 'What country are you travelling to?'
+            speech = 'I will assist you with your restaurant inquiry. What country are you travelling to?'
             title = ['South Korea', 'Japan', 'Other']
         datum = {
             'text': speech,
