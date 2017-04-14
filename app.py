@@ -1484,7 +1484,7 @@ def process_request(req):
                     for i, item in enumerate(_res['rest']):
                         fb_item = {
                             'title': item['name']['name'],
-                            'subtitle': '%s\n%s' % (item['name']['name_sub'], item['contacts']['address']),
+                            'subtitle': '%s\n%s' % (item['name']['name_sub'], item['contacts']['address']), ##this line has a proble??
                             'image_url': item['image_url']['thumbnail'],
                             'buttons': [
                                 {
@@ -1719,7 +1719,7 @@ def process_request(req):
             'source': 'apiai-restaurant',
             'data': ''
         }
-    elif action in ('restaurant.country-cuisine',):
+    elif action in ('restaurant.country-cuisine', 'restaurant.country-cuisine.Restaurant-countrycuisine-fallback'):
         if userlocale == 'zh_cn':
             speech = 'Which area do you want to search for? (ex. Gangnam, Ginza)'  # translation needed
         elif userlocale in ('zh_tw', 'zh_hk'):
