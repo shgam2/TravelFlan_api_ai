@@ -1485,6 +1485,7 @@ def process_request(req):
                 }
                 print('1. GURUNAVI')
                 _res = exapi_gurunavi(_data)
+                print('RESSSS \n{}'.format(_res))
 
                 elements = list()
                 if not _res['rest']:
