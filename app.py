@@ -1311,8 +1311,10 @@ def process_request(req):
                 cuisine = req['result']['parameters']['cuisine'].lower()
             else:
                 cuisine = req['result']['parameters'].get('prev-cuisine').lower()
-            if country == 'japan':
+
+            if country == 'japan': ##
                 category_l = exapi_gurunavi_category_l(cuisine)
+
             if cuisine == 'korean':
                 category2 = '3101'
             elif cuisine == 'japanese':
@@ -1414,13 +1416,16 @@ def process_request(req):
         else:
             address = req['result']['parameters']['prev-address']
 
+        print('1111111')
         geocode_result = gmaps.geocode(address)
         latitude = geocode_result[0]['geometry']['location']['lat']
         longitude = geocode_result[0]['geometry']['location']['lng']
 
+        print('2222222')
         if action == 'restaurant':
-
+            print('3333333')
             if country == 'japan':
+                print('4444444')
                 _data = {
                     'key_id': GURUNAVI_KEY,
                     'lang': lang,
