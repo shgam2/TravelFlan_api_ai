@@ -467,7 +467,7 @@ def make_quick_replies(locale):
         text = '那麼有其他可以為您服務的嗎?'
         title = ['行程', '一天團', '餐廳', '方向', '天氣']
     else:
-        text = 'Anything I can help?'
+        text = 'Anything else?'
         title = ['Itinerary', 'Tour', 'Restaurant', 'Transportation', 'Weather']
     return {
         'text': text,
