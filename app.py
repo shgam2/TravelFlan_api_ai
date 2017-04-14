@@ -422,104 +422,8 @@ def exapi_pengtai(data):
         return None
 
 def exapi_gurunavi(data):
-
-
-    url_cuisine = GURUNAVI_CATEGORY_URL + urlencode({'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en'})
-    url_location = GURUNAVI_AREA_URL + urlencode({'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en'})
-    res_cuisine = requests.get(url_cuisine).json()['category_l']
-    res_location = requests.get(url_location).json()['garea_large']
-
-    for i, item in enumerate(res_location):
-        if location.lower() in item.get('areaname_l').lower():
-            print('found it')
-            print('Location: found code is %s' % (item.get('areacode_l')))
-            location_code = item.get('areacode_l')
-            break
-        else:
-            pass
-    if not location_code:
-        return None
-
-    for i, item in enumerate(res_cuisine):
-        if cuisine.lower() in item.get('category_l_name').lower():
-            print('found it')
-            print('Cuisine: found code is %s' % (item.get('category_l_code')))
-            cuisine_code = item.get('category_l_code')
-            break
-        else:
-            pass
-    if not cuisine_code:
-        return None
-
-    url_lookup = GURUNAVI_SEARCH_URL + urlencode(
-        {'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en', 'areacode_l': location_code,
-         'category_l': cuisine_code})
-    _res = requests.get(url_lookup).json()
-
-    speech = ''
-
-    elements = list()
-
-    if not _res['rest']:
-        print("Empty list!")
-    else:
-        for i, item in enumerate(_res['rest']):
-            fb_item = {
-                'title': item['name']['name'],
-                'subtitle': '%s\n%s' % (item['name']['name_sub'], item['contacts']['address']),
-                'image_url': item['image_url']['thumbnail'],
-                'buttons': [
-                    {
-                        'type': 'web_url',
-                        'url': item['url'],
-                        'title': 'TEMP BUTTON TITLE'
-                    }
-                ]
-            }
-            elements.append(fb_item)
-            if userlocale == 'zh_cn':
-                speech += '%s. 名称: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
-                    i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
-                    item['contacts']['tel'], item['business_hour']
-                )
-            elif userlocale in ('zh_tw', 'zh_hk'):
-                speech += '%s. 名稱: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
-                    i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
-                    item['contacts']['tel'], item['business_hour']
-                )
-            else:
-                speech += '%s. Name: %s\nSummary: %s\nAddress: %s\nTel: %s\nBusiness hours: %s\n\n' % (
-                    i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
-                    item['contacts']['tel'], item['business_hour']
-                )
-
-            speech += '%s. name: %s\nsummary: %s\naddress: %s\ntel: %s\nbusiness hours: %s\n\n' % (
-                i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
-                item['contacts']['tel'], item['business_hour']
-            )
-        l = 0
-        for x in speech.split('\n'):
-            l += len(x)
-            if l > 500:
-                speech = speech[:l - len(x)] + '\n\n...'
-                break
-        data = [
-            {
-                'attachment_type': 'template',
-                'attachment_payload': {
-                    'template_type': 'generic',
-                    'elements': elements
-                }
-            }
-        ]
-        res = {
-            'speech': speech,
-            'displayText': speech,
-            'source': 'apiai-restaurant',
-            'data': data
-        }
     try:
-        res = requests.get(PENGTAI_TEST_URL, headers=headers, params=data)
+        res = requests.get(GURUNAVI_SEARCH_URL, params=data)
         print(res.json())
         return res.json()
     except Exception as e:
@@ -1493,46 +1397,58 @@ def process_request(req):
         latitude = geocode_result[0]['geometry']['location']['lat']
         longitude = geocode_result[0]['geometry']['location']['lng']
 
-        if country == 'japan':
-            _data = {
-                'key_id': GURUNAVI_KEY,
-                'lang': lang,
-                'category_l': category_l,
-                'latitude': str(latitude),
-                'longitude': str(longitude),
-                'input_coordinates_mode': '2',
-                'range': '500',
-                'format': 'json'
-            }
-        else:
-            _data = {
-                'lang': lang,
-                'category1': category1,
-                'category2': category2,
-                # 'cityCode': None,
-                # 'areaCode': None,
-                'latitude': str(latitude),
-                'longitude': str(longitude),
-                'distance': '10000'
-            }
         if action == 'restaurant':
+
             if country == 'japan':
+                _data = {
+                    'key_id': GURUNAVI_KEY,
+                    'lang': lang,
+                    'category_l': category_l,
+                    'latitude': str(latitude),
+                    'longitude': str(longitude),
+                    'input_coordinates_mode': '2',
+                    'range': '500',
+                    'format': 'json'
+                }
+                print('1. GURUNAVI')
                 _res = exapi_gurunavi(_data)
-                print('GURUNAVI')
+
             elif country == 'korea':
+                _data = {
+                    'lang': lang,
+                    'category1': category1,
+                    'category2': category2,
+                    'latitude': str(latitude),
+                    'longitude': str(longitude),
+                    'distance': '10000'
+                }
                 _res = exapi_pengtai(_data)
                 print('PENGTAI')
-            elif country == 'unknown':
+            else:
+                _data = {
+                    'lang': lang,
+                    'category1': category1,
+                    'category2': category2,
+                    'latitude': str(latitude),
+                    'longitude': str(longitude),
+                    'distance': '10000'
+                }
                 _res = exapi_pengtai(_data)
                 print('PENGTAI')
                 if not _res:
+                    print('NOT FOUND IN PENGTAI, NOW GO TO GURUNAVI')
+                    _data = {
+                        'key_id': GURUNAVI_KEY,
+                        'lang': lang,
+                        'category_l': category_l,
+                        'latitude': str(latitude),
+                        'longitude': str(longitude),
+                        'input_coordinates_mode': '2',
+                        'range': '500',
+                        'format': 'json'
+                    }
+                    print('1. GURUNAVI')
                     _res = exapi_gurunavi(_data)
-                    print('GURUNAVI')
-                if not _res:
-                    return None
-        else:
-            _res = exapi_pengtai(_data)
-            print('PENGTAI')
 
         print('res ========================= \n{}'.format(_res))
 
