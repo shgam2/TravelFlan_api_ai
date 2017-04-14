@@ -424,14 +424,14 @@ def exapi_pengtai(data):
 
 def exapi_gurunavi(data):
     print("In exapi_gurunavi(data) **********")
-    print('DATA IS \n{}'.format(data))
-    try:
-        res = requests.get(GURUNAVI_SEARCH_URL, params=data)
-        print(res.json())
-        return res.json()
-    except Exception as e:
-        print(e)
-        return None
+
+    url_lookup = GURUNAVI_SEARCH_URL + urlencode(
+        {'keyid': GURUNAVI_KEY, 'format': data['format'], 'category_l': data['category_l'], 'latitude':data['latitude'], 'longitude':data['longitude'], 'input_coordinates_mode':
+        data['input_coordinates_mode'], 'range':data['range']})
+
+    print('URL: {}'.format(url_lookup))
+    _res = requests.get(url_lookup).json()
+    return _res
 
 
 def exapi_gurunavi_category_l(cuisine):
@@ -1458,7 +1458,31 @@ def process_request(req):
                 }
                 _res = exapi_pengtai(_data)
                 print('PENGTAI')
-            else:
+
+                speech = ''
+
+                elements = list()
+                if not _res['list']:
+                    speech = ''
+                    print("speech is empty")
+                else:
+                    for i, item in enumerate(_res['list']):
+                        fb_item = {
+                            'title': item['name'],
+                            'subtitle': '%s\n%s' % (item['summary'], item['address']),
+                            'image_url': item['imagePath'],
+                            'buttons': [
+                                {
+                                    'type': 'web_url',
+                                    'url': item['url'],
+                                    'title': button_title
+                                }
+                            ]
+                        }
+                        elements.append(fb_item)
+                        print('elements:::::::\n%s' % elements)
+
+            else: # country is unknown
                 _data = {
                     'lang': lang,
                     'category1': category1,
@@ -1484,30 +1508,112 @@ def process_request(req):
                     print('1. GURUNAVI')
                     _res = exapi_gurunavi(_data)
 
+                    elements = list()
+                    if not _res['rest']:
+                        print("Empty list!")
+                    else:
+                        for i, item in enumerate(_res['rest']):
+                            fb_item = {
+                                'title': item['name']['name'],
+                                'subtitle': '%s\n%s' % (item['name']['name_sub'], item['contacts']['address']),
+                                'image_url': item['image_url']['thumbnail'],
+                                'buttons': [
+                                    {
+                                        'type': 'web_url',
+                                        'url': item['url'],
+                                        'title': 'TEMP BUTTON TITLE'
+                                    }
+                                ]
+                            }
+                            elements.append(fb_item)
+                            if userlocale == 'zh_cn':
+                                speech += '%s. 名称: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
+                                    i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                                    item['contacts']['tel'], item['business_hour']
+                                )
+                            elif userlocale in ('zh_tw', 'zh_hk'):
+                                speech += '%s. 名稱: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
+                                    i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                                    item['contacts']['tel'], item['business_hour']
+                                )
+                            else:
+                                speech += '%s. Name: %s\nSummary: %s\nAddress: %s\nTel: %s\nBusiness hours: %s\n\n' % (
+                                    i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                                    item['contacts']['tel'], item['business_hour']
+                                )
+
+                            speech += '%s. name: %s\nsummary: %s\naddress: %s\ntel: %s\nbusiness hours: %s\n\n' % (
+                                i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                                item['contacts']['tel'], item['business_hour']
+                            )
+                else:
+                    speech = ''
+
+                    elements = list()
+                    if not _res['list']:
+                        speech = ''
+                        print("speech is empty")
+                    else:
+                        for i, item in enumerate(_res['list']):
+                            fb_item = {
+                                'title': item['name'],
+                                'subtitle': '%s\n%s' % (item['summary'], item['address']),
+                                'image_url': item['imagePath'],
+                                'buttons': [
+                                    {
+                                        'type': 'web_url',
+                                        'url': item['url'],
+                                        'title': button_title
+                                    }
+                                ]
+                            }
+                            elements.append(fb_item)
+                            print('elements:::::::\n%s' % elements)
+                ######
+                elements = list()
+                if not _res['rest']:
+                    print("Empty list!")
+                else:
+                    for i, item in enumerate(_res['rest']):
+                        fb_item = {
+                            'title': item['name']['name'],
+                            'subtitle': '%s\n%s' % (item['name']['name_sub'], item['contacts']['address']),
+                            'image_url': item['image_url']['thumbnail'],
+                            'buttons': [
+                                {
+                                    'type': 'web_url',
+                                    'url': item['url'],
+                                    'title': 'TEMP BUTTON TITLE'
+                                }
+                            ]
+                        }
+                        elements.append(fb_item)
+                        if userlocale == 'zh_cn':
+                            speech += '%s. 名称: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
+                                i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                                item['contacts']['tel'], item['business_hour']
+                            )
+                        elif userlocale in ('zh_tw', 'zh_hk'):
+                            speech += '%s. 名稱: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
+                                i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                                item['contacts']['tel'], item['business_hour']
+                            )
+                        else:
+                            speech += '%s. Name: %s\nSummary: %s\nAddress: %s\nTel: %s\nBusiness hours: %s\n\n' % (
+                                i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                                item['contacts']['tel'], item['business_hour']
+                            )
+
+                        speech += '%s. name: %s\nsummary: %s\naddress: %s\ntel: %s\nbusiness hours: %s\n\n' % (
+                            i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                            item['contacts']['tel'], item['business_hour']
+                        )
+
+
+
         print('res ========================= \n{}'.format(_res))
 
-        speech = ''
 
-        elements = list()
-        if not _res['list']:
-            speech = ''
-            print("speech is empty")
-        else:
-            for i, item in enumerate(_res['list']):
-                fb_item = {
-                    'title': item['name'],
-                    'subtitle': '%s\n%s' % (item['summary'], item['address']),
-                    'image_url': item['imagePath'],
-                    'buttons': [
-                        {
-                            'type': 'web_url',
-                            'url': item['url'],
-                            'title': button_title
-                        }
-                    ]
-                }
-                elements.append(fb_item)
-                print('elements:::::::\n%s' % elements)
 
             l = 0
             for x in speech.split('\n'):
