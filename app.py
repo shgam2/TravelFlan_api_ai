@@ -1488,19 +1488,11 @@ def process_request(req):
                 print('1. GURUNAVI')
                 _res = exapi_gurunavi(_data)
                 print('RESSSS \n{}'.format(_res))
-                print('thomas2')
-                print(_res)
                 elements = list()
-                print('thomas1')
-                print(_res['error']['code'])
-                print(hasattr(_res, 'error'))
-                print(hasattr(_res['error'], 'code'))
-                print(_res['error']['code'] == '600')
-                print(hasattr(_res, 'rest'))
-                print('rest' in _res)
-                if(hasattr(_res, 'error') and hasattr(_res['error'], 'code') and _res['error']['code'] == '600'):
+
+                if((not 'rest' in _res) and  _res['error']['code'] == '600'):
                     speech = 'Sorry, we do not have sufficient data at the moment. Please try with different parameters'
-                elif hasattr(_res, 'rest') and not _res['rest']:
+                elif not _res['rest']:
                     print("Empty list!")
                 else:
                     print("HERERERERE")
