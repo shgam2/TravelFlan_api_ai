@@ -1426,6 +1426,12 @@ def process_request(req):
         if action == 'restaurant':
             print('3333333')
             if country == 'japan':
+                if lang == '01':
+                    lang = 'zh_cn'
+                elif lang == '02':
+                    lang = 'zh_tw'
+                else:
+                    lang = 'en'
                 print('4444444')
                 _data = {
                     'keyid': GURUNAVI_KEY,
