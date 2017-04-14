@@ -1455,7 +1455,7 @@ def process_request(req):
                     for i, item in enumerate(_res['rest']):
                         fb_item = {
                             'title': item['name']['name'],
-                            'subtitle': '%s\n%s' % (item['name']['name_sub'], item['contacts']['address']),
+                            'subtitle': '%s\n%s' % (item['name']['name_sub'], item['contacts']['address']), ##this line has a proble??
                             'image_url': item['image_url']['thumbnail'],
                             'buttons': [
                                 {
