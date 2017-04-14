@@ -423,6 +423,7 @@ def exapi_pengtai(data):
 
 
 def exapi_gurunavi(data):
+    print("In exapi_gurunavi(data) **********")
     try:
         res = requests.get(GURUNAVI_SEARCH_URL, params=data)
         print(res.json())
