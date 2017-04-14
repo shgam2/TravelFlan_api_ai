@@ -1110,7 +1110,6 @@ def process_request(req):
                 'data': data
             }
     elif action in ('attraction', 'accommodation', 'restaurant', 'shopping'):
-        print('333333333')
         if userlocale == 'zh_cn':
             lang = '01'
             button_title = '点击查看'
@@ -1121,10 +1120,8 @@ def process_request(req):
             lang = '04'
             button_title = 'Click to view'
 
-        print('444444444')
-
         if action == 'restaurant':
-            print('555555555')
+            print('IN RESTAURANT ACTION')
             category1 = '3000'
             if req['result']['parameters'].get('cuisine'):
                 cuisine = req['result']['parameters']['cuisine'].lower()
@@ -1226,13 +1223,10 @@ def process_request(req):
                 return None
         else:
             category1 = None
-        print('66666666')
         if req['result']['parameters'].get('address'):
             address = req['result']['parameters']['address']
         else:
             address = req['result']['parameters']['prev-address']
-
-        print('7777777777')
 
         geocode_result = gmaps.geocode(address)
         latitude = geocode_result[0]['geometry']['location']['lat']
@@ -1292,6 +1286,72 @@ def process_request(req):
         res = {
             'speech': speech,
             'displayText': speech,
+            'source': 'apiai-restaurant',
+            'data': data
+        }
+    elif action == 'restaurant.init':
+        if userlocale == 'zh_cn':
+            speech = 'How can I help you?' # translation needed
+        elif userlocale in ('zh_tw', 'zh_hk'):
+            speech = 'How can I help you?' # translation needed
+        else:
+            speech = 'How can I help you?'
+        res = {
+            'speech': speech,
+            'displayText': '',
+            'source': 'apiai-restaurant',
+            'data': ''
+        }
+    elif action == 'restaurant.location':
+        if userlocale == 'zh_cn':
+            speech = 'Any particular food that you are looking for? (Ex. Korean, Japanese, Sushi, Ramen)' #translation needed
+        elif userlocale in ('zh_tw', 'zh_hk'):
+            speech = 'Any particular food that you are looking for? (Ex. Korean, Japanese, Sushi, Ramen)' #translation needed
+        else:
+            speech = 'Any particular food that you are looking for? (Ex. Korean, Japanese, Sushi, Ramen)'
+        res = {
+            'speech': speech,
+            'displayText': '',
+            'source': 'apiai-restaurant',
+            'data': ''
+        }
+    elif action in ('Restaurant.Restaurant-fallback'):
+        print('IN Restaurant.Restaurant-fallback ACTION')
+        data = []
+        payload = ['SOUTH KOREA', 'JAPAN', 'OTHER']
+        if userlocale == 'zh_cn':
+            speech = '您要去哪个国家？'
+            title = ['韩国', '日本', '其他']
+        elif userlocale in ('zh_tw', 'zh_hk'):
+            speech = '您要去哪個國家？'
+            title = ['韓國', '日本', '其他']
+        else:
+            speech = 'What country are you travelling to?'
+            title = ['South Korea', 'Japan', 'Other']
+        datum = {
+            'text': speech,
+            'quick_replies': [
+                {
+                    'content_type': 'text',
+                    'title': title[0],
+                    'payload': payload[0]
+                },
+                {
+                    'content_type': 'text',
+                    'title': title[1],
+                    'payload': payload[1]
+                },
+                {
+                    'content_type': 'text',
+                    'title': title[2],
+                    'payload': payload[2]
+                }
+            ]
+        }
+        data.append(datum)
+        res = {
+            'speech': speech,
+            'displayText': '',
             'source': 'apiai-restaurant',
             'data': data
         }
