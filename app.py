@@ -467,7 +467,7 @@ def make_quick_replies(locale):
         text = '那麼有其他可以為您服務的嗎?'
         title = ['行程', '一天團', '餐廳', '方向', '天氣']
     else:
-        text = 'Anything I can help?'
+        text = 'Anything else?'
         title = ['Itinerary', 'Tour', 'Restaurant', 'Transportation', 'Weather']
     return {
         'text': text,
@@ -1487,6 +1487,7 @@ def process_request(req):
                 }
                 print('1. GURUNAVI')
                 _res = exapi_gurunavi(_data)
+                print('RESSSS \n{}'.format(_res))
 
                 elements = list()
                 if not _res['rest']:
@@ -1494,16 +1495,9 @@ def process_request(req):
                 else:
                     print("HERERERERE")
                     for i, item in enumerate(_res['rest']):
-                        #print('----------------item--------------- \n{}'.format(item))
-                        print ("1. {}\n"
-                               "2. {}\n"
-                               "3. {}\n"
-                               "4. {}\n"
-                               "5. {}\n".format(item['name']['name'], item['name']['name_sub'], item['contacts']['address'], item['image_url']['thumbnail'], item['url']))
-
                         fb_item = {
                             'title': item['name']['name'],
-                            'subtitle': '%s\n%s' % (item['name']['name_sub'], item['contacts']['address']), ##this line has a proble??
+                            'subtitle': '%s\n%s' % (item['access'], item['contacts']['address']),
                             'image_url': item['image_url']['thumbnail'],
                             'buttons': [
                                 {
@@ -1530,10 +1524,10 @@ def process_request(req):
                                 item['contacts']['tel'], item['business_hour']
                             )
 
-                        speech += '%s. name: %s\nsummary: %s\naddress: %s\ntel: %s\nbusiness hours: %s\n\n' % (
-                            i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
-                            item['contacts']['tel'], item['business_hour']
-                        )
+                        # speech += '%s. name: %s\nsummary: %s\naddress: %s\ntel: %s\nbusiness hours: %s\n\n' % (
+                        #     i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                        #     item['contacts']['tel'], item['business_hour']
+                        # )
 
             elif country == 'korea':
                 _data = {
@@ -1568,7 +1562,21 @@ def process_request(req):
                             ]
                         }
                         elements.append(fb_item)
-                        print('elements:::::::\n%s' % elements)
+                        if userlocale == 'zh_cn':
+                            speech += '%s. 名称: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
+                                i + 1, item['name'], item['summary'], item['address'],
+                                item['tel'], item['besinessHours']
+                            )
+                        elif userlocale in ('zh_tw', 'zh_hk'):
+                            speech += '%s. 名稱: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
+                                i + 1, item['name'], item['summary'], item['address'],
+                                item['tel'], item['besinessHours']
+                            )
+                        else:
+                            speech += '%s. Name: %s\nSummary: %s\nAddress: %s\nTel: %s\nBusiness hours: %s\n\n' % (
+                                i + 1, item['name'], item['summary'], item['address'],
+                                item['tel'], item['besinessHours']
+                            )
 
             else:  # country is unknown
                 _data = {
@@ -1579,9 +1587,9 @@ def process_request(req):
                     'longitude': str(longitude),
                     'distance': '10000'
                 }
-                _res = exapi_pengtai(_data)
+                _res = exapi_pengtai(_data) # try Pengtai first (Korean content)
                 print('PENGTAI')
-                if not _res:
+                if not _res: # if not found in Pengtai database, look into Gurunavi
                     print('NOT FOUND IN PENGTAI, NOW GO TO GURUNAVI')
                     _data = {
                         'key_id': GURUNAVI_KEY,
@@ -1603,13 +1611,13 @@ def process_request(req):
                         for i, item in enumerate(_res['rest']):
                             fb_item = {
                                 'title': item['name']['name'],
-                                'subtitle': '%s\n%s' % (item['name']['name_sub'], item['contacts']['address']),
+                                'subtitle': '%s\n%s' % (item['access'], item['contacts']['address']),
                                 'image_url': item['image_url']['thumbnail'],
                                 'buttons': [
                                     {
                                         'type': 'web_url',
                                         'url': item['url'],
-                                        'title': 'TEMP BUTTON TITLE'
+                                        'title': button_title
                                     }
                                 ]
                             }
@@ -1630,16 +1638,15 @@ def process_request(req):
                                     item['contacts']['tel'], item['business_hour']
                                 )
 
-                            speech += '%s. name: %s\nsummary: %s\naddress: %s\ntel: %s\nbusiness hours: %s\n\n' % (
-                                i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
-                                item['contacts']['tel'], item['business_hour']
-                            )
-                else:
+                            # speech += '%s. name: %s\nsummary: %s\naddress: %s\ntel: %s\nbusiness hours: %s\n\n' % (
+                            #     i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                            #     item['contacts']['tel'], item['business_hour']
+                            # )
+                else: # Korean - continue
                     speech = ''
 
                     elements = list()
                     if not _res['list']:
-                        speech = ''
                         print("speech is empty")
                     else:
                         for i, item in enumerate(_res['list']):
@@ -1656,46 +1663,48 @@ def process_request(req):
                                 ]
                             }
                             elements.append(fb_item)
-                            print('elements:::::::\n%s' % elements)
-                ######
-                elements = list()
-                if not _res['rest']:
-                    print("Empty list!")
-                else:
-                    for i, item in enumerate(_res['rest']):
-                        fb_item = {
-                            'title': item['name']['name'],
-                            'subtitle': '%s\n%s' % (item['name']['name_sub'], item['contacts']['address']),
-                            'image_url': item['image_url']['thumbnail'],
-                            'buttons': [
-                                {
-                                    'type': 'web_url',
-                                    'url': item['url'],
-                                    'title': 'TEMP BUTTON TITLE'
-                                }
-                            ]
-                        }
-                        elements.append(fb_item)
-                        if userlocale == 'zh_cn':
-                            speech += '%s. 名称: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
-                                i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
-                                item['contacts']['tel'], item['business_hour']
-                            )
-                        elif userlocale in ('zh_tw', 'zh_hk'):
-                            speech += '%s. 名稱: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
-                                i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
-                                item['contacts']['tel'], item['business_hour']
-                            )
-                        else:
-                            speech += '%s. Name: %s\nSummary: %s\nAddress: %s\nTel: %s\nBusiness hours: %s\n\n' % (
-                                i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
-                                item['contacts']['tel'], item['business_hour']
-                            )
+                            if userlocale == 'zh_cn':
+                                speech += '%s. 名称: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
+                                    i + 1, item['name'], item['summary'], item['address'],
+                                    item['tel'], item['besinessHours']
+                                )
+                            elif userlocale in ('zh_tw', 'zh_hk'):
+                                speech += '%s. 名稱: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
+                                    i + 1, item['name'], item['summary'], item['address'],
+                                    item['tel'], item['besinessHours']
+                                )
+                            else:
+                                speech += '%s. Name: %s\nSummary: %s\nAddress: %s\nTel: %s\nBusiness hours: %s\n\n' % (
+                                    i + 1, item['name'], item['summary'], item['address'],
+                                    item['tel'], item['besinessHours']
+                                )
 
-                        speech += '%s. name: %s\nsummary: %s\naddress: %s\ntel: %s\nbusiness hours: %s\n\n' % (
-                            i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
-                            item['contacts']['tel'], item['business_hour']
-                        )
+                            # speech += '%s. name: %s\nsummary: %s\naddress: %s\ntel: %s\nbusiness hours: %s\n\n' % (
+                            #     i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                            #     item['contacts']['tel'], item['business_hour']
+                # elements = list()
+                # if not _res['rest']:
+                #     print("Empty list!")
+                # else:
+                #     elements = list()
+                #     if not _res['list']:
+                #         speech = ''
+                #         print("speech is empty")
+                #     else:
+                #         for i, item in enumerate(_res['list']):
+                #             fb_item = {
+                #                 'title': item['name'],
+                #                 'subtitle': '%s\n%s' % (item['summary'], item['address']),
+                #                 'image_url': item['imagePath'],
+                #                 'buttons': [
+                #                     {
+                #                         'type': 'web_url',
+                #                         'url': item['url'],
+                #                         'title': button_title
+                #                     }
+                #                 ]
+                #             }
+                #             elements.append(fb_item)
 
         print('res ========================= \n{}'.format(_res))
 
