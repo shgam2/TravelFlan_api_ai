@@ -1462,6 +1462,7 @@ def process_request(req):
         longitude = geocode_result[0]['geometry']['location']['lng']
 
         print('2222222')
+        speech = ''
         if action == 'restaurant':
             print('3333333')
             if country == 'japan':
