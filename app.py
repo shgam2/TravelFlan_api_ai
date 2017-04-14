@@ -1530,7 +1530,7 @@ def process_request(req):
             'data': ''
         }
 
-    elif action in ('restaurant.location', 'restaurant.country'):
+    elif action in ('restaurant.location', 'restaurant.country', 'Restaurant.location.Restaurant-location-fallback'):
         if userlocale == 'zh_cn':
             speech = 'Any particular food that you are looking for? (Ex. Korean, Japanese, Sushi, Ramen)'  # translation needed
         elif userlocale in ('zh_tw', 'zh_hk'):
@@ -1543,6 +1543,8 @@ def process_request(req):
             'source': 'apiai-restaurant',
             'data': ''
         }
+
+
     elif action in ('Restaurant.Restaurant-fallback'):
         print('IN Restaurant.Restaurant-fallback ACTION')
         data = []
