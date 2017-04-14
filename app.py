@@ -22,7 +22,7 @@ YAHOO_YQL_BASE_URL = 'https://query.yahooapis.com/v1/public/yql?'
 TRANSLATE_BASE_URL = 'http://awseb-e-f-AWSEBLoa-VIW6OYVV6CSY-1979702995.us-east-1.elb.amazonaws.com/translate?'
 
 TF_ITINERARY_URL = 'https://flanb-demo.travelflan.com/data/itinerary?type=0&'
-TF_TOUR_URL = 'https://flanb-test.travelflan.com/data/itinerary?type=1&days=1'#&area=seoul'
+TF_TOUR_URL = 'https://flanb-demo.travelflan.com/data/itinerary?type=1&days=1&'
 
 PENGTAI_URL = 'http://www.hanguoing.cn/exApi/travelFlan'
 PENGTAI_TEST_URL = 'http://test1.hanguoing.com/exApi/travelFlan'
@@ -397,11 +397,8 @@ def exapi_travelflan_itin(data):
 
 
 def exapi_travelflan_tour(data):
-    print('city: %s' % data['city'])
-    print('lang: %s' % data['lang'])
-
     tour_url = TF_TOUR_URL + urlencode({'area': data['city']})
-    print('tour_url: {}'.format(tour_url))
+    print('tour_url:', tour_url)
 
     try:
         res = requests.get(tour_url)
@@ -574,33 +571,81 @@ def process_request(req):
             'displayText': speech,
             'source': 'apiai-weather'
         }
-    elif action == 'tour':
+    elif action in ('Tour', 'Tour.Tour-fallback'):
+        data = []
+        payload = ['SEOUL', 'BUSAN', 'TOKYO', 'OSAKA', 'NAGOYA']
+        if userlocale == 'zh_cn':
+            speech = 'Where are you travelling to? (ex. Seoul, Osaka, or Tokyo)'
+            title = ['尔的', '釜山', '东京', '大阪', '名古屋']
+        elif userlocale in ('zh_tw', 'zh_hk'):
+            speech = 'Where are you travelling to? (ex. Seoul, Osaka, or Tokyo)'
+            title = ['爾的', '釜山', '東京', '大阪', '名古屋']
+        else:
+            speech = 'Where are you travelling to? (ex. Seoul, Osaka, or Tokyo)'
+            title = ['Seoul', 'Busan', 'Tokyo', 'Osaka', 'Nagoya']
+        datum = {
+            'text': speech,
+            'quick_replies': [
+                {
+                    'content_type': 'text',
+                    'title': title[0],
+                    'payload': payload[0]
+                },
+                {
+                    'content_type': 'text',
+                    'title': title[1],
+                    'payload': payload[1]
+                },
+                {
+                    'content_type': 'text',
+                    'title': title[2],
+                    'payload': payload[2]
+                },
+                {
+                    'content_type': 'text',
+                    'title': title[3],
+                    'payload': payload[3]
+                },
+                {
+                    'content_type': 'text',
+                    'title': title[4],
+                    'payload': payload[4]
+                }
+            ]
+        }
+        data.append(datum)
+        res = {
+            'speech': '',
+            'displayText': '',
+            'source': 'apiai-tour',
+            'data': data
+        }
+        return res
+    elif action in ('Tour.location', 'Tour.location.Tour-location-fallback'):
         city = req['result']['parameters'].get('city')
+
         if userlocale == 'zh_cn':
             button_title = '点击查看'
-            speech = '可唔可以介紹%s既必去當地團俾我呀.\n' % city  # this is in traditional chinese atm. need to fix this later
+            speech = '可唔可以介绍%s既必去当地团俾我呀.\n' % city
         elif userlocale in ('zh_tw', 'zh_hk'):
             button_title = '點擊查看'
             speech = '可唔可以介紹%s既必去當地團俾我呀.\n' % city
         else:
             button_title = 'Click to view'
             speech = 'Here are the top recommended tours in %s.\n' % city
-
         _data = {
             'city': city,
             'lang': userlocale
         }
+
         tf_res = exapi_travelflan_tour(_data)
-
-        num_data = len(tf_res)
-
+        if not tf_res.get('day1'):
+            return None
         data = list()
-
-        for day in range(1, num_data + 1):
+        for day in range(1, len(tf_res) + 1):
             d = tf_res['day%d' % (day,)]
             elements = list()
 
-            place_num = 1
             for j, day_item in enumerate(d):
                 for k, item in enumerate(day_item):
                     if item['locale'].lower() == userlocale:
@@ -622,26 +667,9 @@ def process_request(req):
                             ]
                         }
 
-                        # map_url += '/{}'.format(title)
-                        place_num = place_num + 1
                         elements.append(fb_item)
                         speech += '(%s) %s\n' % (j + 1, title)
-                    else:
-                        print('passing item %s' % (j + 1))
-
-            # map_item = {
-            #     'title': 'Day {}: {}'.format(day, map_title),
-            #     'subtitle': map_subtitle,
-            #     'image_url': MAP_IMAGE_URL,
-            #     'buttons': [
-            #         {
-            #             'type': 'web_url',
-            #             'url': map_url,
-            #             'title': button_title
-            #         }
-            #     ]
-            # }
-            # elements.append(map_item)
+                        break
 
             data_item = {
                 'attachment_type': 'template',
