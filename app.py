@@ -1188,6 +1188,8 @@ def process_request(req):
                     'Transportation.address-from.Transportation-address-from-fallback'):
         speech, data = parse_json(req)
         print('Speech:\n%s' % (speech,))
+        datum = make_quick_replies(userlocale)
+        data.append(datum)
         res = {
             'speech': speech,
             'displayText': speech,
@@ -1484,7 +1486,6 @@ def process_request(req):
                 else:
                     print("HERERERERE")
                     for i, item in enumerate(_res['rest']):
-
                         print('----------------item--------------- \n{}'.format(item))
                         # print ("1. {}\n"
                         #        "2. {}\n"
