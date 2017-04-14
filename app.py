@@ -1152,7 +1152,7 @@ def process_request(req):
             'source': 'apiai-itinerary',
             'data': data
         }
-    elif action == 'Transportation':
+    elif action in ('Transportation', 'Transportation.Transportation-fallback'):
         if userlocale == 'zh_cn':
             speech = '请问需要什么帮忙? (如: 怎么从大阪去东京?)'
         elif userlocale in ('zh_tw', 'zh_hk'):
@@ -1164,19 +1164,19 @@ def process_request(req):
             'displayText': speech,
             'source': 'apiai-transportation'
         }
-    elif action == 'Transportation.Transportation-fallback':
-        if userlocale == 'zh_cn':
-            speech = '您的目的地是哪里呢? (如: 首尔/银座/江南站等)'
-        elif userlocale in ('zh_tw', 'zh_hk'):
-            speech = '您的目的地是哪裡呢? (如: 首爾/銀座/江南站等)'
-        else:
-            speech = 'What is your destination? (Ex: Seoul, Ginza, Gangnam station)'
-        res = {
-            'speech': speech,
-            'displayText': speech,
-            'source': 'apiai-transportation'
-        }
-    elif action in ('Transportation.destination', 'Transportation.destination.Transportation-destination-fallback'):
+    # elif action == 'Transportation.Transportation-fallback':
+    #     if userlocale == 'zh_cn':
+    #         speech = '您的目的地是哪里呢? (如: 首尔/银座/江南站等)'
+    #     elif userlocale in ('zh_tw', 'zh_hk'):
+    #         speech = '您的目的地是哪裡呢? (如: 首爾/銀座/江南站等)'
+    #     else:
+    #         speech = 'What is your destination? (Ex: Seoul, Ginza, Gangnam station)'
+    #     res = {
+    #         'speech': speech,
+    #         'displayText': speech,
+    #         'source': 'apiai-transportation'
+    #     }
+    elif action in ('Transportation.address-to', 'Transportation.address-to.Transportation-address-to-fallback'):
         if userlocale == 'zh_cn':
             speech = '从哪里出发呢? (如: 首尔/银座/江南站等)'
         elif userlocale in ('zh_tw', 'zh_hk'):
@@ -1188,9 +1188,13 @@ def process_request(req):
             'displayText': speech,
             'source': 'apiai-transportation'
         }
-    elif action in ('Transportation.source', 'Transportation.source.Transportation-source-fallback'):
+    elif action in ('Transportation.final',
+                    'Transportation.address-from-to.Transportation-address-from-to-fallback',
+                    'Transportation.address-from.Transportation-address-from-fallback'):
         speech, data = parse_json(req)
         print('Speech:\n%s' % (speech,))
+        datum = make_quick_replies(userlocale)
+        data.append(datum)
         res = {
             'speech': speech,
             'displayText': speech,
@@ -1487,7 +1491,6 @@ def process_request(req):
                 else:
                     print("HERERERERE")
                     for i, item in enumerate(_res['rest']):
-
                         print('----------------item--------------- \n{}'.format(item))
                         # print ("1. {}\n"
                         #        "2. {}\n"
