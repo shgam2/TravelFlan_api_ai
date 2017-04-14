@@ -1242,7 +1242,25 @@ def process_request(req):
             'data': data
         }
     elif action == 'restaurant.init':
-        speech = "How can I help you?"
+        if userlocale == 'zh_cn':
+            speech = 'How can I help you?' # translation needed
+        elif userlocale in ('zh_tw', 'zh_hk'):
+            speech = 'How can I help you?' # translation needed
+        else:
+            speech = 'How can I help you?'
+        res = {
+            'speech': speech,
+            'displayText': '',
+            'source': 'apiai-restaurant',
+            'data': ''
+        }
+    elif action == 'restaurant.location':
+        if userlocale == 'zh_cn':
+            speech = 'Any particular food that you are looking for? (Ex. Korean, Japanese, Sushi, Ramen)' #translation needed
+        elif userlocale in ('zh_tw', 'zh_hk'):
+            speech = 'Any particular food that you are looking for? (Ex. Korean, Japanese, Sushi, Ramen)' #translation needed
+        else:
+            speech = 'Any particular food that you are looking for? (Ex. Korean, Japanese, Sushi, Ramen)'
         res = {
             'speech': speech,
             'displayText': '',
