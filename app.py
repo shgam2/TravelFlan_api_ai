@@ -425,10 +425,15 @@ def exapi_pengtai(data):
 def exapi_gurunavi(data):
     print("In exapi_gurunavi(data) **********")
 
-    url_lookup = GURUNAVI_SEARCH_URL + urlencode(
-        {'keyid': GURUNAVI_KEY, 'format': data['format'], 'category_l': data['category_l'],
-         'latitude': data['latitude'], 'longitude': data['longitude'], 'input_coordinates_mode':
-             data['input_coordinates_mode']})
+    url_lookup = GURUNAVI_SEARCH_URL + urlencode({
+        'keyid': GURUNAVI_KEY,
+        'format': data['format'],
+        'category_l': data['category_l'],
+        'latitude': data['latitude'],
+        'longitude': data['longitude'],
+        'input_coordinates_mode': data['input_coordinates_mode'],
+        'lang': data['lang']
+    })
 
     print('URL: {}'.format(url_lookup))
     _res = requests.get(url_lookup).json()
