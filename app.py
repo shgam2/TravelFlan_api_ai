@@ -1484,40 +1484,47 @@ def process_request(req):
                 else:
                     print("HERERERERE")
                     for i, item in enumerate(_res['rest']):
-                        fb_item = {
-                            'title': item['name']['name'],
-                            'subtitle': '%s\n%s' % (item['name']['name_sub'], item['contacts']['address']),
-                        ##this line has a proble??
-                            'image_url': item['image_url']['thumbnail'],
-                            'buttons': [
-                                {
-                                    'type': 'web_url',
-                                    'url': item['url'],
-                                    'title': 'TEMP BUTTON TITLE'
-                                }
-                            ]
-                        }
-                        elements.append(fb_item)
-                        if userlocale == 'zh_cn':
-                            speech += '%s. 名称: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
-                                i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
-                                item['contacts']['tel'], item['business_hour']
-                            )
-                        elif userlocale in ('zh_tw', 'zh_hk'):
-                            speech += '%s. 名稱: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
-                                i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
-                                item['contacts']['tel'], item['business_hour']
-                            )
-                        else:
-                            speech += '%s. Name: %s\nSummary: %s\nAddress: %s\nTel: %s\nBusiness hours: %s\n\n' % (
-                                i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
-                                item['contacts']['tel'], item['business_hour']
-                            )
 
-                        speech += '%s. name: %s\nsummary: %s\naddress: %s\ntel: %s\nbusiness hours: %s\n\n' % (
-                            i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
-                            item['contacts']['tel'], item['business_hour']
-                        )
+                        print('----------------item--------------- \n{}'.format(item))
+                        # print ("1. {}\n"
+                        #        "2. {}\n"
+                        #        "3. {}\n"
+                        #        "4. {}\n"
+                        #        "5. {}\n".format(item['name']['name'], item['name']['name_sub'], item['contacts']['address'], item['image_url']['thumbnail'], item['url']))
+                        #
+                        # fb_item = {
+                        #     'title': item['name']['name'],
+                        #     'subtitle': '%s\n%s' % (item['name']['name_sub'], item['contacts']['address']), ##this line has a proble??
+                        #     'image_url': item['image_url']['thumbnail'],
+                        #     'buttons': [
+                        #         {
+                        #             'type': 'web_url',
+                        #             'url': item['url'],
+                        #             'title': 'TEMP BUTTON TITLE'
+                        #         }
+                        #     ]
+                        # }
+                        # elements.append(fb_item)
+                        # if userlocale == 'zh_cn':
+                        #     speech += '%s. 名称: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
+                        #         i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                        #         item['contacts']['tel'], item['business_hour']
+                        #     )
+                        # elif userlocale in ('zh_tw', 'zh_hk'):
+                        #     speech += '%s. 名稱: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
+                        #         i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                        #         item['contacts']['tel'], item['business_hour']
+                        #     )
+                        # else:
+                        #     speech += '%s. Name: %s\nSummary: %s\nAddress: %s\nTel: %s\nBusiness hours: %s\n\n' % (
+                        #         i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                        #         item['contacts']['tel'], item['business_hour']
+                        #     )
+                        #
+                        # speech += '%s. name: %s\nsummary: %s\naddress: %s\ntel: %s\nbusiness hours: %s\n\n' % (
+                        #     i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                        #     item['contacts']['tel'], item['business_hour']
+
 
             elif country == 'korea':
                 _data = {
