@@ -421,6 +421,7 @@ def exapi_pengtai(data):
         print(e)
         return None
 
+
 def exapi_gurunavi(data):
     try:
         res = requests.get(GURUNAVI_SEARCH_URL, params=data)
@@ -429,6 +430,7 @@ def exapi_gurunavi(data):
     except Exception as e:
         print(e)
         return None
+
 
 def exapi_gurunavi_category_l(cuisine):
     print('CUISINE WE ARE LOOKING IS {}'.format(cuisine))
@@ -447,6 +449,7 @@ def exapi_gurunavi_category_l(cuisine):
         return None
     else:
         return category_l_code
+
 
 def make_quick_replies(locale):
     if locale == 'zh_cn':
@@ -943,16 +946,16 @@ def process_request(req):
         return res
     elif action in ('Itinerary.location', 'Itinerary.location.Itinerary-location-fallback'):
         data = []
-        payload = ['5']
+        payload = ['1', '2', '3', '4', '5']
         if userlocale == 'zh_cn':
             speech = 'How many days do you want to go?'
-            title = ['5']
+            title = ['1', '2', '3', '4', '5']
         elif userlocale in ('zh_tw', 'zh_hk'):
             speech = 'How many days do you want to go?'
-            title = ['5']
+            title = ['1', '2', '3', '4', '5']
         else:
             speech = 'How many days do you want to go?'
-            title = ['5']
+            title = ['1', '2', '3', '4', '5']
         datum = {
             'text': speech,
             'quick_replies': [
@@ -960,6 +963,26 @@ def process_request(req):
                     'content_type': 'text',
                     'title': title[0],
                     'payload': payload[0]
+                },
+                {
+                    'content_type': 'text',
+                    'title': title[1],
+                    'payload': payload[1]
+                },
+                {
+                    'content_type': 'text',
+                    'title': title[2],
+                    'payload': payload[2]
+                },
+                {
+                    'content_type': 'text',
+                    'title': title[3],
+                    'payload': payload[3]
+                },
+                {
+                    'content_type': 'text',
+                    'title': title[4],
+                    'payload': payload[4]
                 }
             ]
         }
@@ -1513,9 +1536,9 @@ def process_request(req):
         }
     elif action in ('restaurant.country-cuisine',):
         if userlocale == 'zh_cn':
-            speech = 'Which area do you want to search for? (ex. Gangnam, Ginza)' #translation needed
+            speech = 'Which area do you want to search for? (ex. Gangnam, Ginza)'  # translation needed
         elif userlocale in ('zh_tw', 'zh_hk'):
-            speech = 'Which area do you want to search for? (ex. Gangnam, Ginza)' #translation needed
+            speech = 'Which area do you want to search for? (ex. Gangnam, Ginza)'  # translation needed
         else:
             speech = 'Which area do you want to search for? (ex. Gangnam, Ginza)'
         res = {
