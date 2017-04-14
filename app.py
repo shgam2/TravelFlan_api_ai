@@ -1657,7 +1657,7 @@ def process_request(req):
         }
         data.append(datum)
         res = {
-            'speech': speech,
+            'speech': '',
             'displayText': '',
             'source': 'apiai-restaurant',
             'data': data
