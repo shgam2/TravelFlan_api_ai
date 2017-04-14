@@ -423,13 +423,13 @@ def exapi_pengtai(data):
 
 def make_quick_replies(locale):
     if locale == 'zh_cn':
-        text = '请选择以下其中一项服务:'
+        text = '那么有其他可以为您服务的吗?'
         title = ['行程', '一天团', '餐厅', '方向', '天气']
     elif locale in ('zh_tw', 'zh_hk'):
-        text = '請選擇以下其中一項服務:'
+        text = '那麼有其他可以為您服務的嗎?'
         title = ['行程', '一天團', '餐廳', '方向', '天氣']
     else:
-        text = 'Choose one of the following services:'
+        text = 'Anything I can help?'
         title = ['Itinerary', 'Tour', 'Restaurant', 'Direction', 'Weather']
     return {
         'text': text,
