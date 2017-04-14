@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import csv
-import datetime
 from datetime import datetime, timedelta
 import hashlib
 import json
@@ -97,9 +96,7 @@ def convert_langauge_to_user_locale(targetlang, userlang):
             return 'Chinese'
 
 
-def make_yql_query(req, city):
-    # city = req['result']['parameters']['city']
-    # print ("city here is {}".format(req['result']['parameters']['city']))
+def make_yql_query(city):
     return 'select * from weather.forecast ' \
            'where woeid in (select woeid from geo.places(1) where text=\'%s\') and u=\'c\'' % (city,)
 
@@ -417,7 +414,6 @@ def exapi_pengtai(data):
 
     try:
         res = requests.get(PENGTAI_TEST_URL, headers=headers, params=data)
-        print('thomas1')
         print(res.json())
         return res.json()
     except Exception as e:
@@ -469,16 +465,14 @@ def make_quick_replies(locale):
 
 def process_request(req):
     res = None
-    print('1111111')
     try:
         userlocale = req['originalRequest']['data']['locale'].lower()
     except Exception as e:
         userlocale = 'zh_cn'
     print('req is {}'.format(req))
-    print('222222222')
     action = req['result']['action']
 
-    print('111 action is {}'.format(action))
+    print('action is {}'.format(action))
     if action == 'prev_context':
         action = req['result']['parameters'].get('prev-action')
         if req['result']['parameters'].get('city'):
@@ -492,7 +486,7 @@ def process_request(req):
             city = req['result']['parameters'].get('city')
 
     if action == 'weather':
-        url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(req, city)}) + '&format=json'
+        url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(city)}) + '&format=json'
         print('YQL-Request:\n%s' % (url,))
         _res = urlopen(url).read()
         print('YQL-Response:\n%s' % (_res,))
@@ -1265,7 +1259,7 @@ def process_request(req):
                 }
                 elements.append(fb_item)
                 print('elements:::::::\n%s' % elements)
-                11111111111
+
             l = 0
             for x in speech.split('\n'):
                 l += len(x)
@@ -1291,9 +1285,9 @@ def process_request(req):
         }
     elif action == 'restaurant.init':
         if userlocale == 'zh_cn':
-            speech = 'How can I help you?' # translation needed
+            speech = 'How can I help you?'  # translation needed
         elif userlocale in ('zh_tw', 'zh_hk'):
-            speech = 'How can I help you?' # translation needed
+            speech = 'How can I help you?'  # translation needed
         else:
             speech = 'How can I help you?'
         res = {
@@ -1304,9 +1298,9 @@ def process_request(req):
         }
     elif action == 'restaurant.location':
         if userlocale == 'zh_cn':
-            speech = 'Any particular food that you are looking for? (Ex. Korean, Japanese, Sushi, Ramen)' #translation needed
+            speech = 'Any particular food that you are looking for? (Ex. Korean, Japanese, Sushi, Ramen)'  # translation needed
         elif userlocale in ('zh_tw', 'zh_hk'):
-            speech = 'Any particular food that you are looking for? (Ex. Korean, Japanese, Sushi, Ramen)' #translation needed
+            speech = 'Any particular food that you are looking for? (Ex. Korean, Japanese, Sushi, Ramen)'  # translation needed
         else:
             speech = 'Any particular food that you are looking for? (Ex. Korean, Japanese, Sushi, Ramen)'
         res = {
