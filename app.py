@@ -1595,7 +1595,7 @@ def process_request(req):
             'source': 'apiai-restaurant',
             'data': ''
         }
-    elif action in ('restaurant.country-cuisine'):
+    elif action in ('restaurant.country-cuisine',):
         if userlocale == 'zh_cn':
             speech = 'Which area do you want to search for? (ex. Gangnam, Ginza)' #translation needed
         elif userlocale in ('zh_tw', 'zh_hk'):
