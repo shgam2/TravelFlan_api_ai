@@ -1492,6 +1492,8 @@ def process_request(req):
                 elements = list()
                 if not _res['rest']:
                     print("Empty list!")
+                elif _res['error']['code'] == 600:
+                    speech = 'Sorry, we do not have sufficient data at the moment. Please try with different parameters'
                 else:
                     print("HERERERERE")
                     for i, item in enumerate(_res['rest']):
@@ -1502,23 +1504,25 @@ def process_request(req):
                             'buttons': [
                                 {
                                     'type': 'web_url',
-                                    'url': item['url'],
-                                    'title': 'TEMP BUTTON TITLE'
+                                    'url': item['url']
                                 }
                             ]
                         }
                         elements.append(fb_item)
                         if userlocale == 'zh_cn':
+                            fb_item['buttons'][0]['title'] = '点击查看'
                             speech += '%s. 名称: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
                                 i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
                                 item['contacts']['tel'], item['business_hour']
                             )
                         elif userlocale in ('zh_tw', 'zh_hk'):
+                            fb_item['buttons'][0]['title'] = '點擊查看'
                             speech += '%s. 名稱: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
                                 i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
                                 item['contacts']['tel'], item['business_hour']
                             )
                         else:
+                            fb_item['buttons'][0]['title'] = 'Click to view'
                             speech += '%s. Name: %s\nSummary: %s\nAddress: %s\nTel: %s\nBusiness hours: %s\n\n' % (
                                 i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
                                 item['contacts']['tel'], item['business_hour']
