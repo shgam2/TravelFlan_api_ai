@@ -1276,9 +1276,9 @@ def process_request(req):
         }
         data.append(datum)
         res = {
-            'speech': '',
+            'speech': speech,
             'displayText': '',
-            'source': 'apiai-itinerary',
+            'source': 'apiai-restaurant',
             'data': data
         }
     return res
