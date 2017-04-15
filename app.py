@@ -1480,6 +1480,8 @@ def process_request(req):
         latitude = geocode_result[0]['geometry']['location']['lat']
         longitude = geocode_result[0]['geometry']['location']['lng']
 
+        elements = list()
+        speech = ''
         if action == 'restaurant':
             if country == 'japan':
                 if lang == '01':
@@ -1499,8 +1501,6 @@ def process_request(req):
                     'format': 'json'
                 }
                 _res = exapi_gurunavi(_data)
-                elements = list()
-                speech = ''
                 if not _res.get('rest') or _res['error']['code'] == '600':
                     speech = 'Sorry, we do not have sufficient data at the moment. ' \
                              'Please try with different parameters.'
@@ -1546,8 +1546,6 @@ def process_request(req):
                     'distance': '10000'
                 }
                 _res = exapi_pengtai(_data)
-                elements = list()
-                speech = ''
                 if not _res['list']:
                     print('Empty')
                 else:
@@ -1603,7 +1601,6 @@ def process_request(req):
                         'format': 'json'
                     }
                     _res = exapi_gurunavi(_data)
-                    elements = list()
                     if not _res['rest']:
                         print('Empty!')
                     else:
@@ -1637,8 +1634,6 @@ def process_request(req):
                                     item['contacts']['tel'], item['business_hour']
                                 )
                 else:
-                    elements = list()
-                    speech = ''
                     if not _res['list']:
                         print('Empty!')
                     else:
@@ -1671,7 +1666,6 @@ def process_request(req):
                                     i + 1, item['name'], item['summary'], item['address'],
                                     item['tel'], item['besinessHours']
                                 )
-        print('res ========================= \n{}'.format(_res))
 
         l = 0
         for x in speech.split('\n'):
