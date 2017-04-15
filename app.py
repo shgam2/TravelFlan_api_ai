@@ -1839,7 +1839,7 @@ def process_request(req):
                     category_l = exapi_gurunavi_category_l(cuisine.lower())
                     _data = {
                         'keyid': GURUNAVI_KEY,
-                        'lang': userlocale,
+                        'lang': 'en' if userlocale == 'en_us' else userlocale,
                         'category_l': category_l,
                         'latitude': str(latitude),
                         'longitude': str(longitude),
