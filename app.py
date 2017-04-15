@@ -391,11 +391,19 @@ def parse_json(req):
 
     if parameters.get('address-from'):
         from_loc = parameters.get('address-from')
+        print('1. BEFORE: from_loc = {}'.format(from_loc))
+        if 'please' in from_loc.lower():
+            from_loc = from_loc.rsplit(' ', 1)[0]
+            print('1. AFTER: from_loc = {}'.format(from_loc))
     else:
         from_loc = parameters.get('prev-address-from')
 
     if parameters.get('address-to'):
         to_loc = parameters.get('address-to')
+        print('2. BEFORE: to_loc = {}'.format(to_loc))
+        if 'please' in to_loc.lower():
+            to_loc = to_loc.rsplit(' ', 1)[0]
+            print('2. AFTER: to_loc = {}'.format(to_loc))
     else:
         to_loc = parameters.get('prev-address-to')
 
