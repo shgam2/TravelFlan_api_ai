@@ -1470,22 +1470,29 @@ def process_request(req):
                     'data': data
                 }
             else:
-                data = []
+                data = [{
+                    'parameters': {
+                    },
+                    'error': False
+                }]
                 if location:
+                    data[0]['parameters']['location'] = location
                     if userlocale == 'zh_cn':
-                        speech = ''
+                        speech = 'cuisine?'
                     elif userlocale in ('zh_tw', 'zh_hk'):
-                        speech = ''
+                        speech = 'cuisine?'
                     else:
-                        speech = ''
+                        speech = 'cuisine?'
                 elif cuisine:
+                    data[0]['parameters']['cuisine'] = cuisine
                     if userlocale == 'zh_cn':
-                        speech = ''
+                        speech = 'location?'
                     elif userlocale in ('zh_tw', 'zh_hk'):
-                        speech = ''
+                        speech = 'location?'
                     else:
-                        speech = ''
+                        speech = 'location?'
                 else:
+                    data[0]['error'] = True
                     if userlocale == 'zh_cn':
                         speech = '首尔哪里有不错的韩式料理?'
                     elif userlocale in ('zh_tw', 'zh_hk'):
