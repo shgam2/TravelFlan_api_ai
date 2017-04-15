@@ -1501,7 +1501,7 @@ def process_request(req):
                     'format': 'json'
                 }
                 _res = exapi_gurunavi(_data)
-                if not _res.get('rest') or _res['error']['code'] == '600':
+                if not _res.get('rest'):
                     speech = 'Sorry, we do not have sufficient data at the moment. ' \
                              'Please try with different parameters.'
                 else:
@@ -1850,7 +1850,7 @@ def process_request(req):
                     _res = exapi_gurunavi(_data)
                     elements = list()
                     speech = ''
-                    if not _res.get('rest') or _res['error']['code'] == '600':
+                    if not _res.get('rest'):
                         speech = 'Sorry, we do not have sufficient data at the moment. ' \
                                  'Please try with different parameters.'
                     else:
