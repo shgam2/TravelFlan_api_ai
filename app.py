@@ -76,6 +76,14 @@ RESTAURANT_CUISINE_FOREIGN = ('Foreign', '异国', '異國')
 RESTAURANT_CUISINE_CAFFE = ('Caffe', '咖啡')
 RESTAURANT_CUISINE_FASTFOOD = ('Fastfood', '速食')
 RESTAURANT_CUISINE_PUB = ('Pub', '酒')
+RESTAURANT_CUISINE_SEAFOOD = ('Seafood', 'Sushi', '寿司', '鱼类料理', '海鲜', '壽司', '魚類料理', '海鮮')
+RESTAURANT_CUISINE_ITALIAN = ('Italian', '意大利菜', '義大利式')
+RESTAURANT_CUISINE_FRENCH = ('French', '法式', '法国菜')
+RESTAURANT_CUISINE_ORGANIC = ('Organic', '有机菜', '有機')
+RESTAURANT_CUISINE_BREAD = ('Bread', '甜点', '甜點')
+RESTAURANT_CUISINE_YAKINIKU = ('Yakiniku', '烤肉', '烤内脏', '燒肉', '烤內臟')
+RESTAURANT_CUISINE_IZAKAYA = ('Izakaya', '居酒屋')
+RESTAURANT_CUISINE_NOODLE = ('Noodle', '面类', '拉面', '荞麦面', '乌冬面等', '麵類', '拉麵', '蕎麥麵', '烏冬麵等')
 
 
 def find_language_code(lang):
@@ -1326,6 +1334,47 @@ def process_request(req):
                         if x.lower() in txt.lower():
                             cuisine = RESTAURANT_CUISINE_PUB[0]
                             break
+                if not cuisine:
+                    for x in RESTAURANT_CUISINE_SEAFOOD:
+                        if x.lower() in txt.lower():
+                            cuisine = RESTAURANT_CUISINE_SEAFOOD[0]
+                            break
+                if not cuisine:
+                    for x in RESTAURANT_CUISINE_ITALIAN:
+                        if x.lower() in txt.lower():
+                            cuisine = RESTAURANT_CUISINE_ITALIAN[0]
+                            break
+                if not cuisine:
+                    for x in RESTAURANT_CUISINE_FRENCH:
+                        if x.lower() in txt.lower():
+                            cuisine = RESTAURANT_CUISINE_FRENCH[0]
+                            break
+                if not cuisine:
+                    for x in RESTAURANT_CUISINE_ORGANIC:
+                        if x.lower() in txt.lower():
+                            cuisine = RESTAURANT_CUISINE_ORGANIC[0]
+                            break
+                if not cuisine:
+                    for x in RESTAURANT_CUISINE_BREAD:
+                        if x.lower() in txt.lower():
+                            cuisine = RESTAURANT_CUISINE_BREAD[0]
+                            break
+                if not cuisine:
+                    for x in RESTAURANT_CUISINE_YAKINIKU:
+                        if x.lower() in txt.lower():
+                            cuisine = RESTAURANT_CUISINE_YAKINIKU[0]
+                            break
+                if not cuisine:
+                    for x in RESTAURANT_CUISINE_IZAKAYA:
+                        if x.lower() in txt.lower():
+                            cuisine = RESTAURANT_CUISINE_IZAKAYA[0]
+                            break
+                if not cuisine:
+                    for x in RESTAURANT_CUISINE_NOODLE:
+                        if x.lower() in txt.lower():
+                            cuisine = RESTAURANT_CUISINE_NOODLE[0]
+                            break
+
             if location and cuisine:
                 geocode_result = gmaps.geocode(location)
                 latitude = geocode_result[0]['geometry']['location']['lat']
