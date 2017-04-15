@@ -1,0 +1,8 @@
+RESTAURANT_CUISINE_KOREAN = ('Korean', '韩式', '韩食', '韓式', '韓食', '韩国', '韓國')
+RESTAURANT_CUISINE_JAPANESE = ('Japanese', '日式', '日食', '日本')
+RESTAURANT_CUISINE_CHINESE = ('Chinese', '中式', '中食', '中国', '中國')
+RESTAURANT_CUISINE_WESTERN = ('Western', '西餐', '西式', '歐美', '各國')
+RESTAURANT_CUISINE_FOREIGN = ('Foreign', '异国', '異國')
+RESTAURANT_CUISINE_CAFFE = ('Caffe', '咖啡')
+RESTAURANT_CUISINE_FASTFOOD = ('Fastfood', '速食')
+RESTAURANT_CUISINE_PUB = ('Pub', '酒')
