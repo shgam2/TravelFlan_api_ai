@@ -1254,6 +1254,251 @@ def process_request(req):
             'source': 'apiai-transportation',
             'data': data
         }
+    elif action in ('Restaurant', 'Restaurant.Restaurant-fallback'):
+        txt = req['result']['parameters']['txt']
+        if txt == 'Restaurant':
+            if userlocale == 'zh_cn':
+                speech = '首尔哪里有不错的韩式料理?'
+            elif userlocale in ('zh_tw', 'zh_hk'):
+                speech = '首爾哪裡有不錯的韓式料理?'
+            else:
+                speech = 'How can I help you? (Ex. Can you find me the best Korean food in Seoul, ' \
+                         'Please find me a sushi restaurant in Tokyo)'
+            res = {
+                'speech': speech,
+                'displayText': speech,
+                'source': 'apiai-restaurant'
+            }
+        else:
+            location = None
+            for x in RESTAURANT_LOCATION_KO:
+                if x in txt:
+                    location = x
+                    break
+            if not location:
+                for x in RESTAURANT_LOCATION_JP:
+                    if x in txt:
+                        location = x
+                        break
+            cuisine = None
+            for x in RESTAURANT_CUISINE_KOREAN:
+                if x in txt:
+                    cuisine = RESTAURANT_CUISINE_KOREAN[0]
+                    break
+            if not cuisine:
+                for x in RESTAURANT_CUISINE_JAPANESE:
+                    if x in txt:
+                        cuisine = RESTAURANT_CUISINE_JAPANESE[0]
+                        break
+            if not cuisine:
+                for x in RESTAURANT_CUISINE_CHINESE:
+                    if x in txt:
+                        cuisine = RESTAURANT_CUISINE_CHINESE[0]
+                        break
+            if not cuisine:
+                for x in RESTAURANT_CUISINE_WESTERN:
+                    if x in txt:
+                        cuisine = RESTAURANT_CUISINE_WESTERN[0]
+                        break
+            if not cuisine:
+                for x in RESTAURANT_CUISINE_FOREIGN:
+                    if x in txt:
+                        cuisine = RESTAURANT_CUISINE_FOREIGN[0]
+                        break
+            if not cuisine:
+                for x in RESTAURANT_CUISINE_CAFFE:
+                    if x in txt:
+                        cuisine = RESTAURANT_CUISINE_CAFFE[0]
+                        break
+            if not cuisine:
+                for x in RESTAURANT_CUISINE_FASTFOOD:
+                    if x in txt:
+                        cuisine = RESTAURANT_CUISINE_FASTFOOD[0]
+                        break
+            if not cuisine:
+                for x in RESTAURANT_CUISINE_PUB:
+                    if x in txt:
+                        cuisine = RESTAURANT_CUISINE_PUB[0]
+                        break
+            if location and cuisine:
+                geocode_result = gmaps.geocode(location)
+                latitude = geocode_result[0]['geometry']['location']['lat']
+                longitude = geocode_result[0]['geometry']['location']['lng']
+                if location in RESTAURANT_LOCATION_KO:
+                    if userlocale == 'zh_cn':
+                        lang = '01'
+                    elif userlocale in ('zh_tw', 'zh_hk'):
+                        lang = '02'
+                    else:
+                        lang = '04'
+                    category1 = '3000'
+                    if cuisine == 'Korean':
+                        category2 = '3101'
+                    elif cuisine == 'Japanese':
+                        category2 = '3102'
+                    elif cuisine == 'Chinese':
+                        category2 = '3103'
+                    elif cuisine == 'Western':
+                        category2 = '3104'
+                    elif cuisine == 'Foreign':
+                        category2 = '3105'
+                    elif cuisine == 'Caffe':
+                        category2 = '3106'
+                    elif cuisine == 'Fastfood':
+                        category2 = '3107'
+                    elif cuisine == 'Pub':
+                        category2 = '3108'
+                    else:
+                        category2 = ''
+                    _data = {
+                        'lang': lang,
+                        'category1': category1,
+                        'category2': category2,
+                        'latitude': str(latitude),
+                        'longitude': str(longitude),
+                        'distance': '10000'
+                    }
+                    _res = exapi_pengtai(_data)
+                    elements = list()
+                    speech = ''
+                    if not _res.get('list'):
+                        speech = 'Sorry, we do not have sufficient data at the moment. ' \
+                                 'Please try with different parameters.'
+                    else:
+                        for i, item in enumerate(_res['list']):
+                            fb_item = {
+                                'title': item['name'],
+                                'subtitle': '%s\n%s' % (item['summary'], item['address']),
+                                'image_url': item['imagePath'],
+                                'buttons': [
+                                    {
+                                        'type': 'web_url',
+                                        'url': item['url']
+                                    }
+                                ]
+                            }
+                            if userlocale == 'zh_cn':
+                                fb_item['buttons'][0]['title'] = '点击查看'
+                                speech += '%s. 名称: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
+                                    i + 1, item['name'], item['summary'], item['address'],
+                                    item['tel'], item['besinessHours']
+                                )
+                            elif userlocale in ('zh_tw', 'zh_hk'):
+                                fb_item['buttons'][0]['title'] = '點擊查看'
+                                speech += '%s. 名稱: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
+                                    i + 1, item['name'], item['summary'], item['address'],
+                                    item['tel'], item['besinessHours']
+                                )
+                            else:
+                                fb_item['buttons'][0]['title'] = 'Click to view'
+                                speech += '%s. Name: %s\nSummary: %s\nAddress: %s\nTel: %s\nBusiness hours: %s\n\n' % (
+                                    i + 1, item['name'], item['summary'], item['address'],
+                                    item['tel'], item['besinessHours']
+                                )
+                            elements.append(fb_item)
+                else:
+                    category_l = exapi_gurunavi_category_l(cuisine.lower())
+                    _data = {
+                        'keyid': GURUNAVI_KEY,
+                        'lang': 'en' if userlocale == 'en_us' else userlocale,
+                        'category_l': category_l,
+                        'latitude': str(latitude),
+                        'longitude': str(longitude),
+                        'input_coordinates_mode': '2',
+                        'range': '500',
+                        'format': 'json'
+                    }
+                    _res = exapi_gurunavi(_data)
+                    elements = list()
+                    speech = ''
+                    if not _res.get('rest'):
+                        speech = 'Sorry, we do not have sufficient data at the moment. ' \
+                                 'Please try with different parameters.'
+                    else:
+                        for i, item in enumerate(_res['rest']):
+                            fb_item = {
+                                'title': item['name']['name'],
+                                'subtitle': '%s\n%s' % (item['access'], item['contacts']['address']),
+                                'image_url': item['image_url']['thumbnail'],
+                                'buttons': [
+                                    {
+                                        'type': 'web_url',
+                                        'url': item['url']
+                                    }
+                                ]
+                            }
+                            if userlocale == 'zh_cn':
+                                fb_item['buttons'][0]['title'] = '点击查看'
+                                speech += '%s. 名称: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
+                                    i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                                    item['contacts']['tel'], item['business_hour']
+                                )
+                            elif userlocale in ('zh_tw', 'zh_hk'):
+                                fb_item['buttons'][0]['title'] = '點擊查看'
+                                speech += '%s. 名稱: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
+                                    i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                                    item['contacts']['tel'], item['business_hour']
+                                )
+                            else:
+                                fb_item['buttons'][0]['title'] = 'Click to view'
+                                speech += '%s. Name: %s\nSummary: %s\nAddress: %s\nTel: %s\nBusiness hours: %s\n\n' % (
+                                    i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                                    item['contacts']['tel'], item['business_hour']
+                                )
+                            elements.append(fb_item)
+                l = 0
+                for x in speech.split('\n'):
+                    l += len(x)
+                    if l > 500:
+                        speech = speech[:l - len(x)] + '\n\n...'
+                        break
+                data = [
+                    {
+                        'attachment_type': 'template',
+                        'attachment_payload': {
+                            'template_type': 'generic',
+                            'elements': elements
+                        }
+                    }
+                ]
+                datum = make_quick_replies(userlocale)
+                data.append(datum)
+                res = {
+                    'speech': speech,
+                    'displayText': speech,
+                    'source': 'apiai-restaurant',
+                    'data': data
+                }
+            else:
+                data = []
+                if location:
+                    if userlocale == 'zh_cn':
+                        speech = ''
+                    elif userlocale in ('zh_tw', 'zh_hk'):
+                        speech = ''
+                    else:
+                        speech = ''
+                elif cuisine:
+                    if userlocale == 'zh_cn':
+                        speech = ''
+                    elif userlocale in ('zh_tw', 'zh_hk'):
+                        speech = ''
+                    else:
+                        speech = ''
+                else:
+                    if userlocale == 'zh_cn':
+                        speech = '首尔哪里有不错的韩式料理?'
+                    elif userlocale in ('zh_tw', 'zh_hk'):
+                        speech = '首爾哪裡有不錯的韓式料理?'
+                    else:
+                        speech = 'How can I help you? (Ex. Can you find me the best Korean food in Seoul, ' \
+                                 'Please find me a sushi restaurant in Tokyo)'
+                res = {
+                    'speech': speech,
+                    'displayText': speech,
+                    'source': 'apiai-restaurant',
+                    'data': data
+                }
     elif action == 'translation':
         if req['result']['parameters'].get('translation'):
             language = req['result']['parameters']['translation']['language']
@@ -1693,227 +1938,6 @@ def process_request(req):
             'source': 'apiai-restaurant',
             'data': data
         }
-    elif action in ('Restaurant', 'Restaurant.Restaurant-fallback'):
-        txt = req['result']['parameters']['txt']
-        if txt == 'Restaurant':
-            if userlocale == 'zh_cn':
-                speech = '首尔哪里有不错的韩式料理?'
-            elif userlocale in ('zh_tw', 'zh_hk'):
-                speech = '首爾哪裡有不錯的韓式料理?'
-            else:
-                speech = 'How can I help you? (Ex. Can you find me the best Korean food in Seoul, ' \
-                         'Please find me a sushi restaurant in Tokyo)'
-            res = {
-                'speech': speech,
-                'displayText': speech,
-                'source': 'apiai-restaurant'
-            }
-        else:
-            location = None
-            for x in RESTAURANT_LOCATION_KO:
-                if x in txt:
-                    location = x
-                    break
-            if not location:
-                for x in RESTAURANT_LOCATION_JP:
-                    if x in txt:
-                        location = x
-                        break
-            cuisine = None
-            for x in RESTAURANT_CUISINE_KOREAN:
-                if x in txt:
-                    cuisine = RESTAURANT_CUISINE_KOREAN[0]
-                    break
-            if not cuisine:
-                for x in RESTAURANT_CUISINE_JAPANESE:
-                    if x in txt:
-                        cuisine = RESTAURANT_CUISINE_JAPANESE[0]
-                        break
-            if not cuisine:
-                for x in RESTAURANT_CUISINE_CHINESE:
-                    if x in txt:
-                        cuisine = RESTAURANT_CUISINE_CHINESE[0]
-                        break
-            if not cuisine:
-                for x in RESTAURANT_CUISINE_WESTERN:
-                    if x in txt:
-                        cuisine = RESTAURANT_CUISINE_WESTERN[0]
-                        break
-            if not cuisine:
-                for x in RESTAURANT_CUISINE_FOREIGN:
-                    if x in txt:
-                        cuisine = RESTAURANT_CUISINE_FOREIGN[0]
-                        break
-            if not cuisine:
-                for x in RESTAURANT_CUISINE_CAFFE:
-                    if x in txt:
-                        cuisine = RESTAURANT_CUISINE_CAFFE[0]
-                        break
-            if not cuisine:
-                for x in RESTAURANT_CUISINE_FASTFOOD:
-                    if x in txt:
-                        cuisine = RESTAURANT_CUISINE_FASTFOOD[0]
-                        break
-            if not cuisine:
-                for x in RESTAURANT_CUISINE_PUB:
-                    if x in txt:
-                        cuisine = RESTAURANT_CUISINE_PUB[0]
-                        break
-            if location and cuisine:
-                geocode_result = gmaps.geocode(location)
-                latitude = geocode_result[0]['geometry']['location']['lat']
-                longitude = geocode_result[0]['geometry']['location']['lng']
-                if location in RESTAURANT_LOCATION_KO:
-                    if userlocale == 'zh_cn':
-                        lang = '01'
-                    elif userlocale in ('zh_tw', 'zh_hk'):
-                        lang = '02'
-                    else:
-                        lang = '04'
-                    category1 = '3000'
-                    if cuisine == 'Korean':
-                        category2 = '3101'
-                    elif cuisine == 'Japanese':
-                        category2 = '3102'
-                    elif cuisine == 'Chinese':
-                        category2 = '3103'
-                    elif cuisine == 'Western':
-                        category2 = '3104'
-                    elif cuisine == 'Foreign':
-                        category2 = '3105'
-                    elif cuisine == 'Caffe':
-                        category2 = '3106'
-                    elif cuisine == 'Fastfood':
-                        category2 = '3107'
-                    elif cuisine == 'Pub':
-                        category2 = '3108'
-                    else:
-                        category2 = ''
-                    _data = {
-                        'lang': lang,
-                        'category1': category1,
-                        'category2': category2,
-                        'latitude': str(latitude),
-                        'longitude': str(longitude),
-                        'distance': '10000'
-                    }
-                    _res = exapi_pengtai(_data)
-                    elements = list()
-                    speech = ''
-                    if not _res.get('list'):
-                        speech = 'Sorry, we do not have sufficient data at the moment. ' \
-                                 'Please try with different parameters.'
-                    else:
-                        for i, item in enumerate(_res['list']):
-                            fb_item = {
-                                'title': item['name'],
-                                'subtitle': '%s\n%s' % (item['summary'], item['address']),
-                                'image_url': item['imagePath'],
-                                'buttons': [
-                                    {
-                                        'type': 'web_url',
-                                        'url': item['url']
-                                    }
-                                ]
-                            }
-                            if userlocale == 'zh_cn':
-                                fb_item['buttons'][0]['title'] = '点击查看'
-                                speech += '%s. 名称: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
-                                    i + 1, item['name'], item['summary'], item['address'],
-                                    item['tel'], item['besinessHours']
-                                )
-                            elif userlocale in ('zh_tw', 'zh_hk'):
-                                fb_item['buttons'][0]['title'] = '點擊查看'
-                                speech += '%s. 名稱: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
-                                    i + 1, item['name'], item['summary'], item['address'],
-                                    item['tel'], item['besinessHours']
-                                )
-                            else:
-                                fb_item['buttons'][0]['title'] = 'Click to view'
-                                speech += '%s. Name: %s\nSummary: %s\nAddress: %s\nTel: %s\nBusiness hours: %s\n\n' % (
-                                    i + 1, item['name'], item['summary'], item['address'],
-                                    item['tel'], item['besinessHours']
-                                )
-                            elements.append(fb_item)
-                else:
-                    category_l = exapi_gurunavi_category_l(cuisine.lower())
-                    _data = {
-                        'keyid': GURUNAVI_KEY,
-                        'lang': 'en' if userlocale == 'en_us' else userlocale,
-                        'category_l': category_l,
-                        'latitude': str(latitude),
-                        'longitude': str(longitude),
-                        'input_coordinates_mode': '2',
-                        'range': '500',
-                        'format': 'json'
-                    }
-                    _res = exapi_gurunavi(_data)
-                    elements = list()
-                    speech = ''
-                    if not _res.get('rest'):
-                        speech = 'Sorry, we do not have sufficient data at the moment. ' \
-                                 'Please try with different parameters.'
-                    else:
-                        for i, item in enumerate(_res['rest']):
-                            fb_item = {
-                                'title': item['name']['name'],
-                                'subtitle': '%s\n%s' % (item['access'], item['contacts']['address']),
-                                'image_url': item['image_url']['thumbnail'],
-                                'buttons': [
-                                    {
-                                        'type': 'web_url',
-                                        'url': item['url']
-                                    }
-                                ]
-                            }
-                            if userlocale == 'zh_cn':
-                                fb_item['buttons'][0]['title'] = '点击查看'
-                                speech += '%s. 名称: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
-                                    i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
-                                    item['contacts']['tel'], item['business_hour']
-                                )
-                            elif userlocale in ('zh_tw', 'zh_hk'):
-                                fb_item['buttons'][0]['title'] = '點擊查看'
-                                speech += '%s. 名稱: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
-                                    i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
-                                    item['contacts']['tel'], item['business_hour']
-                                )
-                            else:
-                                fb_item['buttons'][0]['title'] = 'Click to view'
-                                speech += '%s. Name: %s\nSummary: %s\nAddress: %s\nTel: %s\nBusiness hours: %s\n\n' % (
-                                    i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
-                                    item['contacts']['tel'], item['business_hour']
-                                )
-                            elements.append(fb_item)
-                l = 0
-                for x in speech.split('\n'):
-                    l += len(x)
-                    if l > 500:
-                        speech = speech[:l - len(x)] + '\n\n...'
-                        break
-                data = [
-                    {
-                        'attachment_type': 'template',
-                        'attachment_payload': {
-                            'template_type': 'generic',
-                            'elements': elements
-                        }
-                    }
-                ]
-                datum = make_quick_replies(userlocale)
-                data.append(datum)
-                res = {
-                    'speech': speech,
-                    'displayText': speech,
-                    'source': 'apiai-restaurant',
-                    'data': data
-                }
-            elif location:
-                pass
-            elif cuisine:
-                pass
-            else:
-                pass
     elif action == 'restaurant.init':
         if userlocale == 'zh_cn':
             speech = 'How can I help?'  # TODO: TR
