@@ -1278,52 +1278,52 @@ def process_request(req):
                 cuisine = parameters.get('cuisine')
             if not location:
                 for x in RESTAURANT_LOCATION_KO:
-                    if x in txt:
+                    if x.lower() in txt.lower():
                         location = x
                         break
                 if not location:
                     for x in RESTAURANT_LOCATION_JP:
-                        if x in txt:
+                        if x.lower() in txt.lower():
                             location = x
                             break
             if not cuisine:
                 for x in RESTAURANT_CUISINE_KOREAN:
-                    if x in txt:
+                    if x.lower() in txt.lower():
                         cuisine = RESTAURANT_CUISINE_KOREAN[0]
                         break
                 if not cuisine:
                     for x in RESTAURANT_CUISINE_JAPANESE:
-                        if x in txt:
+                        if x.lower() in txt.lower():
                             cuisine = RESTAURANT_CUISINE_JAPANESE[0]
                             break
                 if not cuisine:
                     for x in RESTAURANT_CUISINE_CHINESE:
-                        if x in txt:
+                        if x.lower() in txt.lower():
                             cuisine = RESTAURANT_CUISINE_CHINESE[0]
                             break
                 if not cuisine:
                     for x in RESTAURANT_CUISINE_WESTERN:
-                        if x in txt:
+                        if x.lower() in txt.lower():
                             cuisine = RESTAURANT_CUISINE_WESTERN[0]
                             break
                 if not cuisine:
                     for x in RESTAURANT_CUISINE_FOREIGN:
-                        if x in txt:
+                        if x.lower() in txt.lower():
                             cuisine = RESTAURANT_CUISINE_FOREIGN[0]
                             break
                 if not cuisine:
                     for x in RESTAURANT_CUISINE_CAFFE:
-                        if x in txt:
+                        if x.lower() in txt.lower():
                             cuisine = RESTAURANT_CUISINE_CAFFE[0]
                             break
                 if not cuisine:
                     for x in RESTAURANT_CUISINE_FASTFOOD:
-                        if x in txt:
+                        if x.lower() in txt.lower():
                             cuisine = RESTAURANT_CUISINE_FASTFOOD[0]
                             break
                 if not cuisine:
                     for x in RESTAURANT_CUISINE_PUB:
-                        if x in txt:
+                        if x.lower() in txt.lower():
                             cuisine = RESTAURANT_CUISINE_PUB[0]
                             break
             if location and cuisine:
