@@ -1482,6 +1482,7 @@ def process_request(req):
                     'error': False
                 }]
                 if location:
+                    data[0]['error'] = True
                     data[0]['parameters']['location'] = location
                     if userlocale == 'zh_cn':
                         speech = '有特定想找的餐点吗? (如: 韩式料理/日式料理/寿司/拉面等)'
@@ -1490,6 +1491,7 @@ def process_request(req):
                     else:
                         speech = 'Any particular food you are looking for? (Ex. Korean, Japanese, Sushi, Ramen)'
                 elif cuisine:
+                    data[0]['error'] = True
                     data[0]['parameters']['cuisine'] = cuisine
                     if userlocale == 'zh_cn':
                         speech = '您想找哪个地区的呢? (如: 江南/银座等)'
