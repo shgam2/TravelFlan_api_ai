@@ -1842,7 +1842,7 @@ def process_request(req):
                                 )
                             elements.append(fb_item)
                 else:
-                    category_l = exapi_gurunavi_category_l(cuisine)
+                    category_l = exapi_gurunavi_category_l(cuisine.lower())
                     _data = {
                         'keyid': GURUNAVI_KEY,
                         'lang': userlocale,
