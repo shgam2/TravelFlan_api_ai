@@ -406,14 +406,12 @@ def parse_json(req):
 
 
 def exapi_travelflan_itin(data):
-    if data['theme'] in ('Food', '美食'):
+    if data['theme'] in ('Food Lover', '美食'):
         theme = 1
-    elif data['theme'] in ('Shopping', '购物', '購物'):
+    elif data['theme'] in ('Shopping', '逛街購物', '逛街购物'):
         theme = 2
-    elif data['theme'] in ('Kids', '亲子', '親子'):
+    elif data['theme'] in ('with Kids', '亲子', '親子'):
         theme = 3
-    elif data['theme'] in ('Suburbs', '近郊'):
-        theme = 4
     else:
         theme = 0
 
@@ -1059,16 +1057,16 @@ def process_request(req):
         }
     elif action in ('Itinerary.num_days', 'Itinerary.num_days.Itinerary-num_days-fallback'):
         data = []
-        payload = ['GENERAL', 'FOOD', 'SHOPPING', 'KIDS', 'SUBURBS']
+        payload = ['FIRST', 'SHOPPING', 'KIDS', 'FOOD']
         if userlocale == 'zh_cn':
             speech = 'What is the purpose of your travel?'
-            title = ['一般', '美食', '购物', '亲子', '近郊']
+            title = ['观光 第一次去', '逛街购物', '亲子', '美食']
         elif userlocale in ('zh_tw', 'zh_hk'):
             speech = 'What is the purpose of your travel?'
-            title = ['一般', '美食', '購物', '親子', '近郊']
+            title = ['[觀光 第一次去', '逛街購物', '親子', '美食']
         else:
             speech = 'What is the purpose of your travel?'
-            title = ['General', 'Food', 'Shopping', 'Kids', 'Suburbs']
+            title = ['First Time', 'Shopping', 'with Kids', 'Food Lover']
         datum = {
             'text': speech,
             'quick_replies': [
@@ -1091,11 +1089,6 @@ def process_request(req):
                     'content_type': 'text',
                     'title': title[3],
                     'payload': payload[3]
-                },
-                {
-                    'content_type': 'text',
-                    'title': title[4],
-                    'payload': payload[4]
                 }
             ]
         }
