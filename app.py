@@ -1632,9 +1632,9 @@ def process_request(req):
                 else:
                     data[0]['error'] = True
                     if userlocale == 'zh_cn':
-                        speech = '首尔哪里有不错的韩式料理?'
+                        speech = '你想吃那类型及那地区的菜式 (例如: 明洞的韩式餐厅 或者 大阪的寿司)'
                     elif userlocale in ('zh_tw', 'zh_hk'):
-                        speech = '首爾哪裡有不錯的韓式料理?'
+                        speech = '你想吃那類型及那地區的菜式 (例如: 明洞的韓式餐廳 或者 大阪的壽司)'
                     else:
                         speech = 'How can I help you? (Ex. Can you find me the best Korean food in Seoul, ' \
                                  'Please find me a sushi restaurant in Tokyo)'
