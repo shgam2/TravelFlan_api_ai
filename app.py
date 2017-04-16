@@ -301,34 +301,46 @@ def get_gmap_directions(from_loc, to_loc, lang):
                                               step['transit_details']['arrival_stop']['name'])
             route += '\n'
 
-        speech = 'Fare: %s\n' \
-                 'Departure Time: %s\n' \
-                 'Arrival Time: %s\n' \
-                 'Distance: %s\n' \
-                 'Duration: %s\n\n' \
-                 'Route:\n%s' % (fare, departure_time, arrival_time, distance, duration, route)
-
+        speech = ''
         if lang == 'zh_TW' or lang == 'zh_HK':
-            speech = '費用: %s\n' \
-                     '出發時間: %s\n' \
-                     '抵達時間: %s\n' \
-                     '距離: %s\n' \
-                     '所需時間: %s\n\n' \
-                     '路線:\n%s' % (fare, departure_time, arrival_time, distance, duration, route)
+            if fare:
+                speech += '費用: %s\n'
+            if departure_time:
+                speech += '出發時間: %s\n'
+            if arrival_time:
+                speech += '抵達時間: %s\n'
+            if distance:
+                speech += '距離: %s\n'
+            if duration:
+                speech += '所需時間: %s\n\n'
+            if route:
+                speech += '路線:\n%s'
         elif lang == 'zh_CN':
-            speech = '费用: %s\n' \
-                     '出发时间: %s\n' \
-                     '抵达时间: %s\n' \
-                     '距离: %s\n' \
-                     '所需时间: %s\n\n' \
-                     '路线:\n%s' % (fare, departure_time, arrival_time, distance, duration, route)
+            if fare:
+                speech += '费用: %s\n'
+            if departure_time:
+                speech += '出发时间: %s\n'
+            if arrival_time:
+                speech += '抵达时间: %s\n'
+            if distance:
+                speech += '距离: %s\n'
+            if duration:
+                speech += '所需时间: %s\n\n'
+            if route:
+                speech += '路线:\n%s'
         else:
-            speech = 'Fare: %s\n' \
-                     'Departure Time: %s\n' \
-                     'Arrival Time: %s\n' \
-                     'Distance: %s\n' \
-                     'Duration: %s\n\n' \
-                     'Route:\n%s' % (fare, departure_time, arrival_time, distance, duration, route)
+            if fare:
+                speech += 'Fare: %s\n'
+            if departure_time:
+                speech += 'Departure Time: %s\n'
+            if arrival_time:
+                speech += 'Arrival Time: %s\n'
+            if distance:
+                speech += 'Distance: %s\n'
+            if duration:
+                speech += 'Duration: %s\n\n'
+            if route:
+                speech += 'Route:\n%s'
 
         l = 0
         for x in speech.split('\n'):
@@ -337,7 +349,7 @@ def get_gmap_directions(from_loc, to_loc, lang):
                 speech = speech[:l - len(x)] + '\n\n...'
                 break
     else:
-        speech = ''  # Need to change this to None without quotes? ###########
+        speech = ''
 
     if lang == 'zh_TW' or lang == 'zh_HK':
         title = '地圖 - %s -> %s' % (from_loc, to_loc)
