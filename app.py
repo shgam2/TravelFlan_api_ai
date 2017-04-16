@@ -725,7 +725,17 @@ def process_request(req):
     #         'displayText': speech,
     #         'source': 'apiai-weather'
     #     }
-    if action in ('Weather', 'Weather.Weather-fallback'):
+    if action in ('Reset',):
+        data = []
+        datum = make_quick_replies(userlocale)
+        data.append(datum)
+        res = {
+            'speech': '',
+            'displayText': '',
+            'source': 'apiai-transportation',
+            'data': data
+        }
+    elif action in ('Weather', 'Weather.Weather-fallback'):
         if userlocale == 'zh_cn':
             speech = '您想查询哪里的天气呢？ (如：首尔/东京/上海等)'
         elif userlocale in ('zh_tw', 'zh_hk'):
@@ -1230,16 +1240,6 @@ def process_request(req):
             'data': data
         }
     elif action in ('Transportation', 'Transportation.Transportation-fallback'):
-        data = []
-        if action == 'Transportation.Transportation-fallback':
-            error_count = req['originalRequest']['data'].get('error_count')
-            if error_count and error_count == 2:
-                return
-            data = [{
-                'parameters': {
-                },
-                'error': True
-            }]
         if userlocale == 'zh_cn':
             speech = '请问需要什么帮忙? (如: 怎么从大阪去东京?)'
         elif userlocale in ('zh_tw', 'zh_hk'):
@@ -1249,8 +1249,7 @@ def process_request(req):
         res = {
             'speech': speech,
             'displayText': speech,
-            'source': 'apiai-transportation',
-            'data': data
+            'source': 'apiai-transportation'
         }
     # elif action == 'Transportation.Transportation-fallback':
     #     if userlocale == 'zh_cn':
@@ -1265,16 +1264,6 @@ def process_request(req):
     #         'source': 'apiai-transportation'
     #     }
     elif action in ('Transportation.address-to', 'Transportation.address-to.Transportation-address-to-fallback'):
-        data = []
-        if action == 'Transportation.address-to.Transportation-address-to-fallback':
-            error_count = req['originalRequest']['data'].get('error_count')
-            if error_count and error_count == 2:
-                return
-            data = [{
-                'parameters': {
-                },
-                'error': True
-            }]
         if userlocale == 'zh_cn':
             speech = '从哪里出发呢? (如: 首尔/银座/江南站等)'
         elif userlocale in ('zh_tw', 'zh_hk'):
@@ -1284,8 +1273,7 @@ def process_request(req):
         res = {
             'speech': speech,
             'displayText': speech,
-            'source': 'apiai-transportation',
-            'data': data
+            'source': 'apiai-transportation'
         }
     elif action in ('Transportation.final',
                     'Transportation.address-from-to.Transportation-address-from-to-fallback',
