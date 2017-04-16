@@ -54,10 +54,9 @@ RESTAURANT_LOCATION_KO = ('Seoul', '서울', '首尔', '首爾',
                           'Incheon', '인천', '仁川',
                           'Pusan', '부산', '釜山', 'Busan',
                           'Itaewon', '이태원',
-                          'Gangnam', '강남',
-                          'Apgujeong', '압구정',
-                          'Sinsa', '신사'
-                          )
+                          'Gangnam', '강남', '江南',
+                          'Apgujeong', '압구정', '狎鸥亭', '狎鷗亭',
+                          'Sinsa', '신사', '新沙')
 RESTAURANT_LOCATION_JP = ('Tokyo', '도쿄', '东京', '東京',
                           'Osaka', '오사카', '大阪',
                           'Kyoto', '교토', '京都',
@@ -73,7 +72,7 @@ RESTAURANT_CUISINE_CHINESE = ('Chinese', '中式', '中食', '中国', '中國',
 RESTAURANT_CUISINE_WESTERN = ('Western', '西餐', '西式', '歐美', '各國', '美式', '意大利餐')
 RESTAURANT_CUISINE_FOREIGN = ('Foreign', '异国', '異國', '亞洲', '多國', '泰國餐')
 RESTAURANT_CUISINE_CAFFE = ('Caffe', 'Coffee', '咖啡')
-RESTAURANT_CUISINE_FASTFOOD = ('Fastfood', '速食', '小點', '快餐', '小食', '小吃', 'Quick Bite')
+RESTAURANT_CUISINE_FASTFOOD = ('Fastfood', '速食', '小點', '快餐', '小食', '小吃', '小点', 'Quick Bite')
 RESTAURANT_CUISINE_PUB = ('Pub', '酒', 'Lounge', 'Bar', 'Beer')
 RESTAURANT_CUISINE_SEAFOOD = ('Seafood', 'Sushi', '寿司', '鱼类料理', '海鲜', '壽司', '魚類料理', '海鮮')
 RESTAURANT_CUISINE_ITALIAN = ('Italian', '意大利菜', '義大利式')
@@ -1300,7 +1299,7 @@ def process_request(req):
             if userlocale == 'zh_cn':
                 speech = '首尔哪里有不错的韩式料理?'
             elif userlocale in ('zh_tw', 'zh_hk'):
-                speech = '首爾哪裡有不錯的韓式料理?'
+                speech = '你想吃那類型及那地區的菜式 (例如: 明洞的韓式餐廳 或者 大阪的壽司)'
             else:
                 speech = 'How can I help you? (Ex. Can you find me the best Korean food in Seoul, ' \
                          'Please find me a sushi restaurant in Tokyo)'
