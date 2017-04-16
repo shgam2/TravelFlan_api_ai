@@ -262,8 +262,8 @@ def get_gmap_directions(from_loc, to_loc, lang):
     now = datetime.now()
     print('from_loc = %s' % (from_loc,))
     print('to_loc = %s' % (to_loc,))
-    # from_loc = gmaps.places(from_loc)['results'][0]['formatted_address']
-    # to_loc = gmaps.places(to_loc)['results'][0]['formatted_address']
+    from_loc = gmaps.places(from_loc)['results'][0]['formatted_address']
+    to_loc = gmaps.places(to_loc)['results'][0]['formatted_address']
 
     if lang in ('zh_CN', 'zh_TW', 'zh_HK'):
         url = 'http://maps.google.cn/maps?saddr=%s&daddr=%s&dirflg=r' % (
