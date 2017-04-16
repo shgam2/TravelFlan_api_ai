@@ -1511,11 +1511,8 @@ def process_request(req):
                         speech = 'Sorry, we do not have sufficient data at the moment. ' \
                                  'Please try with different parameters.'
                     else:
-                        print ('HERE----------------------------------')
-                        print('HERE----------------------------------')
                         print(_res['rest'])
-
-                        if isinstance(_res['rest'], list) == True:
+                        if isinstance(_res['rest'], list):
                             for i, item in enumerate(_res['rest']):
                                 fb_item = {
                                     'title': item['name']['name'],
@@ -1531,19 +1528,22 @@ def process_request(req):
                                 if userlocale == 'zh_cn':
                                     fb_item['buttons'][0]['title'] = '点击查看'
                                     speech += '%s. 名称: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
-                                        i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                                        i + 1, item['name']['name'], item['name']['name_sub'],
+                                        item['contacts']['address'],
                                         item['contacts']['tel'], item['business_hour']
                                     )
                                 elif userlocale in ('zh_tw', 'zh_hk'):
                                     fb_item['buttons'][0]['title'] = '點擊查看'
                                     speech += '%s. 名稱: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
-                                        i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                                        i + 1, item['name']['name'], item['name']['name_sub'],
+                                        item['contacts']['address'],
                                         item['contacts']['tel'], item['business_hour']
                                     )
                                 else:
                                     fb_item['buttons'][0]['title'] = 'Click to view'
                                     speech += '%s. Name: %s\nSummary: %s\nAddress: %s\nTel: %s\nBusiness hours: %s\n\n' % (
-                                        i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                                        i + 1, item['name']['name'], item['name']['name_sub'],
+                                        item['contacts']['address'],
                                         item['contacts']['tel'], item['business_hour']
                                     )
                                 elements.append(fb_item)
@@ -1895,13 +1895,13 @@ def process_request(req):
                 if not _res.get('rest'):
                     if userlocale == 'en_us':
                         speech = 'Sorry, we do not have sufficient data at the moment. ' \
-                             'Please try with different parameters.'
+                                 'Please try with different parameters.'
                     elif userlocale in ('zh_hk', 'zh_tw'):
                         speech = 'Sorry, we do not have sufficient data at the moment. ' \
-                             'Please try with different parameters.'    # Todo: translation
+                                 'Please try with different parameters.'  # Todo: translation
                     else:
                         speech = 'Sorry, we do not have sufficient data at the moment. ' \
-                             'Please try with different parameters.'    # Todo: translation
+                                 'Please try with different parameters.'  # Todo: translation
                 else:
                     for i, item in enumerate(_res['rest']):
                         fb_item = {
@@ -2093,7 +2093,7 @@ def process_request(req):
         }
     elif action == 'restaurant.init':
         if userlocale == 'zh_cn':
-            speech= '首尔哪里有不错的韩式料理？'
+            speech = '首尔哪里有不错的韩式料理？'
         elif userlocale in ('zh_tw', 'zh_hk'):
             speech = '首爾哪裡有不錯的韓式料理？'
         else:
