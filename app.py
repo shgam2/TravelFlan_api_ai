@@ -67,14 +67,14 @@ RESTAURANT_LOCATION_JP = ('Tokyo', '도쿄', '东京', '東京',
                           'Shinjuku', '신주쿠', '新宿',
                           'Nagoya', '나고야', '名古屋')
 
-RESTAURANT_CUISINE_KOREAN = ('Korean', '韩式', '韩食', '韓式', '韓食', '韩国', '韓國')
-RESTAURANT_CUISINE_JAPANESE = ('Japanese', '日式', '日食', '日本')
-RESTAURANT_CUISINE_CHINESE = ('Chinese', '中式', '中食', '中国', '中國')
-RESTAURANT_CUISINE_WESTERN = ('Western', '西餐', '西式', '歐美', '各國')
-RESTAURANT_CUISINE_FOREIGN = ('Foreign', '异国', '異國')
-RESTAURANT_CUISINE_CAFFE = ('Caffe', '咖啡')
-RESTAURANT_CUISINE_FASTFOOD = ('Fastfood', '速食')
-RESTAURANT_CUISINE_PUB = ('Pub', '酒')
+RESTAURANT_CUISINE_KOREAN = ('Korean', '韩式', '韩食', '韓式', '韓食', '韩国', '韓國', '韓餐', '烤肉')
+RESTAURANT_CUISINE_JAPANESE = ('Japanese', '日式', '日食', '日本', '和食')
+RESTAURANT_CUISINE_CHINESE = ('Chinese', '中式', '中食', '中国', '中國', '中餐', '唐餐')
+RESTAURANT_CUISINE_WESTERN = ('Western', '西餐', '西式', '歐美', '各國', '美式', '意大利餐')
+RESTAURANT_CUISINE_FOREIGN = ('Foreign', '异国', '異國', '亞洲', '多國', '泰國餐')
+RESTAURANT_CUISINE_CAFFE = ('Caffe', 'Coffee', '咖啡')
+RESTAURANT_CUISINE_FASTFOOD = ('Fastfood', '速食', '小點', '快餐', '小食', '小吃', 'Quick Bite')
+RESTAURANT_CUISINE_PUB = ('Pub', '酒', 'Lounge', 'Bar', 'Beer')
 RESTAURANT_CUISINE_SEAFOOD = ('Seafood', 'Sushi', '寿司', '鱼类料理', '海鲜', '壽司', '魚類料理', '海鮮')
 RESTAURANT_CUISINE_ITALIAN = ('Italian', '意大利菜', '義大利式')
 RESTAURANT_CUISINE_FRENCH = ('French', '法式', '法国菜')
@@ -1099,7 +1099,7 @@ def process_request(req):
             title = ['观光 第一次去', '逛街购物', '亲子', '美食']
         elif userlocale in ('zh_tw', 'zh_hk'):
             speech = '您這次的行程目的是什麼呢？'
-            title = ['[觀光 第一次去', '逛街購物', '親子', '美食']
+            title = ['觀光 第一次去', '逛街購物', '親子', '美食']
         else:
             speech = 'What is your travel theme this time?'
             title = ['First Time', 'Shopping', 'with Kids', 'Food Lover']
@@ -1440,7 +1440,7 @@ def process_request(req):
                         'category2': category2,
                         'latitude': str(latitude),
                         'longitude': str(longitude),
-                        'distance': '10000'
+                        'distance': '3000'
                     }
                     _res = exapi_pengtai(_data)
                     elements = list()
