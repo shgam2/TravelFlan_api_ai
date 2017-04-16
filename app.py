@@ -773,7 +773,7 @@ def process_request(req):
             speech = '%s的天氣: %s, 溫度是%s°%s\n請問您需要天氣預報嗎?' % (city, temp, condition['temp'], units['temperature'])
         else:
             title = ['Yes', 'No']
-            speech = 'Current weather in %s: %s, the temperature is %s°%s\nDo you want to know about the forecast?' % (
+            speech = 'Current weather in %s: %s, the temperature is %s°%s\nWould you like a 10-day forecast?' % (
                 location['city'], condition['text'],
                 condition['temp'], units['temperature'])
 
