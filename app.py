@@ -1604,7 +1604,7 @@ def process_request(req):
                 }
             else:
                 error_count = req['originalRequest']['data'].get('error_count')
-                if error_count and error_count == 2:
+                if error_count and error_count >= 2:
                     return
                 data = [{
                     'parameters': {
