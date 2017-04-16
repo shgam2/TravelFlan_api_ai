@@ -1095,7 +1095,7 @@ def process_request(req):
             title = ['观光 第一次去', '逛街购物', '亲子', '美食']
         elif userlocale in ('zh_tw', 'zh_hk'):
             speech = '您這次的行程目的是什麼呢？'
-            title = ['[觀光 第一次去', '逛街購物', '親子', '美食']
+            title = ['觀光 第一次去', '逛街購物', '親子', '美食']
         else:
             speech = 'What is your travel theme this time?'
             title = ['First Time', 'Shopping', 'with Kids', 'Food Lover']
