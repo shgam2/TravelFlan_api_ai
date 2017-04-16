@@ -423,7 +423,7 @@ def exapi_travelflan_itin(data):
     else:
         theme = 0
 
-    if data['city'] == 'Tokyo' and theme == 1: # TODO: Tmp
+    if data['city'] == 'Tokyo' and theme == 1:  # TODO: Tmp
         theme = 0
 
     itinerary_url = TF_ITINERARY_URL + urlencode({'area': data['city'],
