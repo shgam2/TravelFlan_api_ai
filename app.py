@@ -530,6 +530,7 @@ def exapi_gurunavi(data):
         'latitude': data['latitude'],
         'longitude': data['longitude'],
         'input_coordinates_mode': data['input_coordinates_mode'],
+        'range': '3',
         'lang': lang
     })
 
