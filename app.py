@@ -941,17 +941,17 @@ def process_request(req):
         }
     elif action in ('Tour.location', 'Tour.location.Tour-location-fallback'):
         city = req['result']['parameters'].get('city')
-        if req['result']['contexts']['parameters']:
-            city_display = req['result']['contexts']['parameters'].get('city.original')
-        else:
-            city_display = city
+        # if req['result']['contexts']['parameters']:
+        #     city_display = req['result']['contexts']['parameters'].get('city.original')
+        # else:
+        #     city_display = city
 
         if userlocale == 'zh_cn':
             button_title = '点击查看'
-            speech = '可唔可以介绍%s既必去当地团俾我呀.\n' % city_display
+            speech = '可唔可以介绍%s既必去当地团俾我呀.\n' % city
         elif userlocale in ('zh_tw', 'zh_hk'):
             button_title = '點擊查看'
-            speech = '可唔可以介紹%s既必去當地團俾我呀.\n' % city_display
+            speech = '可唔可以介紹%s既必去當地團俾我呀.\n' % city
         else:
             button_title = 'Click to view'
             speech = 'Here are the top recommended tours in %s.\n' % city
