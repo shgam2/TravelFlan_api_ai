@@ -1509,8 +1509,10 @@ def process_request(req):
                         speech = 'Sorry, we do not have sufficient data at the moment. ' \
                                  'Please try with different parameters.'
                     else:
+                        print ('HERE----------------------------------')
+                        print('HERE----------------------------------')
+                        print(_res['rest'])
                         for i, item in enumerate(_res['rest']):
-                            print('HEREEEEEEEEEEEEEE: {}'.format(item['name']['name']))
                             fb_item = {
                                 'title': item['name']['name'],
                                 'subtitle': '%s\n%s' % (item['access'], item['contacts']['address']),
