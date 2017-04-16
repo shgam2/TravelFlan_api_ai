@@ -1304,7 +1304,7 @@ def process_request(req):
         }
     elif action in ('Restaurant', 'Restaurant.Restaurant-fallback'):
         txt = req['result']['parameters']['txt']
-        if txt == 'Restaurant':
+        if txt.startswith('Restaurant') or txt.startswith('餐廳') or txt.startswith('餐厅'):
             if userlocale == 'zh_cn':
                 speech = '你想吃那类型及那地区的菜式 (例如: 明洞的韩式餐厅 或者 大阪的寿司)'
             elif userlocale in ('zh_tw', 'zh_hk'):
