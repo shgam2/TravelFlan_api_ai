@@ -870,10 +870,10 @@ def process_request(req):
         data = []
         payload = ['SEOUL', 'BUSAN', 'TOKYO', 'OSAKA', 'NAGOYA']
         if userlocale == 'zh_cn':
-            speech = 'Where are you travelling to? (ex. Seoul, Osaka, or Tokyo)'
+            speech = '请问您要去哪里旅游呢？ (如：首尔/大阪/东京)'
             title = ['尔的', '釜山', '东京', '大阪', '名古屋']
         elif userlocale in ('zh_tw', 'zh_hk'):
-            speech = 'Where are you travelling to? (ex. Seoul, Osaka, or Tokyo)'
+            speech = '請問您要去哪裡旅遊呢？ (如：首爾/大阪/東京)'
             title = ['爾的', '釜山', '東京', '大阪', '名古屋']
         else:
             speech = 'Where are you travelling to? (ex. Seoul, Osaka, or Tokyo)'
@@ -2023,9 +2023,9 @@ def process_request(req):
         }
     elif action == 'restaurant.init':
         if userlocale == 'zh_cn':
-            speech = 'How can I help?'  # TODO: TR
+            speech = '首尔哪里有不错的韩式料理？'
         elif userlocale in ('zh_tw', 'zh_hk'):
-            speech = 'How can I help?'  # TODO: TR
+            speech = '首爾哪裡有不錯的韓式料理？'
         else:
             speech = 'How can I help?'
         res = {
@@ -2036,9 +2036,9 @@ def process_request(req):
         }
     elif action in ('restaurant.country-cuisine', 'restaurant.country-cuisine.Restaurant-countrycuisine-fallback'):
         if userlocale == 'zh_cn':
-            speech = 'Which area do you want to search for? (ex. Gangnam, Ginza)'  # TODO: TR
+            speech = '您想找哪个地区的呢？ (如：江南/银座等)'
         elif userlocale in ('zh_tw', 'zh_hk'):
-            speech = 'Which area do you want to search for? (ex. Gangnam, Ginza)'  # TODO: TR
+            speech = '首爾哪裡有不錯的韓式料理？'
         else:
             speech = 'Which area do you want to search for? (ex. Gangnam, Ginza)'
         res = {
@@ -2050,9 +2050,9 @@ def process_request(req):
     elif action in ('restaurant.location', 'restaurant.country', 'Restaurant.location.Restaurant-location-fallback',
                     'restaurant.country.Restaurant-country-fallback'):
         if userlocale == 'zh_cn':
-            speech = 'Any particular food that you are looking for? (Ex. Korean, Japanese, Sushi, Ramen)'  # TODO: TR
+            speech = '有特定想找的餐点吗？ (如：韩式料理/日式料理/寿司/拉面等)'
         elif userlocale in ('zh_tw', 'zh_hk'):
-            speech = 'Any particular food that you are looking for? (Ex. Korean, Japanese, Sushi, Ramen)'  # TODO: TR
+            speech = '有特定想找的餐點嗎？(如：韓式料理/日式料理/壽司/拉麵等)'
         else:
             speech = 'Any particular food that you are looking for? (Ex. Korean, Japanese, Sushi, Ramen)'
         res = {
