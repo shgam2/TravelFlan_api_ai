@@ -894,10 +894,10 @@ def process_request(req):
         payload = ['SEOUL', 'BUSAN', 'TOKYO', 'OSAKA', 'NAGOYA']
         if userlocale == 'zh_cn':
             speech = '请问您要去哪里旅游呢？ (如：首尔/大阪/东京)'
-            title = ['尔的', '釜山', '东京', '大阪', '名古屋']
+            title = ['首尔', '釜山', '东京', '大阪', '名古屋']
         elif userlocale in ('zh_tw', 'zh_hk'):
             speech = '請問您要去哪裡旅遊呢？ (如：首爾/大阪/東京)'
-            title = ['爾的', '釜山', '東京', '大阪', '名古屋']
+            title = ['首爾', '釜山', '東京', '大阪', '名古屋']
         else:
             speech = 'Where are you travelling to? (ex. Seoul, Osaka, or Tokyo)'
             title = ['Seoul', 'Busan', 'Tokyo', 'Osaka', 'Nagoya']
