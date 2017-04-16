@@ -478,7 +478,7 @@ def exapi_pengtai(data):
         return None
 
 
-def exapi_gurunavi_ex(location, cuisine):
+def exapi_gurunavi_ex(location, cuisine, lang):
     url_cuisine = GURUNAVI_CATEGORY_URL + urlencode({'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en'})
     url_location = GURUNAVI_AREA_URL + urlencode({'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en'})
     res_cuisine = requests.get(url_cuisine).json()['category_l']
@@ -502,10 +502,13 @@ def exapi_gurunavi_ex(location, cuisine):
     if not cuisine_code:
         return None
 
-    if location_code == 'zh_hk':
-        location_code == 'zh_tw'
+    if lang == 'zh_hk':
+        lang == 'zh_tw'
+    elif lang == 'en_us':
+        lang = 'en'
+
     url_lookup = GURUNAVI_SEARCH_URL + urlencode(
-        {'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en',
+        {'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': lang,
          'areacode_l': location_code, 'category_l': cuisine_code})
     return requests.get(url_lookup).json()
 
@@ -1623,7 +1626,7 @@ def process_request(req):
         parameters = req['result']['parameters']
         location = parameters.get('address')
         cuisine = parameters.get('gurunavi_cuisine_temp')
-        _res = exapi_gurunavi_ex(location, cuisine)
+        _res = exapi_gurunavi_ex(location, cuisine, userlocale)
         elements = list()
         speech = ''
         if not _res['rest']:
