@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import csv
-import datetime
-from datetime import datetime, timedelta
+from datetime import datetime
 import hashlib
 import json
 import os
@@ -262,8 +261,8 @@ def grab_answer(from_loc, to_loc, dir_file, lang):
 
 def get_gmap_directions(from_loc, to_loc, lang):
     now = datetime.now()
-    print('from_loc = %s' % (from_loc))
-    print('to_loc = %s' % (to_loc))
+    print('from_loc = %s' % (from_loc,))
+    print('to_loc = %s' % (to_loc,))
     # from_loc = gmaps.places(from_loc)['results'][0]['formatted_address']
     # to_loc = gmaps.places(to_loc)['results'][0]['formatted_address']
 
