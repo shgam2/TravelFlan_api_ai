@@ -2104,11 +2104,11 @@ def process_request(req):
         }
     elif action in ('restaurant.country-cuisine', 'restaurant.country-cuisine.Restaurant-countrycuisine-fallback'):
         if userlocale == 'zh_cn':
-            speech = '您想找哪个地区的呢？ (如：江南/银座等)'
+            speech = '您想找哪个地区的呢? (如: 江南/新宿)'
         elif userlocale in ('zh_tw', 'zh_hk'):
-            speech = '首爾哪裡有不錯的韓式料理？'
+            speech = '首爾哪裡有不錯的韓式料理? (如: 江南/新宿)'
         else:
-            speech = 'Which area do you want to search for? (ex. Gangnam, Ginza)'
+            speech = 'Which area do you want to search for? (ex. Gangnam, Shinjuku)'
         res = {
             'speech': speech,
             'displayText': '',
@@ -2118,9 +2118,9 @@ def process_request(req):
     elif action in ('restaurant.location', 'restaurant.country', 'Restaurant.location.Restaurant-location-fallback',
                     'restaurant.country.Restaurant-country-fallback'):
         if userlocale == 'zh_cn':
-            speech = '有特定想找的餐点吗？ (如：韩式料理/日式料理/寿司/拉面等)'
+            speech = '有特定想找的餐点吗? (如: 韩式料理/日式料理/寿司/拉面等)'
         elif userlocale in ('zh_tw', 'zh_hk'):
-            speech = '有特定想找的餐點嗎？(如：韓式料理/日式料理/壽司/拉麵等)'
+            speech = '有特定想找的餐點嗎? (如: 韓式料理/日式料理/壽司/拉麵等)'
         else:
             speech = 'Any particular food that you are looking for? (Ex. Korean, Japanese, Sushi, Ramen)'
         res = {
