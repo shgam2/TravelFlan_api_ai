@@ -1436,7 +1436,7 @@ def process_request(req):
                         'category2': category2,
                         'latitude': str(latitude),
                         'longitude': str(longitude),
-                        'distance': '5000'
+                        'distance': '3000'
                     }
                     _res = exapi_pengtai(_data)
                     elements = list()
