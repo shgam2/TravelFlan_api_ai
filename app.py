@@ -515,6 +515,14 @@ def exapi_gurunavi_ex(location, cuisine, lang):
 def exapi_gurunavi(data):
     print("In exapi_gurunavi(data) **********")
 
+    lang = ''
+    if data['lang'].lower() == 'zh_hk':
+        lang = 'zh_tw'
+    elif data['lang'].lower() == 'en_us':
+        lang = 'en'
+    else:
+        lang = 'zh_cn'
+
     url_lookup = GURUNAVI_SEARCH_URL + urlencode({
         'keyid': GURUNAVI_KEY,
         'format': data['format'],
@@ -522,7 +530,7 @@ def exapi_gurunavi(data):
         'latitude': data['latitude'],
         'longitude': data['longitude'],
         'input_coordinates_mode': data['input_coordinates_mode'],
-        'lang': data['lang']
+        'lang': lang
     })
 
     print('URL: {}'.format(url_lookup))
@@ -1845,8 +1853,15 @@ def process_request(req):
                 }
                 _res = exapi_gurunavi(_data)
                 if not _res.get('rest'):
-                    speech = 'Sorry, we do not have sufficient data at the moment. ' \
+                    if userlocale == 'en_us':
+                        speech = 'Sorry, we do not have sufficient data at the moment. ' \
                              'Please try with different parameters.'
+                    elif userlocale in ('zh_hk', 'zh_tw'):
+                        speech = 'Sorry, we do not have sufficient data at the moment. ' \
+                             'Please try with different parameters.'    # Todo: translation
+                    else:
+                        speech = 'Sorry, we do not have sufficient data at the moment. ' \
+                             'Please try with different parameters.'    # Todo: translation
                 else:
                     for i, item in enumerate(_res['rest']):
                         fb_item = {
