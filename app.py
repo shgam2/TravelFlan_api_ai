@@ -1042,13 +1042,13 @@ def process_request(req):
         data = []
         payload = ['1', '2', '3', '4', '5']
         if userlocale == 'zh_cn':
-            speech = 'How many days do you want to go?'
+            speech = '您预计会停留几天？'
             title = ['1', '2', '3', '4', '5']
         elif userlocale in ('zh_tw', 'zh_hk'):
-            speech = 'How many days do you want to go?'
+            speech = '您預計會停留幾天？'
             title = ['1', '2', '3', '4', '5']
         else:
-            speech = 'How many days do you want to go?'
+            speech = 'For how many days are you planning to stay?'
             title = ['1', '2', '3', '4', '5']
         datum = {
             'text': speech,
@@ -1091,13 +1091,13 @@ def process_request(req):
         data = []
         payload = ['FIRST', 'SHOPPING', 'KIDS', 'FOOD']
         if userlocale == 'zh_cn':
-            speech = 'What is the purpose of your travel?'
+            speech = '您这次的行程目的是什么呢？'
             title = ['观光 第一次去', '逛街购物', '亲子', '美食']
         elif userlocale in ('zh_tw', 'zh_hk'):
-            speech = 'What is the purpose of your travel?'
+            speech = '您這次的行程目的是什麼呢？'
             title = ['[觀光 第一次去', '逛街購物', '親子', '美食']
         else:
-            speech = 'What is the purpose of your travel?'
+            speech = 'What is your travel theme this time?'
             title = ['First Time', 'Shopping', 'with Kids', 'Food Lover']
         datum = {
             'text': speech,
