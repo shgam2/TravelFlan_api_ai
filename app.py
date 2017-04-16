@@ -501,6 +501,8 @@ def exapi_gurunavi_ex(location, cuisine):
     if not cuisine_code:
         return None
 
+    if location_code == 'zh_hk':
+        location_code == 'zh_tw'
     url_lookup = GURUNAVI_SEARCH_URL + urlencode(
         {'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en',
          'areacode_l': location_code, 'category_l': cuisine_code})
@@ -530,6 +532,8 @@ def exapi_gurunavi_category_l(cuisine):
     url_cuisine = GURUNAVI_CATEGORY_URL + urlencode({'keyid': GURUNAVI_KEY, 'format': 'json', 'lang': 'en'})
     res_cuisine = requests.get(url_cuisine).json()['category_l']
     category_l_code = None
+    if cuisine.lower() == 'japanese':
+        cuisine = 'traditional japanese'
     for i, item in enumerate(res_cuisine):
         print('MATCHING: {}'.format(item.get('category_l_name').lower()))
         if cuisine.lower() in item.get('category_l_name').lower():
@@ -2031,7 +2035,7 @@ def process_request(req):
         }
     elif action == 'restaurant.init':
         if userlocale == 'zh_cn':
-            speech = '首尔哪里有不错的韩式料理？'
+            speech= '首尔哪里有不错的韩式料理？'
         elif userlocale in ('zh_tw', 'zh_hk'):
             speech = '首爾哪裡有不錯的韓式料理？'
         else:
