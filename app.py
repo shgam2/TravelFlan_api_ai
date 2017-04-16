@@ -940,7 +940,7 @@ def process_request(req):
             'data': data
         }
     elif action in ('Tour.location', 'Tour.location.Tour-location-fallback'):
-        city = req['result']['parameters'].get('city')
+        city = req['result']['parameters'].get('city.original')
 
         if userlocale == 'zh_cn':
             button_title = '点击查看'
