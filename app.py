@@ -1512,7 +1512,41 @@ def process_request(req):
                         print ('HERE----------------------------------')
                         print('HERE----------------------------------')
                         print(_res['rest'])
-                        for i, item in enumerate(_res['rest']):
+
+                        if isinstance(_res['rest'], list) == True:
+                            for i, item in enumerate(_res['rest']):
+                                fb_item = {
+                                    'title': item['name']['name'],
+                                    'subtitle': '%s\n%s' % (item['access'], item['contacts']['address']),
+                                    'image_url': item['image_url']['thumbnail'],
+                                    'buttons': [
+                                        {
+                                            'type': 'web_url',
+                                            'url': item['url']
+                                        }
+                                    ]
+                                }
+                                if userlocale == 'zh_cn':
+                                    fb_item['buttons'][0]['title'] = '点击查看'
+                                    speech += '%s. 名称: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
+                                        i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                                        item['contacts']['tel'], item['business_hour']
+                                    )
+                                elif userlocale in ('zh_tw', 'zh_hk'):
+                                    fb_item['buttons'][0]['title'] = '點擊查看'
+                                    speech += '%s. 名稱: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
+                                        i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                                        item['contacts']['tel'], item['business_hour']
+                                    )
+                                else:
+                                    fb_item['buttons'][0]['title'] = 'Click to view'
+                                    speech += '%s. Name: %s\nSummary: %s\nAddress: %s\nTel: %s\nBusiness hours: %s\n\n' % (
+                                        i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                                        item['contacts']['tel'], item['business_hour']
+                                    )
+                                elements.append(fb_item)
+                        else:
+                            item = _res['rest']
                             fb_item = {
                                 'title': item['name']['name'],
                                 'subtitle': '%s\n%s' % (item['access'], item['contacts']['address']),
@@ -1527,22 +1561,23 @@ def process_request(req):
                             if userlocale == 'zh_cn':
                                 fb_item['buttons'][0]['title'] = '点击查看'
                                 speech += '%s. 名称: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
-                                    i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                                    1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
                                     item['contacts']['tel'], item['business_hour']
                                 )
                             elif userlocale in ('zh_tw', 'zh_hk'):
                                 fb_item['buttons'][0]['title'] = '點擊查看'
                                 speech += '%s. 名稱: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
-                                    i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                                    1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
                                     item['contacts']['tel'], item['business_hour']
                                 )
                             else:
                                 fb_item['buttons'][0]['title'] = 'Click to view'
                                 speech += '%s. Name: %s\nSummary: %s\nAddress: %s\nTel: %s\nBusiness hours: %s\n\n' % (
-                                    i + 1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
+                                    1, item['name']['name'], item['name']['name_sub'], item['contacts']['address'],
                                     item['contacts']['tel'], item['business_hour']
                                 )
                             elements.append(fb_item)
+
                 l = 0
                 for x in speech.split('\n'):
                     l += len(x)
