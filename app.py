@@ -304,43 +304,43 @@ def get_gmap_directions(from_loc, to_loc, lang):
         speech = ''
         if lang == 'zh_TW' or lang == 'zh_HK':
             if fare:
-                speech += '費用: %s\n'
+                speech += '費用: %s\n' % (fare,)
             if departure_time:
-                speech += '出發時間: %s\n'
+                speech += '出發時間: %s\n' % (departure_time,)
             if arrival_time:
-                speech += '抵達時間: %s\n'
+                speech += '抵達時間: %s\n' % (arrival_time,)
             if distance:
-                speech += '距離: %s\n'
+                speech += '距離: %s\n' % (distance,)
             if duration:
-                speech += '所需時間: %s\n\n'
+                speech += '所需時間: %s\n\n' % (duration,)
             if route:
-                speech += '路線:\n%s'
+                speech += '路線:\n%s' % (route,)
         elif lang == 'zh_CN':
             if fare:
-                speech += '费用: %s\n'
+                speech += '费用: %s\n' % (fare,)
             if departure_time:
-                speech += '出发时间: %s\n'
+                speech += '出发时间: %s\n' % (departure_time,)
             if arrival_time:
-                speech += '抵达时间: %s\n'
+                speech += '抵达时间: %s\n' % (arrival_time,)
             if distance:
-                speech += '距离: %s\n'
+                speech += '距离: %s\n' % (distance,)
             if duration:
-                speech += '所需时间: %s\n\n'
+                speech += '所需时间: %s\n\n' % (duration,)
             if route:
-                speech += '路线:\n%s'
+                speech += '路线:\n%s' % (route,)
         else:
             if fare:
-                speech += 'Fare: %s\n'
+                speech += 'Fare: %s\n' % (fare,)
             if departure_time:
-                speech += 'Departure Time: %s\n'
+                speech += 'Departure Time: %s\n' % (departure_time,)
             if arrival_time:
-                speech += 'Arrival Time: %s\n'
+                speech += 'Arrival Time: %s\n' % (arrival_time,)
             if distance:
-                speech += 'Distance: %s\n'
+                speech += 'Distance: %s\n' % (distance,)
             if duration:
-                speech += 'Duration: %s\n\n'
+                speech += 'Duration: %s\n\n' % (duration,)
             if route:
-                speech += 'Route:\n%s'
+                speech += 'Route:\n%s' % (route,)
 
         l = 0
         for x in speech.split('\n'):
