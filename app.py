@@ -468,6 +468,9 @@ def exapi_pengtai(data):
 
     data['timestamp'] = timestamp
 
+    print('**********************************************')
+    print('Pengtai data: {}'.format(data))
+
     try:
         res = requests.get(PENGTAI_TEST_URL, headers=headers, params=data)
         print(res.json())
