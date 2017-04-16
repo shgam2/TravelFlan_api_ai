@@ -1306,7 +1306,7 @@ def process_request(req):
         txt = req['result']['parameters']['txt']
         if txt == 'Restaurant':
             if userlocale == 'zh_cn':
-                speech = '首尔哪里有不错的韩式料理?'
+                speech = '你想吃那类型及那地区的菜式 (例如: 明洞的韩式餐厅 或者 大阪的寿司)'
             elif userlocale in ('zh_tw', 'zh_hk'):
                 speech = '你想吃那類型及那地區的菜式 (例如: 明洞的韓式餐廳 或者 大阪的壽司)'
             else:
