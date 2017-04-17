@@ -1286,7 +1286,7 @@ def process_request(req):
         elif userlocale in ('zh_tw', 'zh_hk'):
             speech = '從哪裡出發呢? (如: 首爾/銀座/江南站等)'
         else:
-            speech = 'From where? (Ex: Seoul, Ginga, Gangnam station)'
+            speech = 'From where? (Ex: Seoul, Ginza, Gangnam station)'
         res = {
             'speech': speech,
             'displayText': speech,
@@ -1627,11 +1627,11 @@ def process_request(req):
                     data[0]['error'] = True
                     data[0]['parameters']['cuisine'] = cuisine
                     if userlocale == 'zh_cn':
-                        speech = '您想找哪个地区的呢? (如: 江南/银座等)'
+                        speech = '您想找哪个地区的呢? (如: 江南/新宿)'
                     elif userlocale in ('zh_tw', 'zh_hk'):
-                        speech = '您想找哪個地區的呢? (如: 江南/銀座等)'
+                        speech = '您想找哪個地區的呢? (如: 江南/新宿)'
                     else:
-                        speech = 'Which area do you want to search for? (Ex. Gangnam, Ginza)'
+                        speech = 'Which area do you want to search for? (Ex. Gangnam, Shinjuku)'
                 else:
                     data[0]['error'] = True
                     if userlocale == 'zh_cn':
