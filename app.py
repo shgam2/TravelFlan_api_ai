@@ -23,6 +23,9 @@ TRANSLATE_BASE_URL = 'http://awseb-e-f-AWSEBLoa-VIW6OYVV6CSY-1979702995.us-east-
 TF_ITINERARY_URL = 'https://flanb-demo.travelflan.com/data/itinerary?type=0&'
 TF_TOUR_URL = 'https://flanb-demo.travelflan.com/data/itinerary?type=1&days=1&'
 
+TF_DATA_URL = 'https://flanb-demo.travelflan.com/data?page_size=10&dist=3000&point=%s,%s&main_category=1'
+TF_DATA_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcm5hbWUiOiI3MjJmNTM0NTVjOGM0ZTI0OGIwNzI4OWVmY2IwYjM2ZiIsImlzX3N1cGVydXNlciI6dHJ1ZSwiaXNfc3RhZmYiOnRydWUsImlzX2FjdGl2ZSI6dHJ1ZSwicHJvdmlkZXIiOjEsImV4cCI6MTUyNDUyNTA2NCwiaXNzIjoiVHJhdmVsRmxhbiJ9.T6KTfCUj9THsud0NazTFKmbKolOUDgqvWG9q66R_wDc'
+
 PENGTAI_URL = 'http://www.hanguoing.cn/exApi/travelFlan'
 PENGTAI_TEST_URL = 'http://test1.hanguoing.com/exApi/travelFlan'
 PENGTAI_KEY = 'xmvoqpfvmffosqksrkqtmqslek'
@@ -561,13 +564,13 @@ def exapi_gurunavi_category_l(cuisine):
 def make_quick_replies(locale):
     if locale == 'zh_cn':
         text = '那么有其他可以为您服务的吗?'
-        title = ['行程', '一天团', '餐厅', '方向', '天气']
+        title = ['行程', '一天团', '餐厅', '方向', '天气', '餐厅2']
     elif locale in ('zh_tw', 'zh_hk'):
         text = '那麼有其他可以為您服務的嗎?'
-        title = ['行程', '一天團', '餐廳', '方向', '天氣']
+        title = ['行程', '一天團', '餐廳', '方向', '天氣', '餐廳2']
     else:
         text = 'Anything else?'
-        title = ['Itinerary', 'Tour', 'Restaurant', 'Transportation', 'Weather']
+        title = ['Itinerary', 'Tour', 'Restaurant', 'Transportation', 'Weather', 'Restaurant2']
     return {
         'text': text,
         'quick_replies': [
@@ -595,7 +598,12 @@ def make_quick_replies(locale):
                 'content_type': 'text',
                 'title': title[4],
                 'payload': 'WEATHER'
-            }
+            },
+            {
+                'content_type': 'text',
+                'title': title[5],
+                'payload': 'RESTAURANT2'
+            },
         ]
     }
 
@@ -1305,7 +1313,8 @@ def process_request(req):
             'source': 'apiai-transportation',
             'data': data
         }
-    elif action in ('Restaurant', 'Restaurant.Restaurant-fallback'):
+    elif action in ('Restaurant', 'Restaurant.Restaurant-fallback',
+                    'Restaurant2', 'Restaurant2.Restaurant2-fallback'):
         txt = req['result']['parameters']['txt']
         if txt.startswith('Restaurant') or txt.startswith('餐廳') or txt.startswith('餐厅'):
             if userlocale == 'zh_cn':
@@ -1423,77 +1432,154 @@ def process_request(req):
                 latitude = geocode_result[0]['geometry']['location']['lat']
                 longitude = geocode_result[0]['geometry']['location']['lng']
                 if location in RESTAURANT_LOCATION_KO:
-                    if userlocale == 'zh_cn':
-                        lang = '01'
-                    elif userlocale in ('zh_tw', 'zh_hk'):
-                        lang = '02'
+                    if action in ('Restaurant', 'Restaurant.Restaurant-fallback'):
+                        if userlocale == 'zh_cn':
+                            lang = '01'
+                        elif userlocale in ('zh_tw', 'zh_hk'):
+                            lang = '02'
+                        else:
+                            lang = '04'
+                        category1 = '3000'
+                        if cuisine == 'Korean':
+                            category2 = '3101'
+                        elif cuisine == 'Japanese':
+                            category2 = '3102'
+                        elif cuisine == 'Chinese':
+                            category2 = '3103'
+                        elif cuisine == 'Western':
+                            category2 = '3104'
+                        elif cuisine == 'Foreign':
+                            category2 = '3105'
+                        elif cuisine == 'Caffe':
+                            category2 = '3106'
+                        elif cuisine == 'Fastfood':
+                            category2 = '3107'
+                        elif cuisine == 'Pub':
+                            category2 = '3108'
+                        else:
+                            category2 = ''
+                        _data = {
+                            'lang': lang,
+                            'category1': category1,
+                            'category2': category2,
+                            'latitude': str(latitude),
+                            'longitude': str(longitude),
+                            'distance': '7000'
+                        }
+                        _res = exapi_pengtai(_data)
+                        elements = list()
+                        speech = ''
+                        if not _res.get('list'):
+                            speech = 'Sorry, we do not have sufficient data at the moment. ' \
+                                     'Please try with different parameters.'
+                        else:
+                            for i, item in enumerate(_res['list']):
+                                fb_item = {
+                                    'title': item['name'],
+                                    'subtitle': '%s\n%s' % (item['summary'], item['address']),
+                                    'image_url': item['imagePath'],
+                                    'buttons': [
+                                        {
+                                            'type': 'web_url',
+                                            'url': item['url']
+                                        }
+                                    ]
+                                }
+                                if userlocale == 'zh_cn':
+                                    fb_item['buttons'][0]['title'] = '点击查看'
+                                    speech += '%s. 名称: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
+                                        i + 1, item['name'], item['summary'], item['address'],
+                                        item['tel'], item['besinessHours']
+                                    )
+                                elif userlocale in ('zh_tw', 'zh_hk'):
+                                    fb_item['buttons'][0]['title'] = '點擊查看'
+                                    speech += '%s. 名稱: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
+                                        i + 1, item['name'], item['summary'], item['address'],
+                                        item['tel'], item['besinessHours']
+                                    )
+                                else:
+                                    fb_item['buttons'][0]['title'] = 'Click to view'
+                                    speech += '%s. Name: %s\nSummary: %s\nAddress: %s\nTel: %s\nBusiness hours: %s\n\n' % (
+                                        i + 1, item['name'], item['summary'], item['address'],
+                                        item['tel'], item['besinessHours']
+                                    )
+                                elements.append(fb_item)
                     else:
-                        lang = '04'
-                    category1 = '3000'
-                    if cuisine == 'Korean':
-                        category2 = '3101'
-                    elif cuisine == 'Japanese':
-                        category2 = '3102'
-                    elif cuisine == 'Chinese':
-                        category2 = '3103'
-                    elif cuisine == 'Western':
-                        category2 = '3104'
-                    elif cuisine == 'Foreign':
-                        category2 = '3105'
-                    elif cuisine == 'Caffe':
-                        category2 = '3106'
-                    elif cuisine == 'Fastfood':
-                        category2 = '3107'
-                    elif cuisine == 'Pub':
-                        category2 = '3108'
-                    else:
-                        category2 = ''
-                    _data = {
-                        'lang': lang,
-                        'category1': category1,
-                        'category2': category2,
-                        'latitude': str(latitude),
-                        'longitude': str(longitude),
-                        'distance': '7000'
-                    }
-                    _res = exapi_pengtai(_data)
-                    elements = list()
-                    speech = ''
-                    if not _res.get('list'):
-                        speech = 'Sorry, we do not have sufficient data at the moment. ' \
-                                 'Please try with different parameters.'
-                    else:
-                        for i, item in enumerate(_res['list']):
-                            fb_item = {
-                                'title': item['name'],
-                                'subtitle': '%s\n%s' % (item['summary'], item['address']),
-                                'image_url': item['imagePath'],
-                                'buttons': [
-                                    {
-                                        'type': 'web_url',
-                                        'url': item['url']
+                        headers = {
+                            'Authorization': 'Bearer %s' % (TF_DATA_TOKEN,)
+                        }
+                        _res = requests.get(TF_DATA_URL % (longitude, latitude), headers=headers).json()
+                        elements = list()
+                        speech = ''
+                        if not _res['results'].get('features'):
+                            speech = 'Sorry, we do not have sufficient data at the moment. ' \
+                                     'Please try with different parameters.'
+                        else:
+                            for i, item in enumerate(_res['results']['features']):
+                                if userlocale == 'zh_cn':
+                                    fb_item = {
+                                        'title': item['properties']['meta']['zh_CN']['name'],
+                                        'subtitle': '%s\n%s' % (item['properties']['meta']['zh_CN']['brief'],
+                                                                item['properties']['meta']['zh_CN']['address']),
+                                        'image_url': item['properties']['meta']['zh_CN']['image_url'],
+                                        'buttons': [
+                                            {
+                                                'type': 'web_url',
+                                                'url': item['properties']['meta']['zh_CN']['basic_url'],
+                                                'title': '点击查看'
+                                            }
+                                        ]
                                     }
-                                ]
-                            }
-                            if userlocale == 'zh_cn':
-                                fb_item['buttons'][0]['title'] = '点击查看'
-                                speech += '%s. 名称: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
-                                    i + 1, item['name'], item['summary'], item['address'],
-                                    item['tel'], item['besinessHours']
-                                )
-                            elif userlocale in ('zh_tw', 'zh_hk'):
-                                fb_item['buttons'][0]['title'] = '點擊查看'
-                                speech += '%s. 名稱: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
-                                    i + 1, item['name'], item['summary'], item['address'],
-                                    item['tel'], item['besinessHours']
-                                )
-                            else:
-                                fb_item['buttons'][0]['title'] = 'Click to view'
-                                speech += '%s. Name: %s\nSummary: %s\nAddress: %s\nTel: %s\nBusiness hours: %s\n\n' % (
-                                    i + 1, item['name'], item['summary'], item['address'],
-                                    item['tel'], item['besinessHours']
-                                )
-                            elements.append(fb_item)
+                                    speech += '%s. 名称: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
+                                        i + 1, item['properties']['meta']['zh_CN']['name'],
+                                        item['properties']['meta']['zh_CN']['brief'],
+                                        item['properties']['meta']['zh_CN']['address'],
+                                        item['properties']['meta']['zh_CN']['contact_number'],
+                                        item['properties']['meta']['zh_CN']['business_hours']
+                                    )
+                                elif userlocale in ('zh_tw', 'zh_hk'):
+                                    fb_item = {
+                                        'title': item['properties']['meta']['zh_HK']['name'],
+                                        'subtitle': '%s\n%s' % (item['properties']['meta']['zh_HK']['brief'],
+                                                                item['properties']['meta']['zh_HK']['address']),
+                                        'image_url': item['properties']['meta']['zh_HK']['image_url'],
+                                        'buttons': [
+                                            {
+                                                'type': 'web_url',
+                                                'url': item['properties']['meta']['zh_HK']['basic_url'],
+                                                'title': '點擊查看'
+                                            }
+                                        ]
+                                    }
+                                    speech += '%s. 名稱: %s\n簡介: %s\n地址: %s\n連絡電話: %s\n營業時間: %s\n\n' % (
+                                        i + 1, item['properties']['meta']['zh_HK']['name'],
+                                        item['properties']['meta']['zh_HK']['brief'],
+                                        item['properties']['meta']['zh_HK']['address'],
+                                        item['properties']['meta']['zh_HK']['contact_number'],
+                                        item['properties']['meta']['zh_HK']['business_hours']
+                                    )
+                                else:
+                                    fb_item = {
+                                        'title': item['properties']['meta']['en_US']['name'],
+                                        'subtitle': '%s\n%s' % (item['properties']['meta']['en_US']['brief'],
+                                                                item['properties']['meta']['en_US']['address']),
+                                        'image_url': item['properties']['meta']['en_US']['image_url'],
+                                        'buttons': [
+                                            {
+                                                'type': 'web_url',
+                                                'url': item['properties']['meta']['en_US']['basic_url'],
+                                                'title': 'Click to view'
+                                            }
+                                        ]
+                                    }
+                                    speech += '%s. Name: %s\nSummary: %s\nAddress: %s\nTel: %s\nBusiness hours: %s\n\n' % (
+                                        i + 1, item['properties']['meta']['en_US']['name'],
+                                        item['properties']['meta']['en_US']['brief'],
+                                        item['properties']['meta']['en_US']['address'],
+                                        item['properties']['meta']['en_US']['contact_number'],
+                                        item['properties']['meta']['en_US']['business_hours']
+                                    )
+                                elements.append(fb_item)
                 else:
                     category_l = exapi_gurunavi_category_l(cuisine.lower())
                     _data = {

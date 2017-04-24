@@ -3,7 +3,7 @@ click==6.7
 Flask==0.12.1
 googlemaps==2.4.6
 itsdangerous==0.24
-Jinja2==2.9.5
+Jinja2==2.9.6
 MarkupSafe==1.0
 packaging==16.8
 pyparsing==2.2.0
