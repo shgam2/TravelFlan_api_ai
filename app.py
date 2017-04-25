@@ -956,12 +956,15 @@ def process_request(req):
         if userlocale == 'zh_cn':
             button_title = '点击查看'
             speech = '可唔可以介绍%s既必去当地团俾我呀.\n' % city
+            locale = 'zh_CN'
         elif userlocale in ('zh_tw', 'zh_hk'):
             button_title = '點擊查看'
             speech = '可唔可以介紹%s既必去當地團俾我呀.\n' % city
+            locale = 'zh_HK'
         else:
             button_title = 'Click to view'
             speech = 'Here are the top recommended tours in %s.\n' % city
+            locale = 'en_US'
         _data = {
             'city': city,
             'lang': userlocale
@@ -975,30 +978,29 @@ def process_request(req):
             d = tf_res['day%d' % (day,)]
             elements = list()
 
-            for j, day_item in enumerate(d):
-                for k, item in enumerate(day_item):
-                    if item['locale'].lower() == userlocale:
-                        title = item['name']
-                        subtitle = item['highlight']
-                        image_url = item['photo']
-                        link = item['link']
+            for k, day_item in enumerate(d, 1):
+                item = day_item.get(locale)
 
-                        fb_item = {
-                            'title': 'Tour {}: {}'.format(j + 1, title),
-                            'subtitle': subtitle,
-                            'image_url': image_url,
-                            'buttons': [
-                                {
-                                    'type': 'web_url',
-                                    'url': link,
-                                    'title': button_title
-                                }
-                            ]
+                title = item['name']
+                subtitle = item['brief']
+                image_url = item['image_url']
+                url = item['basic_url']
+
+                fb_item = {
+                    'title': 'Tour {}: {}'.format(k, title),
+                    'subtitle': subtitle,
+                    'image_url': image_url,
+                    'buttons': [
+                        {
+                            'type': 'web_url',
+                            'url': url,
+                            'title': button_title
                         }
+                    ]
+                }
 
-                        elements.append(fb_item)
-                        speech += '(%s) %s\n' % (j + 1, title)
-                        break
+                elements.append(fb_item)
+                speech += '(%s) %s\n' % (k, title)
 
             data_item = {
                 'attachment_type': 'template',
@@ -1166,14 +1168,17 @@ def process_request(req):
             map_title = '地图: %s -> %s'
             button_title = '点击查看'
             speech = '以下是%s天的行程：\n' % num_days
+            locale = 'zh_CN'
         elif userlocale in ('zh_tw', 'zh_hk'):
             map_title = '地圖: %s -> %s'
             button_title = '點擊查看'
             speech = '以下是%s天的行程：\n' % num_days
+            locale = 'zh_HK'
         else:
             map_title = 'Map: %s -> %s'
             button_title = 'Click to view'
             speech = 'Here is the %s-day itinerary.\n' % num_days
+            locale = 'en_US'
         _data = {
             'city': city,
             'num_days': num_days,
@@ -1197,46 +1202,45 @@ def process_request(req):
 
             speech += 'Day {}:\n'.format(day)
             prev_map = None
-            for j, day_item in enumerate(d):
-                for k, item in enumerate(day_item):
-                    if item['locale'].lower() == userlocale:
-                        title = item['name']
-                        subtitle = item['highlight']
-                        image_url = item['photo']
-                        link = item['link']
+            for k, day_item in enumerate(d, 1):
+                item = day_item.get(locale)
 
-                        fb_item = {
-                            'title': 'Day {}-{}: {}'.format(day, j + 1, title),
-                            'subtitle': subtitle,
-                            'image_url': image_url,
-                            'buttons': [
-                                {
-                                    'type': 'web_url',
-                                    'url': link,
-                                    'title': button_title
-                                }
-                            ]
+                title = item['name']
+                subtitle = item['brief']
+                image_url = item['image_url']
+                url = item['basic_url']
+
+                fb_item = {
+                    'title': 'Day {}-{}: {}'.format(day, k, title),
+                    'subtitle': subtitle,
+                    'image_url': image_url,
+                    'buttons': [
+                        {
+                            'type': 'web_url',
+                            'url': url,
+                            'title': button_title
                         }
+                    ]
+                }
 
-                        if prev_map:
-                            map_item = {
-                                'title': 'Day {} {}'.format(day, map_title % (prev_map, title)),
-                                'subtitle': '\n',
-                                'image_url': MAP_IMAGE_URL,
-                                'buttons': [
-                                    {
-                                        'type': 'web_url',
-                                        'url': map_url % (prev_map.replace(' ', '+'), title.replace(' ', '+')),
-                                        'title': button_title
-                                    }
-                                ]
+                if prev_map:
+                    map_item = {
+                        'title': 'Day {} {}'.format(day, map_title % (prev_map, title)),
+                        'subtitle': '\n',
+                        'image_url': MAP_IMAGE_URL,
+                        'buttons': [
+                            {
+                                'type': 'web_url',
+                                'url': map_url % (prev_map.replace(' ', '+'), title.replace(' ', '+')),
+                                'title': button_title
                             }
-                            map_data.append(map_item)
+                        ]
+                    }
+                    map_data.append(map_item)
 
-                        prev_map = title
-                        elements.append(fb_item)
-                        speech += '(%s) %s\n' % (j + 1, title)
-                        break
+                prev_map = title
+                elements.append(fb_item)
+                speech += '(%s) %s\n' % (k, title)
 
             elements += map_data
             data_item = {
