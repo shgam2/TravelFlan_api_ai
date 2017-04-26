@@ -2239,14 +2239,7 @@ def webhook():
     return r
 
 
-@app.route('/weather', methods=['GET'])
-def weather():
-    city = request.args.get('city')
-    date = request.args.get('date')
-    forecast = request.args.get('forecast')
-    language = request.args.get('language')
-
-
+def get_weather_data(city):
     url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(city), 'format': 'json'})
     print('YQL-Request:\n%s' % (url,))
     _res = urlopen(url).read()
@@ -2266,10 +2259,112 @@ def weather():
     if 'forecast' not in data['query']['results']['channel']['item']:
         return None
 
-    location = data['query']['results']['channel']['location']
+    location = data['query']['results']['channel']['location']['city']
     units = data['query']['results']['channel']['units']
     forecast_items = data['query']['results']['channel']['item']['forecast']
 
+    res = {
+        'location': location,
+        'units': units,
+        'forecast_items': forecast_items
+    }
+
+    return res
+
+def weather_text(request_data):
+    # request_data
+    city = request_data['city']
+    date = request_data['date']
+    isForecast = request_data['isForecast']
+    language = request_data['language']
+
+    weather_data = get_weather_data(city)
+    unit = weather_data['units']['temperature']
+    forecast_items = weather_data['forecast_items']
+
+    date_found = False
+    for item in forecast_items:
+        if datetime.strptime(date, '%Y/%m/%d').strftime('%d %b %Y') in item['date']:
+            date_found = True
+            condition_code = item['code']
+            high = item['high']
+            low = item['low']
+            condition = item['text']
+            break
+
+    if date_found == False:
+        return None
+
+    if isForecast == False:
+        print('Forecast is false')
+        if language == 'zh_cn':
+            title = ['是', '否']
+            # temp = conv_weather_cond(condition['code'], 's_cn')
+            # speech = '%s的天气: %s, 温度是%s°%s\n请问您需要天气预报吗?' % (city, temp, condition['temp'], units['temperature'])
+            speech = '%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
+                city, date, conv_weather_cond(condition_code, 's_cn'),
+                high, unit, low, unit)
+        elif language in ('zh_tw', 'zh_hk'):
+            title = ['是', '否']
+            # temp = conv_weather_cond(condition['code'], 't_cn')
+            # speech = '%s的天氣: %s, 溫度是%s°%s\n請問您需要天氣預報嗎?' % (city, temp, condition['temp'], units['temperature'])
+            speech = '%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
+                city, date, conv_weather_cond(condition_code, 't_cn'),
+                high, unit, low, unit)
+        else:
+            title = ['Yes', 'No']
+            speech = 'Weather in %s (%s): %s, high: %s°%s, low: %s°%s' % (
+                city, date, condition,
+                high, unit, low, unit)
+    else:
+        print('Forecast is True')
+        if language == 'zh_cn':
+            speech = '%s天氣預報(10天):' % city
+        elif language in ('zh_tw', 'zh_hk'):
+            speech = '%s天气预报(10天):' % city
+        else:
+            speech = 'Here is the 10-day forecast for %s:' % (city)
+
+        for i in range(0, 10):
+            item_num = i
+            fc_weather = forecast(datetime.now().strftime('%Y-%m-%d'), item_num, forecast_items)
+            if not fc_weather:
+                speech = None
+                break
+            if language in ('zh_cn', 'zh_tw', 'zh_hk'):
+                if language == 'zh_cn':
+                    condition = conv_weather_cond(condition_code, 's_cn')
+                else:
+                    condition = conv_weather_cond(condition_code, 't_cn')
+                speech += '\n(%s) %s, 高溫: %s°%s, 低溫: %s°%s' % (
+                    datetime.strptime(date, '%Y/%m/%d').strftime('%m/%d'), condition,
+                    high, unit,
+                    low, unit)
+            else:
+                speech += '\n(%s) %s, high: %s°%s, low: %s°%s' % (
+                    datetime.strptime(date, '%Y/%m/%d').strftime('%a %b %d'), condition,
+                    high, unit,
+                    low, unit)
+
+    return speech, title
+
+@app.route('/weather', methods=['GET'])
+def weather():
+    city = request.args.get('city')
+    date = request.args.get('date')
+    isForecast = request.args.get('forecast')
+    language = request.args.get('language')
+
+    request_data = {
+        'city': city,
+        'date': date,
+        'isForecast': isForecast,
+        'language': language
+    }
+
+    speech = weather_text(request_data)
+    if speech == None:
+        return None
 
     res = ''
     return res
