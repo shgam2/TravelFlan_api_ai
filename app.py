@@ -608,6 +608,9 @@ def make_quick_replies(locale):
     }
 
 
+#def weather
+
+
 def process_request(req):
     res = None
     try:
@@ -780,6 +783,7 @@ def process_request(req):
         print('YQL-Response:\n%s' % (_res,))
 
         data = json.loads(_res)
+        print ("DATA IS::::::::::::::::::::::: \n{}".format(data))
 
         if 'query' not in data:
             return None
@@ -1304,9 +1308,7 @@ def process_request(req):
             'displayText': speech,
             'source': 'apiai-transportation'
         }
-    elif action in ('Transportation.final',
-                    'Transportation.address-from-to.Transportation-address-from-to-fallback',
-                    'Transportation.address-from.Transportation-address-from-fallback'):
+    elif action in ('Transportation.final', 'Transportation.address-from-to.Transportation-address-from-to-fallback', 'Transportation.address-from.Transportation-address-from-fallback'):
         speech, data = parse_json(req)
         print('Speech:\n%s' % (speech,))
         datum = make_quick_replies(userlocale)
@@ -1317,8 +1319,7 @@ def process_request(req):
             'source': 'apiai-transportation',
             'data': data
         }
-    elif action in ('Restaurant', 'Restaurant.Restaurant-fallback',
-                    'Restaurant2', 'Restaurant2.Restaurant2-fallback'):
+    elif action in ('Restaurant', 'Restaurant.Restaurant-fallback', 'Restaurant2', 'Restaurant2.Restaurant2-fallback'):
         txt = req['result']['parameters']['txt']
         if txt.startswith('Restaurant') or txt.startswith('餐廳') or txt.startswith('餐厅'):
             if userlocale == 'zh_cn':
@@ -2209,8 +2210,7 @@ def process_request(req):
             'source': 'apiai-restaurant',
             'data': ''
         }
-    elif action in ('restaurant.location', 'restaurant.country', 'Restaurant.location.Restaurant-location-fallback',
-                    'restaurant.country.Restaurant-country-fallback'):
+    elif action in ('restaurant.location', 'restaurant.country', 'Restaurant.location.Restaurant-location-fallback', 'restaurant.country.Restaurant-country-fallback'):
         if userlocale == 'zh_cn':
             speech = '有特定想找的餐点吗? (如: 韩式料理/日式料理/寿司/拉面等)'
         elif userlocale in ('zh_tw', 'zh_hk'):
@@ -2237,6 +2237,42 @@ def webhook():
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
     return r
+
+
+@app.route('/weather', methods=['GET'])
+def weather():
+    city = request.args.get('city')
+    date = request.args.get('date')
+    forecast = request.args.get('forecast')
+    language = request.args.get('language')
+
+
+    url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(city), 'format': 'json'})
+    print('YQL-Request:\n%s' % (url,))
+    _res = urlopen(url).read()
+    print('YQL-Response:\n%s' % (_res,))
+
+    data = json.loads(_res)
+
+    if 'query' not in data:
+        return None
+    if 'results' not in data['query']:
+        return None
+    if 'channel' not in data['query']['results']:
+        return None
+    for x in ('location', 'item', 'units'):
+        if x not in data['query']['results']['channel']:
+            return None
+    if 'forecast' not in data['query']['results']['channel']['item']:
+        return None
+
+    location = data['query']['results']['channel']['location']
+    units = data['query']['results']['channel']['units']
+    forecast_items = data['query']['results']['channel']['item']['forecast']
+
+
+    res = ''
+    return res
 
 
 if __name__ == '__main__':
