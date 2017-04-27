@@ -2352,6 +2352,7 @@ def weather_text(request_data):
                     datetime.strptime(date, '%d %b %Y').strftime('%m/%d'),
                     condition, high, unit, low, unit)
 
+        print('123123123')
     return speech
 
 
@@ -2381,7 +2382,7 @@ def weather():
         'data': ''
     }
 
-    #res = ''
+    res = ''
     return res
 
 
