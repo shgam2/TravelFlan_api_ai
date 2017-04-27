@@ -217,9 +217,9 @@ def weather_speech(request_data):
 
                 if language in ('zh_cn', 'zh_tw', 'zh_hk'):
                     if language == 'zh_cn':
-                        condition = conv_weather_cond(condition_code, 's_cn')
+                        condition = conv_weather_cond(condition_code, language)
                     else:
-                        condition = conv_weather_cond(condition_code, 't_cn')
+                        condition = conv_weather_cond(condition_code, language)
                     speech += '\n({}) 高溫:{:>3}°{}, 低溫:{:>3}°{}, {}'.format(
                         datetime.strptime(date, '%d %b %Y').strftime('%m/%d'),
                         high, unit, low, unit, condition)
@@ -232,11 +232,11 @@ def weather_speech(request_data):
                 print("DISPLAY CURRENT WEATHER")
                 if language.lower() == 'zh_cn':
                     title = ['是', '否']
-                    condition = conv_weather_cond(current_weather['code'], 's_cn')
+                    condition = conv_weather_cond(current_weather['code'], language)
                     speech = '%s的天气: %s, 温度是%s°%s\n请问您需要天气预报吗?' % (city, condition, current_weather['temp'], unit)
                 elif language.lower() in ('zh_tw', 'zh_hk'):
                     title = ['是', '否']
-                    condition = conv_weather_cond(current_weather['code'], 't_cn')
+                    condition = conv_weather_cond(current_weather['code'], language)
                     speech = '%s的天氣: %s, 溫度是%s°%s\n請問您需要天氣預報嗎?' % (city, condition, current_weather['temp'], unit)
                 else:
                     title = ['Yes', 'No']
@@ -262,13 +262,13 @@ def weather_speech(request_data):
                 if language == 'zh_cn':
                     title = ['是', '否']
                     speech = '%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
-                        city, date, conv_weather_cond(condition_code, 's_cn'),
+                        city, date, conv_weather_cond(condition_code, language),
                         high, unit, low, unit)
                     print('Speech is {}'.format(speech))
                 elif language in ('zh_tw', 'zh_hk'):
                     title = ['是', '否']
                     speech = '%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
-                        city, date, conv_weather_cond(condition_code, 't_cn'),
+                        city, date, conv_weather_cond(condition_code, language),
                         high, unit, low, unit)
                 else:
                     title = ['Yes', 'No']
@@ -279,43 +279,37 @@ def weather_speech(request_data):
     return speech
 
 
-def forecast(date, item_num, forecast_items):
-    if item_num != -1:
-        fc_weather = forecast_items[item_num]
-        return fc_weather
-
-    for i in forecast_items:
-        if date:
-            i_date = datetime.strptime(i.get('date'), '%d %b %Y').strftime('%Y-%m-%d')
-            if date == i_date:
-                fc_weather = {
-                    'date': datetime.strptime(i.get('date'), '%d %b %Y').strftime('%a %b %d'),
-                    'high': i.get('high'),
-                    'low': i.get('low'),
-                    'text': i.get('text'),
-                    'code': i.get('code')
-                }
-                return fc_weather
-                # break
-    print("We've got past the forecast_items")
-    return None
+# def forecast(date, item_num, forecast_items):
+#     if item_num != -1:
+#         fc_weather = forecast_items[item_num]
+#         return fc_weather
+#
+#     for i in forecast_items:
+#         if date:
+#             i_date = datetime.strptime(i.get('date'), '%d %b %Y').strftime('%Y-%m-%d')
+#             if date == i_date:
+#                 fc_weather = {
+#                     'date': datetime.strptime(i.get('date'), '%d %b %Y').strftime('%a %b %d'),
+#                     'high': i.get('high'),
+#                     'low': i.get('low'),
+#                     'text': i.get('text'),
+#                     'code': i.get('code')
+#                 }
+#                 return fc_weather
+#     return None
 
 
-def conv_weather_cond(c_code, lang):
+def conv_weather_cond(c_code, language):
     weather_file = 'weather_condition.csv'
     try:
         with open(weather_file, 'rU') as f:
             w_cond = list(csv.reader(f))
             row_num = 1
-            print('condition = {}'.format(c_code))
             while True:
-                # print('w_cond[row_num][0] = {}'.format(w_cond[row_num][0]))
                 if w_cond[row_num][0] == c_code:
                     row_found = row_num
-                    print('found the weather condition! : {}'.format(row_found))
                     break
                 elif not w_cond[row_num][0]:
-                    print('end of file')
                     break
                 else:
                     row_num += 1
@@ -324,11 +318,9 @@ def conv_weather_cond(c_code, lang):
     except Exception as e:
         print('Exception', e)
 
-    if lang == 's_cn':
-        print('11 {}'.format(w_cond[row_found][2]))
+    if language == 'zh_cn':
         return w_cond[row_found][2]
     else:
-        print('22 {}'.format(w_cond[row_found][3]))
         return w_cond[row_found][3]
 
 
