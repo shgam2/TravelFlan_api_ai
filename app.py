@@ -2271,7 +2271,7 @@ def get_weather_data(city):
 
     return res
 
-def weather_text(request_data):
+def weather_speech(request_data):
     # request_data
     city = request_data['city']
     date = request_data['date']
@@ -2374,7 +2374,7 @@ def weather():
         'language': language
     }
 
-    speech = weather_text(request_data)
+    speech = weather_speech(request_data)
     if speech == None:
         return None
 
