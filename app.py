@@ -2348,7 +2348,7 @@ def weather_text(request_data):
                     datetime.strptime(date, '%d %b %Y').strftime('%m/%d'),
                     high, unit, low, unit, condition)
             else:
-                speech += '\n(%s) %s, high: %s°%s, low: %s°%s' % (
+                speech += '\n(%s) high: %s°%s, low: %s°%s, %s' % (
                     datetime.strptime(date, '%d %b %Y').strftime('%m/%d'),
                     high, unit, low, unit, condition)
 
