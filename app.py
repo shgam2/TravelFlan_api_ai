@@ -2345,11 +2345,11 @@ def weather_text(request_data):
                     print('bbbbb22222')
                 print('bbbbb33333')
                 speech += '\n(%s) %s, 高溫: %s°%s, 低溫: %s°%s' % (
-                    datetime.strptime(date, '%a %b %d').strftime('%m/%d'),
+                    datetime.strptime(date, '%d %b %Y').strftime('%m/%d'),
                     condition, high, unit, low, unit)
             else:
                 speech += '\n(%s) %s, high: %s°%s, low: %s°%s' % (
-                    datetime.strptime(date, '%a %b %d').strftime('%m/%d'),
+                    datetime.strptime(date, '%d %b %Y').strftime('%m/%d'),
                     condition, high, unit, low, unit)
 
     return speech
