@@ -254,7 +254,6 @@ def weather_speech(request_data):
                         high, unit, low, unit, condition)
         else:
             if not date:
-                print("DISPLAY CURRENT WEATHER")
                 if language.lower() == 'zh_cn':
                     title = ['是', '否']
                     condition = get_weather_cond(current_weather['code'], language)
