@@ -2350,6 +2350,7 @@ def weather_text(request_data):
 
 @app.route('/weather', methods=['GET'])
 def weather():
+    print("HERE!! :)")
     city = request.args.get('city')
     date = request.args.get('date')
     isForecast = request.args.get('forecast')
