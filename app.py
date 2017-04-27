@@ -2313,13 +2313,11 @@ def weather_text(request_data):
             speech = '%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
                 city, date, conv_weather_cond(condition_code, 't_cn'),
                 high, unit, low, unit)
-            print('Speech is {}'.format(speech))
         else:
             title = ['Yes', 'No']
             speech = 'Weather in %s (%s): %s, high: %s°%s, low: %s°%s' % (
                 city, date, condition,
                 high, unit, low, unit)
-            print('Speech is {}'.format(speech))
     else:
         print('Forecast is True')
         if language == 'zh_cn':
@@ -2352,7 +2350,8 @@ def weather_text(request_data):
                     datetime.strptime(date, '%d %b %Y').strftime('%m/%d'),
                     condition, high, unit, low, unit)
 
-        print('123123123')
+
+        print('Speech is: \n{}'.format(speech))
     return speech
 
 
