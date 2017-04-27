@@ -162,11 +162,13 @@ def get_weather_data(city):
     location = data['query']['results']['channel']['location']['city']
     units = data['query']['results']['channel']['units']
     forecast_items = data['query']['results']['channel']['item']['forecast']
+    current = data['query']['results']['channel']['item']['condition']
 
     res = {
         'location': location,
         'units': units,
-        'forecast_items': forecast_items
+        'forecast_items': forecast_items,
+        'current': current
     }
 
     return res
@@ -185,9 +187,11 @@ def weather_speech(request_data):
         isForecast = False
     language = request_data['language']
 
+    # data from Yahoo
     weather_data = get_weather_data(city)
     unit = weather_data['units']['temperature']
     forecast_items = weather_data['forecast_items']
+    current_weather = weather_data['current']
 
     if not city:
         # ask for city
@@ -230,6 +234,21 @@ def weather_speech(request_data):
             if not date:
                 # current weather
                 print("DISPLAY CURRENT WEATHER")
+                if language.lower() == 'zh_cn':
+                    title = ['是', '否']
+                    condition = conv_weather_cond(current_weather['code'], 's_cn')
+                    # temp = conv_weather_cond(current_weather['code'], 's_cn')
+                    speech = '%s的天气: %s, 温度是%s°%s\n请问您需要天气预报吗?' % (city, condition, current_weather['temp'], unit)
+                elif language.lower() in ('zh_tw', 'zh_hk'):
+                    title = ['是', '否']
+                    condition = conv_weather_cond(current_weather['code'], 't_cn')
+                    # temp = conv_weather_cond(condition['code'], 't_cn')
+                    speech = '%s的天氣: %s, 溫度是%s°%s\n請問您需要天氣預報嗎?' % (city, condition, current_weather['temp'], unit)
+                else:
+                    title = ['Yes', 'No']
+                    condition = current_weather['text']
+                    speech = 'Current weather in %s: %s, the temperature is %s°%s\nWould you like a 10-day forecast?' % (
+                        city, condition, current_weather['temp'], unit)
 
             else:
                 # weather by date
@@ -914,28 +933,28 @@ def process_request(req):
         }
     elif action in ('Weather.location', 'Weather.location.Weather-location-fallback'):
         city = req['result']['parameters'].get('city')
-        url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(city)}) + '&format=json'
-        print('YQL-Request:\n%s' % (url,))
-        _res = urlopen(url).read()
-        print('YQL-Response:\n%s' % (_res,))
-
-        data = json.loads(_res)
-
-        if 'query' not in data:
-            return None
-        if 'results' not in data['query']:
-            return None
-        if 'channel' not in data['query']['results']:
-            return None
-        for x in ('location', 'item', 'units'):
-            if x not in data['query']['results']['channel']:
-                return None
-        if 'condition' not in data['query']['results']['channel']['item']:
-            return None
-
-        location = data['query']['results']['channel']['location']
-        condition = data['query']['results']['channel']['item']['condition']
-        units = data['query']['results']['channel']['units']
+        # url = YAHOO_YQL_BASE_URL + urlencode({'q': make_yql_query(city)}) + '&format=json'
+        # print('YQL-Request:\n%s' % (url,))
+        # _res = urlopen(url).read()
+        # print('YQL-Response:\n%s' % (_res,))
+        #
+        # data = json.loads(_res)
+        #
+        # if 'query' not in data:
+        #     return None
+        # if 'results' not in data['query']:
+        #     return None
+        # if 'channel' not in data['query']['results']:
+        #     return None
+        # for x in ('location', 'item', 'units'):
+        #     if x not in data['query']['results']['channel']:
+        #         return None
+        # if 'condition' not in data['query']['results']['channel']['item']:
+        #     return None
+        #
+        # location = data['query']['results']['channel']['location']
+        # condition = data['query']['results']['channel']['item']['condition']
+        # units = data['query']['results']['channel']['units']
 
         payload = ['YES', 'NO']
         if userlocale == 'zh_cn':
