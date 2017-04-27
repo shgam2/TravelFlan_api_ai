@@ -259,6 +259,9 @@ def weather_speech(request_data):
                 if date_found is False:
                     return None
 
+                temp_date = date
+                date = datetime.strptime(temp_date, '%Y/%m/%d').strftime('%a %b %d')
+
                 if language == 'zh_cn':
                     title = ['是', '否']
                     speech = '%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
@@ -2401,7 +2404,11 @@ def weather():
     if not date:
         date = ''
     isForecast = request.args.get('forecast')
+    if not isForecast:
+        isForecast = False
     language = request.args.get('language')
+    if not language:
+        language = 'zh_tw'
 
     request_data = {
         'city': city,
