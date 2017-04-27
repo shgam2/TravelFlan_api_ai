@@ -2276,6 +2276,10 @@ def weather_text(request_data):
     city = request_data['city']
     date = request_data['date']
     isForecast = request_data['isForecast']
+    if isForecast == 'True' or isForecast == 'true':
+        isForecast = True
+    else:
+        isForecast = False
     language = request_data['language']
 
     weather_data = get_weather_data(city)
