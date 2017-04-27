@@ -191,7 +191,12 @@ def weather_speech(request_data):
 
     if not city:
         # ask for city
-        print("ASK USER FOR CITY")
+        if language == 'zh_cn':
+            speech = '您想查询哪里的天气呢？ (如：首尔/东京/上海等)'
+        elif language in ('zh_tw', 'zh_hk'):
+            speech = '您想查詢哪裡的天氣呢？ (如：首爾/東京/上海等)'
+        else:
+            speech = 'Where do you want to know about the weather? (Ex. Seoul, Tokyo, Shanghai)'
     else:
         if isForecast is True:
             # 10-day forecast
@@ -200,7 +205,7 @@ def weather_speech(request_data):
             elif language in ('zh_tw', 'zh_hk'):
                 speech = '%s天气预报(10天):' % city
             else:
-                speech = 'Here is the 10-day forecast for %s:' % (city)
+                speech = 'Here is the 10-day forecast for %s:' % city
 
             for item in forecast_items:
                 condition_code = item['code']
@@ -221,12 +226,11 @@ def weather_speech(request_data):
                     speech += '\n(%s) high: %s°%s, low: %s°%s, %s' % (
                         datetime.strptime(date, '%d %b %Y').strftime('%m/%d'),
                         high, unit, low, unit, condition)
-
-            print('Speech is: \n{}'.format(speech))
         else:
             if not date:
                 # current weather
                 print("DISPLAY CURRENT WEATHER")
+
             else:
                 # weather by date
                 date_found = False
@@ -889,12 +893,20 @@ def process_request(req):
             'data': data
         }
     elif action in ('Weather', 'Weather.Weather-fallback'):
-        if userlocale == 'zh_cn':
-            speech = '您想查询哪里的天气呢？ (如：首尔/东京/上海等)'
-        elif userlocale in ('zh_tw', 'zh_hk'):
-            speech = '您想查詢哪裡的天氣呢？ (如：首爾/東京/上海等)'
-        else:
-            speech = 'Where do you want to know about the weather? (Ex. Seoul, Tokyo, Shanghai)'
+        # if userlocale == 'zh_cn':
+        #     speech = '您想查询哪里的天气呢？ (如：首尔/东京/上海等)'
+        # elif userlocale in ('zh_tw', 'zh_hk'):
+        #     speech = '您想查詢哪裡的天氣呢？ (如：首爾/東京/上海等)'
+        # else:
+        #     speech = 'Where do you want to know about the weather? (Ex. Seoul, Tokyo, Shanghai)'
+        request_data = {
+            'language': userlocale
+        }
+
+        speech = weather_speech(request_data)
+        if speech is None:
+            return None
+
         res = {
             'speech': speech,
             'displayText': speech,
