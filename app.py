@@ -2383,6 +2383,7 @@ def weather():
         'data': ''
     }
 
+    res = json.dumps(res, indent=4)
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
 
