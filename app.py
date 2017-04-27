@@ -2374,7 +2374,10 @@ def weather():
     if speech == None:
         return None
 
-    res = ''
+    res = {
+        'speech': speech,
+        'data': ''
+    }
     return res
 
 
