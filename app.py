@@ -959,17 +959,26 @@ def process_request(req):
         payload = ['YES', 'NO']
         if userlocale == 'zh_cn':
             title = ['是', '否']
-            temp = conv_weather_cond(condition['code'], 's_cn')
-            speech = '%s的天气: %s, 温度是%s°%s\n请问您需要天气预报吗?' % (city, temp, condition['temp'], units['temperature'])
+            # temp = conv_weather_cond(condition['code'], 's_cn')
+            # speech = '%s的天气: %s, 温度是%s°%s\n请问您需要天气预报吗?' % (city, temp, condition['temp'], units['temperature'])
         elif userlocale in ('zh_tw', 'zh_hk'):
             title = ['是', '否']
-            temp = conv_weather_cond(condition['code'], 't_cn')
-            speech = '%s的天氣: %s, 溫度是%s°%s\n請問您需要天氣預報嗎?' % (city, temp, condition['temp'], units['temperature'])
+            # temp = conv_weather_cond(condition['code'], 't_cn')
+            # speech = '%s的天氣: %s, 溫度是%s°%s\n請問您需要天氣預報嗎?' % (city, temp, condition['temp'], units['temperature'])
         else:
             title = ['Yes', 'No']
-            speech = 'Current weather in %s: %s, the temperature is %s°%s\nWould you like a 10-day forecast?' % (
-                location['city'], condition['text'],
-                condition['temp'], units['temperature'])
+            # speech = 'Current weather in %s: %s, the temperature is %s°%s\nWould you like a 10-day forecast?' % (
+            #     location['city'], condition['text'],
+            #     condition['temp'], units['temperature'])
+
+        request_data = {
+            'language': userlocale,
+            'city': city
+        }
+
+        speech = weather_speech(request_data)
+        if speech is None:
+            return None
 
         data = []
         datum = {
