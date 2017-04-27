@@ -2383,8 +2383,10 @@ def weather():
         'data': ''
     }
 
-    res = ''
-    return res
+    r = make_response(res)
+    r.headers['Content-Type'] = 'application/json'
+
+    return r
 
 
 if __name__ == '__main__':
