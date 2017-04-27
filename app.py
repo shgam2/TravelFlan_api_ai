@@ -2342,13 +2342,13 @@ def weather_text(request_data):
                     condition = conv_weather_cond(condition_code, 't_cn')
                     print('bbbbb22222')
                 print('bbbbb33333')
-                speech += '\n(%s) %s, 高溫: %s°%s, 低溫: %s°%s' % (
+                speech += '\n(%s) 高溫: %s°%s, 低溫: %s°%s, %s' % (
                     datetime.strptime(date, '%d %b %Y').strftime('%m/%d'),
-                    condition, high, unit, low, unit)
+                    high, unit, low, unit, condition)
             else:
                 speech += '\n(%s) %s, high: %s°%s, low: %s°%s' % (
                     datetime.strptime(date, '%d %b %Y').strftime('%m/%d'),
-                    condition, high, unit, low, unit)
+                    high, unit, low, unit, condition)
 
 
         print('Speech is: \n{}'.format(speech))
