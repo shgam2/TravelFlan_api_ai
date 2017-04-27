@@ -223,7 +223,7 @@ def weather_speech(request_data):
                         condition = conv_weather_cond(condition_code, 's_cn')
                     else:
                         condition = conv_weather_cond(condition_code, 't_cn')
-                    speech += '\n({}) 高溫: {:>2}°{}, 低溫: {:2s}°{}, {}'.format(
+                    speech += '\n({}) 高溫: {:>3}°{}, 低溫: {:>3}°{}, {}'.format(
                         datetime.strptime(date, '%d %b %Y').strftime('%m/%d'),
                         high, unit, low, unit, condition)
                     # speech += '\n(%s) 高溫: %s°%s, 低溫: %s°%s, %s' % (
