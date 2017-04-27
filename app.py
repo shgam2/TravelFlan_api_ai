@@ -2378,6 +2378,8 @@ def weather():
         'speech': speech,
         'data': ''
     }
+
+    res = ''
     return res
 
 
