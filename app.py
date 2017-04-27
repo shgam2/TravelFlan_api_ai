@@ -2286,7 +2286,7 @@ def weather_text(request_data):
     unit = weather_data['units']['temperature']
     forecast_items = weather_data['forecast_items']
 
-    if isForecast == False:
+    if isForecast is False:
         print('Forecast is false')
 
         date_found = False
@@ -2338,17 +2338,18 @@ def weather_text(request_data):
             if language in ('zh_cn', 'zh_tw', 'zh_hk'):
                 if language == 'zh_cn':
                     condition = conv_weather_cond(condition_code, 's_cn')
+                    print('bbbbb11111')
                 else:
                     condition = conv_weather_cond(condition_code, 't_cn')
+                    print('bbbbb22222')
+                print('bbbbb33333')
                 speech += '\n(%s) %s, 高溫: %s°%s, 低溫: %s°%s' % (
-                    datetime.strptime(date, '%Y/%m/%d').strftime('%m/%d'), condition,
-                    high, unit,
-                    low, unit)
+                    datetime.strptime(date, '%Y/%m/%d').strftime('%m/%d'),
+                    condition, high, unit, low, unit)
             else:
                 speech += '\n(%s) %s, high: %s°%s, low: %s°%s' % (
-                    datetime.strptime(date, '%Y/%m/%d').strftime('%a %b %d'), condition,
-                    high, unit,
-                    low, unit)
+                    datetime.strptime(date, '%Y/%m/%d').strftime('%a %b %d'),
+                    condition, high, unit, low, unit)
 
     return speech
 
