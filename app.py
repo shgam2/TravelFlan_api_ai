@@ -2286,33 +2286,30 @@ def weather_text(request_data):
     unit = weather_data['units']['temperature']
     forecast_items = weather_data['forecast_items']
 
-    date_found = False
-    for item in forecast_items:
-        if datetime.strptime(date, '%Y/%m/%d').strftime('%d %b %Y') in item['date']:
-            date_found = True
-            condition_code = item['code']
-            high = item['high']
-            low = item['low']
-            condition = item['text']
-            break
-
-    if date_found == False:
-        return None
-
     if isForecast == False:
         print('Forecast is false')
+
+        date_found = False
+        for item in forecast_items:
+            if datetime.strptime(date, '%Y/%m/%d').strftime('%d %b %Y') in item['date']:
+                date_found = True
+                condition_code = item['code']
+                high = item['high']
+                low = item['low']
+                condition = item['text']
+                break
+
+        if date_found is False:
+            return None
+
         if language == 'zh_cn':
             title = ['是', '否']
-            # temp = conv_weather_cond(condition['code'], 's_cn')
-            # speech = '%s的天气: %s, 温度是%s°%s\n请问您需要天气预报吗?' % (city, temp, condition['temp'], units['temperature'])
             speech = '%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
                 city, date, conv_weather_cond(condition_code, 's_cn'),
                 high, unit, low, unit)
             print('Speech is {}'.format(speech))
         elif language in ('zh_tw', 'zh_hk'):
             title = ['是', '否']
-            # temp = conv_weather_cond(condition['code'], 't_cn')
-            # speech = '%s的天氣: %s, 溫度是%s°%s\n請問您需要天氣預報嗎?' % (city, temp, condition['temp'], units['temperature'])
             speech = '%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
                 city, date, conv_weather_cond(condition_code, 't_cn'),
                 high, unit, low, unit)
@@ -2332,12 +2329,12 @@ def weather_text(request_data):
         else:
             speech = 'Here is the 10-day forecast for %s:' % (city)
 
-        for i in range(0, 10):
-            item_num = i
-            fc_weather = forecast(datetime.now().strftime('%Y-%m-%d'), item_num, forecast_items)
-            if not fc_weather:
-                speech = None
-                break
+        for item in forecast_items:
+            condition_code = item['code']
+            high = item['high']
+            low = item['low']
+            condition = item['text']
+
             if language in ('zh_cn', 'zh_tw', 'zh_hk'):
                 if language == 'zh_cn':
                     condition = conv_weather_cond(condition_code, 's_cn')
@@ -2353,7 +2350,8 @@ def weather_text(request_data):
                     high, unit,
                     low, unit)
 
-    return speech, title
+    return speech
+
 
 @app.route('/weather', methods=['GET'])
 def weather():
@@ -2381,7 +2379,7 @@ def weather():
         'data': ''
     }
 
-    res = ''
+    #res = ''
     return res
 
 
