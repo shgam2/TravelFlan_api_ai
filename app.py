@@ -173,6 +173,31 @@ def get_weather_data(city):
     return res
 
 
+def get_weather_cond(c_code, language):
+    weather_file = 'weather_condition.csv'
+    try:
+        with open(weather_file, 'rU') as f:
+            w_cond = list(csv.reader(f))
+            row_num = 1
+            while True:
+                if w_cond[row_num][0] == c_code:
+                    row_found = row_num
+                    break
+                elif not w_cond[row_num][0]:
+                    break
+                else:
+                    row_num += 1
+    except IOError as e:
+        print('IOError: {}'.format(weather_file), e)
+    except Exception as e:
+        print('Exception', e)
+
+    if language == 'zh_cn':
+        return w_cond[row_found][2]
+    else:
+        return w_cond[row_found][3]
+
+
 def weather_speech(request_data):
     # request_data
     city = request_data.get('city')
@@ -217,9 +242,9 @@ def weather_speech(request_data):
 
                 if language in ('zh_cn', 'zh_tw', 'zh_hk'):
                     if language == 'zh_cn':
-                        condition = conv_weather_cond(condition_code, language)
+                        condition = get_weather_cond(condition_code, language)
                     else:
-                        condition = conv_weather_cond(condition_code, language)
+                        condition = get_weather_cond(condition_code, language)
                     speech += '\n({}) 高溫:{:>3}°{}, 低溫:{:>3}°{}, {}'.format(
                         datetime.strptime(date, '%d %b %Y').strftime('%m/%d'),
                         high, unit, low, unit, condition)
@@ -232,11 +257,11 @@ def weather_speech(request_data):
                 print("DISPLAY CURRENT WEATHER")
                 if language.lower() == 'zh_cn':
                     title = ['是', '否']
-                    condition = conv_weather_cond(current_weather['code'], language)
+                    condition = get_weather_cond(current_weather['code'], language)
                     speech = '%s的天气: %s, 温度是%s°%s\n请问您需要天气预报吗?' % (city, condition, current_weather['temp'], unit)
                 elif language.lower() in ('zh_tw', 'zh_hk'):
                     title = ['是', '否']
-                    condition = conv_weather_cond(current_weather['code'], language)
+                    condition = get_weather_cond(current_weather['code'], language)
                     speech = '%s的天氣: %s, 溫度是%s°%s\n請問您需要天氣預報嗎?' % (city, condition, current_weather['temp'], unit)
                 else:
                     title = ['Yes', 'No']
@@ -264,12 +289,12 @@ def weather_speech(request_data):
                 if language == 'zh_cn':
                     title = ['是', '否']
                     speech = '%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
-                        city, date, conv_weather_cond(condition_code, language),
+                        city, date, get_weather_cond(condition_code, language),
                         high, unit, low, unit)
                 elif language in ('zh_tw', 'zh_hk'):
                     title = ['是', '否']
                     speech = '%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
-                        city, date, conv_weather_cond(condition_code, language),
+                        city, date, get_weather_cond(condition_code, language),
                         high, unit, low, unit)
                 else:
                     title = ['Yes', 'No']
@@ -299,31 +324,6 @@ def weather_speech(request_data):
 #                 }
 #                 return fc_weather
 #     return None
-
-
-def conv_weather_cond(c_code, language):
-    weather_file = 'weather_condition.csv'
-    try:
-        with open(weather_file, 'rU') as f:
-            w_cond = list(csv.reader(f))
-            row_num = 1
-            while True:
-                if w_cond[row_num][0] == c_code:
-                    row_found = row_num
-                    break
-                elif not w_cond[row_num][0]:
-                    break
-                else:
-                    row_num += 1
-    except IOError as e:
-        print('IOError: {}'.format(weather_file), e)
-    except Exception as e:
-        print('Exception', e)
-
-    if language == 'zh_cn':
-        return w_cond[row_found][2]
-    else:
-        return w_cond[row_found][3]
 
 
 def grab_answer(from_loc, to_loc, dir_file, lang):
