@@ -162,15 +162,14 @@ def get_weather_data(city):
     location = data['query']['results']['channel']['location']['city']
     units = data['query']['results']['channel']['units']
     forecast_items = data['query']['results']['channel']['item']['forecast']
-    current = data['query']['results']['channel']['item']['condition']
+    current_weather = data['query']['results']['channel']['item']['condition']
 
     res = {
         'location': location,
         'units': units,
         'forecast_items': forecast_items,
-        'current': current
+        'current_weather': current_weather
     }
-
     return res
 
 
@@ -185,16 +184,15 @@ def weather_speech(request_data):
         isForecast = True
     else:
         isForecast = False
-    language = request_data['language']
+    language = request_data['language'].lower()
 
     # data from Yahoo
     weather_data = get_weather_data(city)
     unit = weather_data['units']['temperature']
     forecast_items = weather_data['forecast_items']
-    current_weather = weather_data['current']
+    current_weather = weather_data['current_weather']
 
     if not city:
-        # ask for city
         if language == 'zh_cn':
             speech = '您想查询哪里的天气呢？ (如：首尔/东京/上海等)'
         elif language in ('zh_tw', 'zh_hk'):
@@ -203,7 +201,6 @@ def weather_speech(request_data):
             speech = 'Where do you want to know about the weather? (Ex. Seoul, Tokyo, Shanghai)'
     else:
         if isForecast is True:
-            # 10-day forecast
             if language == 'zh_cn':
                 speech = '%s天氣預報(10天):' % city
             elif language in ('zh_tw', 'zh_hk'):
@@ -226,26 +223,20 @@ def weather_speech(request_data):
                     speech += '\n({}) 高溫:{:>3}°{}, 低溫:{:>3}°{}, {}'.format(
                         datetime.strptime(date, '%d %b %Y').strftime('%m/%d'),
                         high, unit, low, unit, condition)
-                    # speech += '\n(%s) 高溫: %s°%s, 低溫: %s°%s, %s' % (
-                    #     datetime.strptime(date, '%d %b %Y').strftime('%m/%d'),
-                    #     high, unit, low, unit, condition)
                 else:
                     speech += '\n({}) high:{:>3}°{}, low:{:>3}°{}, {}'.format(
                         datetime.strptime(date, '%d %b %Y').strftime('%m/%d'),
                         high, unit, low, unit, condition)
         else:
             if not date:
-                # current weather
                 print("DISPLAY CURRENT WEATHER")
                 if language.lower() == 'zh_cn':
                     title = ['是', '否']
                     condition = conv_weather_cond(current_weather['code'], 's_cn')
-                    # temp = conv_weather_cond(current_weather['code'], 's_cn')
                     speech = '%s的天气: %s, 温度是%s°%s\n请问您需要天气预报吗?' % (city, condition, current_weather['temp'], unit)
                 elif language.lower() in ('zh_tw', 'zh_hk'):
                     title = ['是', '否']
                     condition = conv_weather_cond(current_weather['code'], 't_cn')
-                    # temp = conv_weather_cond(condition['code'], 't_cn')
                     speech = '%s的天氣: %s, 溫度是%s°%s\n請問您需要天氣預報嗎?' % (city, condition, current_weather['temp'], unit)
                 else:
                     title = ['Yes', 'No']
@@ -284,11 +275,6 @@ def weather_speech(request_data):
                     speech = 'Weather in %s (%s): %s, high: %s°%s, low: %s°%s' % (
                         city, date, condition,
                         high, unit, low, unit)
-
-    # if isForecast is False:
-    #
-    # else:
-    #     print('Forecast is True')
 
     return speech
 
