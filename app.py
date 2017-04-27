@@ -260,14 +260,12 @@ def weather_speech(request_data):
                     return None
 
                 temp_date = date
-                date = datetime.strptime(temp_date, '%Y/%m/%d').strftime('%a %b %d')
-
+                date = datetime.strptime(temp_date, '%Y/%m/%d').strftime('%m/%d')
                 if language == 'zh_cn':
                     title = ['是', '否']
                     speech = '%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
                         city, date, conv_weather_cond(condition_code, language),
                         high, unit, low, unit)
-                    print('Speech is {}'.format(speech))
                 elif language in ('zh_tw', 'zh_hk'):
                     title = ['是', '否']
                     speech = '%s的天气(%s): %s, 高溫: %s°%s, 低溫: %s°%s' % (
@@ -275,6 +273,7 @@ def weather_speech(request_data):
                         high, unit, low, unit)
                 else:
                     title = ['Yes', 'No']
+                    date = datetime.strptime(temp_date, '%Y/%m/%d').strftime('%a %b %d')
                     speech = 'Weather in %s (%s): %s, high: %s°%s, low: %s°%s' % (
                         city, date, condition,
                         high, unit, low, unit)
