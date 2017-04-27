@@ -2286,21 +2286,22 @@ def weather_text(request_data):
     unit = weather_data['units']['temperature']
     forecast_items = weather_data['forecast_items']
 
-    date_found = False
-    for item in forecast_items:
-        if datetime.strptime(date, '%Y/%m/%d').strftime('%d %b %Y') in item['date']:
-            date_found = True
-            condition_code = item['code']
-            high = item['high']
-            low = item['low']
-            condition = item['text']
-            break
-
-    if date_found == False:
-        return None
-
     if isForecast == False:
         print('Forecast is false')
+
+        date_found = False
+        for item in forecast_items:
+            if datetime.strptime(date, '%Y/%m/%d').strftime('%d %b %Y') in item['date']:
+                date_found = True
+                condition_code = item['code']
+                high = item['high']
+                low = item['low']
+                condition = item['text']
+                break
+
+        if date_found == False:
+            return None
+
         if language == 'zh_cn':
             title = ['是', '否']
             # temp = conv_weather_cond(condition['code'], 's_cn')
@@ -2360,6 +2361,8 @@ def weather():
     print("HERE!! :)")
     city = request.args.get('city')
     date = request.args.get('date')
+    if not date:
+        date = ''
     isForecast = request.args.get('forecast')
     language = request.args.get('language')
 
