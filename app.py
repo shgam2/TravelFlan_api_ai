@@ -2437,8 +2437,8 @@ app = Flask(__name__)
 CORS(app)
 
 @app.route("/")
-def helloWorld():
-  return "Hello, TravelFlan!"
+def init():
+    return "Hello, TravelFlan!"
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
