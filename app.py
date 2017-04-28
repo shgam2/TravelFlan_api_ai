@@ -2433,8 +2433,8 @@ def weather():
     return r
 
 
-# app = Flask(__name__)
-# CORS(app)
+app = Flask(__name__)
+CORS(app)
 #
 # @app.route("/")
 # def init():
