@@ -10,6 +10,8 @@ from urllib.parse import urlencode
 from urllib.request import urlopen
 
 from flask import make_response, request, Flask
+from flask_cors import CORS, cross_origin
+
 import googlemaps
 import requests
 
@@ -2430,6 +2432,13 @@ def weather():
 
     return r
 
+
+app = Flask(__name__)
+CORS(app)
+
+@app.route("/")
+def helloWorld():
+  return "Hello, TravelFlan!"
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
