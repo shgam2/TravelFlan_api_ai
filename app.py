@@ -17,6 +17,8 @@ import requests
 
 app = Flask(__name__)
 
+CORS(app)
+
 gmaps = googlemaps.Client(key='AIzaSyB8ri2uUrjtGX2tgOoK_vMSo8ByuP31Njs')
 
 YAHOO_YQL_BASE_URL = 'https://query.yahooapis.com/v1/public/yql?'
@@ -2398,6 +2400,7 @@ def webhook():
 
 
 @app.route('/weather', methods=['GET'])
+@cross_origin()
 def weather():
     city = request.args.get('city')
     date = request.args.get('date')
@@ -2433,8 +2436,7 @@ def weather():
     return r
 
 
-app = Flask(__name__)
-CORS(app)
+
 #
 # @app.route("/")
 # def init():
