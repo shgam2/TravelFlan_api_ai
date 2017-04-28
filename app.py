@@ -2433,12 +2433,12 @@ def weather():
     return r
 
 
-app = Flask(__name__)
-CORS(app)
-
-@app.route("/")
-def init():
-    return "Hello, TravelFlan!"
+# app = Flask(__name__)
+# CORS(app)
+#
+# @app.route("/")
+# def init():
+#     return "Hello, TravelFlan!"
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
