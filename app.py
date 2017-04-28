@@ -149,6 +149,7 @@ def get_weather_data(city):
     print('YQL-Response:\n%s' % (_res,))
 
     data = json.loads(_res)
+    print('Brian: data\n{}\n\n\n'.format(data))
 
     if 'query' not in data:
         return None
