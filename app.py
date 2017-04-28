@@ -16,7 +16,6 @@ import googlemaps
 import requests
 
 app = Flask(__name__)
-
 CORS(app)
 
 gmaps = googlemaps.Client(key='AIzaSyB8ri2uUrjtGX2tgOoK_vMSo8ByuP31Njs')
@@ -1468,7 +1467,8 @@ def process_request(req):
             'displayText': speech,
             'source': 'apiai-transportation'
         }
-    elif action in ('Transportation.final', 'Transportation.address-from-to.Transportation-address-from-to-fallback', 'Transportation.address-from.Transportation-address-from-fallback'):
+    elif action in ('Transportation.final', 'Transportation.address-from-to.Transportation-address-from-to-fallback',
+                    'Transportation.address-from.Transportation-address-from-fallback'):
         speech, data = parse_json(req)
         print('Speech:\n%s' % (speech,))
         datum = make_quick_replies(userlocale)
@@ -2370,7 +2370,8 @@ def process_request(req):
             'source': 'apiai-restaurant',
             'data': ''
         }
-    elif action in ('restaurant.location', 'restaurant.country', 'Restaurant.location.Restaurant-location-fallback', 'restaurant.country.Restaurant-country-fallback'):
+    elif action in ('restaurant.location', 'restaurant.country', 'Restaurant.location.Restaurant-location-fallback',
+                    'restaurant.country.Restaurant-country-fallback'):
         if userlocale == 'zh_cn':
             speech = '有特定想找的餐点吗? (如: 韩式料理/日式料理/寿司/拉面等)'
         elif userlocale in ('zh_tw', 'zh_hk'):
@@ -2400,7 +2401,6 @@ def webhook():
 
 
 @app.route('/weather', methods=['GET'])
-@cross_origin()
 def weather():
     city = request.args.get('city')
     date = request.args.get('date')
@@ -2435,12 +2435,6 @@ def weather():
 
     return r
 
-
-
-#
-# @app.route("/")
-# def init():
-#     return "Hello, TravelFlan!"
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
