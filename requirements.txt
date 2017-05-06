@@ -1,7 +1,7 @@
 appdirs==1.4.3
 click==6.7
 Flask==0.12.1
-flask-cors==3.0.2
+Flask-Cors==3.0.2
 googlemaps==2.4.6
 itsdangerous==0.24
 Jinja2==2.9.6
